@@ -105,6 +105,11 @@ class lint_lint extends Command {
             return $formatter->output($linters, $results);
         }
 
+        if ($format === 'jsonl') {
+            $formatter = new \local_devtools\local\lint\formatters\jsonl($io);
+            return $formatter->output($linters, $results);
+        }
+
         if ($format === 'text') {
             $formatter = new \local_devtools\local\lint\formatters\text($io);
             $formatter->decorate = $decorate;

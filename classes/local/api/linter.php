@@ -22,6 +22,7 @@ use local_devtools\local\lint\linters\lang;
 use local_devtools\local\lint\linters\phpcs;
 use local_devtools\local\lint\linters\phpdoc;
 use local_devtools\local\lint\linters\phplint;
+use local_devtools\local\lint\linters\phpstan;
 use local_devtools\local\lint\linters\stylelint;
 use local_devtools\local\lint\schemas\file;
 use Symfony\Component\Console\Helper\ProgressIndicator;
@@ -41,6 +42,7 @@ class linter {
      * @param bool $phpcs
      * @param bool $phplint
      * @param bool $phpdoc
+     * @param bool $phpstan
      * @param bool $stylelint
      * @return class-string<base>[]
      */
@@ -50,6 +52,7 @@ class linter {
         bool $phpcs = true,
         bool $phplint = true,
         bool $phpdoc = true,
+        bool $phpstan = true,
         bool $stylelint = true,
     ): array {
         $linters = [
@@ -58,6 +61,7 @@ class linter {
             $phpcs ? phpcs::class : null,
             $phplint ? phplint::class : null,
             $phpdoc ? phpdoc::class : null,
+            $phpstan ? phpstan::class : null,
             $stylelint ? stylelint::class : null,
         ];
         $linters = array_values(array_filter($linters, fn($linter) => $linter !== null));

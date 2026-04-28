@@ -25,7 +25,6 @@ use Symfony\Component\Console\Helper\ProgressIndicator;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use function count;
 
 /**
  * Command to lint a directory or file.
@@ -52,7 +51,7 @@ class lint_lint extends Command {
         #[Option('Enable the phpdoc linter')] bool $phpdoc = false,
         #[Option('Enable the phpstan linter')] bool $phpstan = false,
         #[Option('Enable the stylelint linter')] bool $stylelint = false,
-        #[Option('Output as JSON')] bool $json = false,
+        #[Option('Format to output as (text/json)')] string $format = 'text',
         #[Option('Add file:// links to output')] bool $decorate = true,
         #[Option('Enable/disable the progress bar')] bool $progress = true,
     ): int {
@@ -101,41 +100,18 @@ class lint_lint extends Command {
 
         $results = linter::run($realpaths, $linters, progress: $progressindicator);
 
-        if ($json) {
-            $jsonstring = json_encode([
-                'linters' => linter::get_linters_info($linters),
-                'files' => $results,
-            ]);
-            if ($jsonstring === false) {
-                $io->error('Error encoding linter results JSON');
-                return -1;
-            }
-            $io->writeln($jsonstring);
-            return 0;
+        if ($format === 'json') {
+            $formatter = new \local_devtools\local\lint\formatters\json($io);
+            return $formatter->output($linters, $results);
         }
 
-        $decorateoutput = $decorate && $io->isDecorated();
-
-        $filecount = count($results);
-        $issuecount = 0;
-
-        foreach ($results as $fileresult) {
-            $path = $fileresult->file;
-            $issues = $fileresult->issues;
-            $issuecount += count($issues);
-
-            foreach ($issues as $issue) {
-                $severity = $issue->severity->value;
-                $message = $issue->message;
-                $rule = "$issue->source/$issue->rule";
-                $filelink = $fileresult->format_path($issue->line, $issue->column, $decorateoutput);
-                $out = "$filelink: $severity: $message ($rule)";
-                $io->writeln($out);
-            }
+        if ($format === 'text') {
+            $formatter = new \local_devtools\local\lint\formatters\text($io);
+            $formatter->decorate = $decorate;
+            return $formatter->output($linters, $results);
         }
 
-        $io->writeln('');
-        $io->writeln("Linted $filecount files with $issuecount issues.");
-        return 0;
+        $io->error("Unknown format $format");
+        return -1;
     }
 }

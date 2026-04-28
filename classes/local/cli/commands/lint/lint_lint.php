@@ -25,6 +25,7 @@ use Symfony\Component\Console\Helper\ProgressIndicator;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use function array_key_exists;
 
 /**
  * Command to lint a directory or file.
@@ -57,6 +58,26 @@ class lint_lint extends Command {
     ): int {
         global $CFG;
         chdir($CFG->root);
+
+        /** @var array<string, class-string<\local_devtools\local\lint\formatters\base>> $formatterclasses */
+        $formatterclasses = [
+            'json' => \local_devtools\local\lint\formatters\json::class,
+            'jsonl' => \local_devtools\local\lint\formatters\jsonl::class,
+            'text' => \local_devtools\local\lint\formatters\text::class,
+        ];
+        if (!array_key_exists($format, $formatterclasses)) {
+            $io->writeln('Available format options are:');
+            $io->listing(array_keys($formatterclasses));
+            $io->error("Unknown format specified");
+            return -1;
+        }
+
+        $formatterclass = $formatterclasses[$format];
+        $formatter = new $formatterclass($io);
+
+        if ($formatter instanceof \local_devtools\local\lint\formatters\text) {
+            $formatter->decorate = $decorate;
+        }
 
         $realpaths = [];
         foreach ($paths as $path) {
@@ -100,23 +121,6 @@ class lint_lint extends Command {
 
         $results = linter::run($realpaths, $linters, progress: $progressindicator);
 
-        if ($format === 'json') {
-            $formatter = new \local_devtools\local\lint\formatters\json($io);
-            return $formatter->output($linters, $results);
-        }
-
-        if ($format === 'jsonl') {
-            $formatter = new \local_devtools\local\lint\formatters\jsonl($io);
-            return $formatter->output($linters, $results);
-        }
-
-        if ($format === 'text') {
-            $formatter = new \local_devtools\local\lint\formatters\text($io);
-            $formatter->decorate = $decorate;
-            return $formatter->output($linters, $results);
-        }
-
-        $io->error("Unknown format $format");
-        return -1;
+        return $formatter->output($linters, $results);
     }
 }

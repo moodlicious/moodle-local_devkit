@@ -25,6 +25,7 @@ use Symfony\Component\Console\Helper\ProgressIndicator;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use function count;
 
 /**
  * Command to lint a directory or file.
@@ -115,9 +116,13 @@ class lint_lint extends Command {
 
         $decorateoutput = $decorate && $io->isDecorated();
 
+        $filecount = count($results);
+        $issuecount = 0;
+
         foreach ($results as $fileresult) {
             $path = $fileresult->file;
             $issues = $fileresult->issues;
+            $issuecount += count($issues);
 
             foreach ($issues as $issue) {
                 $severity = $issue->severity->value;
@@ -129,6 +134,8 @@ class lint_lint extends Command {
             }
         }
 
+        $io->writeln('');
+        $io->writeln("Linted $filecount files with $issuecount issues.");
         return 0;
     }
 }

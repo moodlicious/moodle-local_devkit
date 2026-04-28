@@ -55,13 +55,13 @@ class phpstan extends base {
         }
 
         $this->set_progress_file($filepath);
-        return [...$results, ...$this->execute_phpcs($filepath)];
+        return [...$results, ...$this->execute($filepath)];
     }
 
     #[\Override]
     public function lint_directory(string $directorypath): array {
         $this->set_progress_file($directorypath);
-        return $this->execute_phpcs($directorypath);
+        return $this->execute($directorypath);
     }
 
     /**
@@ -69,9 +69,9 @@ class phpstan extends base {
      * @param string $path
      * @return file[]
      */
-    private function execute_phpcs($path): array {
+    private function execute($path): array {
         $binary = $this->get_phpstan_binary_path();
-        $config = $this->get_neon($path);
+        $config = $this->get_config_neon($path);
         $process = new Process([
             'php',
             $binary,
@@ -86,6 +86,13 @@ class phpstan extends base {
         $process->run();
 
         $output = $process->getOutput();
+        if (!$output) {
+            $error = $process->getErrorOutput();
+            $issue = phpstan_issue::simple($error);
+            $results[] = new file($path, [$issue]);
+            return $results;
+        }
+
         return $this->parse_json($output, $path);
     }
 
@@ -102,7 +109,7 @@ class phpstan extends base {
             $issue = new phpstan_issue(
                 0,
                 0,
-                "'phpcs' returned non-JSON output.",
+                "'phpcs' returned non-JSON output",
                 'phpcs-json-error',
                 $this->get_name(),
                 severity::error,
@@ -162,6 +169,37 @@ class phpstan extends base {
 
         file_put_contents($neonpath, $phpstandotneon);
         return $neonpath;
+    }
+
+    /**
+     * Walks up the file path until we find a phpstan.neon.
+     * If none found, then generate one.
+     * @return string
+     */
+    public function get_config_neon(string $path): string {
+        $filename = 'phpstan.neon';
+        $path = is_file($path) ? dirname($path) : $path;
+        $currentdir = realpath($path);
+
+        if (!$currentdir) {
+            return $this->generate_temp_config_neon();
+        }
+
+        while (true) {
+            $neon = $currentdir . DIRECTORY_SEPARATOR . $filename;
+            if (is_file($neon)) {
+                return $neon;
+            }
+
+            $parentdir = dirname($currentdir);
+            if ($parentdir === $currentdir) {
+                break;
+            }
+
+            $currentdir = $parentdir;
+        }
+
+        return $this->generate_temp_config_neon();
     }
 
     /**

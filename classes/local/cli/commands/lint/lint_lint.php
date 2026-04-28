@@ -45,13 +45,13 @@ class lint_lint extends Command {
         #[Argument('Paths to lint (must be absolute or relative to the Moodle root)')] array $paths,
         SymfonyStyle $io,
         OutputInterface $output,
-        #[Option('Enable the eslint linter')] bool $eslint = false,
-        #[Option('Enable the lang dir linter')] bool $lang = false,
-        #[Option('Enable the php-codesniffer linter')] bool $phpcs = false,
-        #[Option('Enable the php -l linter')] bool $phplint = false,
-        #[Option('Enable the phpdoc linter')] bool $phpdoc = false,
-        #[Option('Enable the phpstan linter')] bool $phpstan = false,
-        #[Option('Enable the stylelint linter')] bool $stylelint = false,
+        #[Option('Enable/disable the eslint linter')] bool $eslint = true,
+        #[Option('Enable/disable the lang dir linter')] bool $lang = true,
+        #[Option('Enable/disable the php-codesniffer linter')] bool $phpcs = true,
+        #[Option('Enable/disable the php -l linter')] bool $phplint = true,
+        #[Option('Enable/disable the phpdoc linter')] bool $phpdoc = true,
+        #[Option('Enable/disable the phpstan linter')] bool $phpstan = true,
+        #[Option('Enable/disable the stylelint linter')] bool $stylelint = true,
         #[Option('Format to output as (text/json)')] string $format = 'text',
         #[Option('Add file:// links to output')] bool $decorate = true,
         #[Option('Enable/disable the progress bar')] bool $progress = true,
@@ -92,17 +92,6 @@ class lint_lint extends Command {
         if ($realpaths === []) {
             $io->error('No paths provided');
             return -1;
-        }
-
-        // If all linter flags are false, then turn all back on.
-        if (array_unique([$eslint, $lang, $phpcs, $phplint, $phpdoc, $phpstan, $stylelint]) === [false]) {
-            $eslint = true;
-            $lang = true;
-            $phpcs = true;
-            $phplint = true;
-            $phpdoc = true;
-            $phpstan = true;
-            $stylelint = true;
         }
 
         $progressindicator = $progress && $output instanceof ConsoleOutputInterface

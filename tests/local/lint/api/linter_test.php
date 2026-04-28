@@ -26,6 +26,7 @@ use local_devtools\local\lint\linters\lang;
 use local_devtools\local\lint\linters\phpcs;
 use local_devtools\local\lint\linters\phpdoc;
 use local_devtools\local\lint\linters\phplint;
+use local_devtools\local\lint\linters\phpstan;
 use local_devtools\local\lint\linters\stylelint;
 
 /**
@@ -47,6 +48,7 @@ final class linter_test extends advanced_testcase {
             phpcs: true,
             phplint: true,
             phpdoc: true,
+            phpstan: true,
             stylelint: true,
         );
 
@@ -56,6 +58,7 @@ final class linter_test extends advanced_testcase {
             phpcs::class,
             phplint::class,
             phpdoc::class,
+            phpstan::class,
             stylelint::class,
         ], $linters);
     }
@@ -70,6 +73,7 @@ final class linter_test extends advanced_testcase {
             phpcs: false,
             phplint: false,
             phpdoc: false,
+            phpstan: false,
             stylelint: false,
         );
 
@@ -86,6 +90,7 @@ final class linter_test extends advanced_testcase {
             phpcs: true,
             phplint: true,
             phpdoc: false,
+            phpstan: false,
             stylelint: true,
         );
 

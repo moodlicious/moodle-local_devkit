@@ -65,7 +65,7 @@ class phpstan extends base {
     }
 
     /**
-     * Executes phpcs on a given path.
+     * Executes phpstan on a given path.
      * @param string $path
      * @return file[]
      */
@@ -97,7 +97,7 @@ class phpstan extends base {
     }
 
     /**
-     * Parses the PHPCS JSON result.
+     * Parses the phpstan JSON result.
      * @param string $output
      * @param string $path
      * @return file[]
@@ -109,8 +109,8 @@ class phpstan extends base {
             $issue = new phpstan_issue(
                 0,
                 0,
-                "'phpcs' returned non-JSON output",
-                'phpcs-json-error',
+                "'phpstan' returned non-JSON output",
+                'phpstan-json-parse-error',
                 $this->get_name(),
                 severity::error,
             );

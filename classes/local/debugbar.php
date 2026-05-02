@@ -311,6 +311,27 @@ class debugbar extends BaseDebugBar {
         return $renderer;
     }
 
+    // phpcs:disable moodle.NamingConventions.ValidVariableName.VariableNameLowerCase
+    /**
+     * Sends the data through the HTTP headers
+     *
+     * @param integer $maxHeaderLength
+     *
+     * @return $this
+     */
+    #[\Override]
+    public function sendDataInHeaders(
+        ?bool $useOpenHandler = null,
+        string $headerName = 'phpdebugbar',
+        int $maxHeaderLength = 4096
+    ): static {
+        if (!devtools::is_enabled()) {
+            return $this;
+        }
+        return parent::sendDataInHeaders($useOpenHandler, $headerName, $maxHeaderLength);
+    }
+    // phpcs:enable moodle.NamingConventions.ValidVariableName.VariableNameLowerCase
+
     /**
      * Store for later use.
      * For example, inspecting a form submit with redirect.

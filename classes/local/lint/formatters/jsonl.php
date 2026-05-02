@@ -14,30 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\cli;
-
-use local_devtools\local\cli\commands\database\database_list;
-use local_devtools\local\cli\commands\lint\lint_lint;
-use local_devtools\local\cli\commands\mcp\mcp_serve;
-use local_devtools\local\cli\commands\plugins\plugins_list;
-use Symfony\Component\Console\Application as BaseApplication;
+namespace local_devtools\local\lint\formatters;
 
 /**
- * Devtools console application.
+ * Jsonl formatter.
  *
  * @package   local_devtools
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class application extends BaseApplication {
-    /**
-     * Constructor.
-     */
-    public function __construct() {
-        parent::__construct('devtools');
-        $this->addCommand(new plugins_list());
-        $this->addCommand(new database_list());
-        $this->addCommand(new mcp_serve());
-        $this->addCommand(new lint_lint());
+class jsonl extends base {
+    #[\Override]
+    public function output(array $linters, array $results): int {
+        foreach ($results as $fileresult) {
+            $issues = $fileresult->issues;
+
+            foreach ($issues as $issue) {
+                $jsonstring = json_encode([
+                    'file' => $fileresult->file,
+                    ...$issue->jsonSerialize(),
+                ]);
+                if ($jsonstring === false) {
+                    $this->io->error('Error encoding linter results JSON');
+                    return -1;
+                }
+
+                $this->io->writeln($jsonstring);
+            }
+        }
+
+        return 0;
     }
 }

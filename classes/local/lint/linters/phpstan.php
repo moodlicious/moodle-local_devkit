@@ -157,7 +157,7 @@ class phpstan extends base {
             - $moodleneonpath
 
             parameters:
-                level: 5
+                level: 8
                 paths:
                     - .
                 excludePaths:

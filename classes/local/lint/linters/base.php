@@ -161,7 +161,7 @@ class base {
             $issue = issue::simple(
                 'Linter not available or is not installed',
                 'linter-installed',
-                'base',
+                static::get_name(),
                 severity::warning
             );
             $file = new file($path, [$issue]);

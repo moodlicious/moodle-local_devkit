@@ -19,6 +19,7 @@ namespace local_devtools\local\lint\linters;
 use local_devtools\local\lint\schemas\issue\phpstan as phpstan_issue;
 use local_devtools\local\lint\severity;
 use local_devtools\local\lint\schemas\file;
+use local_devtools\local\utils;
 use Symfony\Component\Process\Process;
 
 /**
@@ -152,6 +153,7 @@ class phpstan extends base {
 
         $moodleneonpath = realpath($CFG->dirroot . '/local/devtools/vendor/micaherne/phpstan-moodle/extension.neon');
 
+        $moodleroot = utils::get_moodle_root_dir();
         $phpstandotneon = <<<NEON
             includes:
             - $moodleneonpath
@@ -163,7 +165,7 @@ class phpstan extends base {
                 excludePaths:
                     - */vendor/*
                 moodle:
-                    rootDirectory: $CFG->root
+                    rootDirectory: $moodleroot
 
             NEON;
 

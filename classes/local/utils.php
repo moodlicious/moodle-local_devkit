@@ -44,4 +44,19 @@ class utils {
         }
         return $result;
     }
+
+    /**
+     * Returns the root directory of the Moodle installation.
+     *
+     * @return string
+     */
+    public static function get_moodle_root_dir(): string {
+        global $CFG;
+
+        if (isset($CFG->root)) {
+            return $CFG->root;
+        }
+
+        return $CFG->dirroot;
+    }
 }

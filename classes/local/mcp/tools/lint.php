@@ -18,6 +18,7 @@ namespace local_devtools\local\mcp\tools;
 
 use Exception;
 use local_devtools\local\api\linter;
+use local_devtools\local\utils;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Schema\ToolAnnotations;
 
@@ -49,7 +50,7 @@ class lint {
             throw new Exception('Unknown current working directory.');
         }
 
-        chdir($CFG->root);
+        chdir(utils::get_moodle_root_dir());
         $linters = linter::get_linters_classnames();
         $results = linter::run($paths, $linters);
         chdir($cwd);

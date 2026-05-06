@@ -61,38 +61,11 @@ class phpdoc extends base {
         }
 
         $this->set_progress_file($filepath);
-        $process = new Process(['php', $installedpath, '--path=' . $filepath]);
-        $process->run();
-
-        $output = $process->getOutput();
-
-        if (!$output) {
-            $results[] = $fileresult;
-            return $results;
-        }
-
-        $xmlarr = (new \core\xml_parser())->parse($output);
-        if ($xmlarr === false) {
-            $fileresult->add_issue(issue::simple(
-                "Output: '$output'",
-                'linter-returned-invalid-results',
-                $this->get_name(),
-                severity::error,
-            ));
-            return [$fileresult];
-        }
-
-        $filehash = $xmlarr['file']['#'];
-        if (!$filehash) {
-            $results[] = $fileresult;
-            return $results;
-        }
-
-        $errors = $filehash['error'];
+        $checker = new \local_moodlecheck_file($filepath);
+        $errors = $checker->validate();
 
         foreach ($errors as $error) {
-            $errordata = $error['@'];
-            $issue = \local_devtools\local\lint\schemas\issue\phpdoc::from_object((object) $errordata);
+            $issue = \local_devtools\local\lint\schemas\issue\phpdoc::from_object((object) $error);
             if (!$issue) {
                 continue;
             }
@@ -118,6 +91,12 @@ class phpdoc extends base {
         $path = $CFG->dirroot . '/local/moodlecheck/cli/moodlecheck.php';
         $realpath = realpath($path);
         $cache = $realpath ?: null;
+
+        if ($cache) {
+            require_once($CFG->dirroot . '/local/moodlecheck/locallib.php');
+            require_once($CFG->dirroot . '/local/moodlecheck/rules/phpdocs_basic.php');
+            \local_moodlecheck_registry::enable_all_rules();
+        }
 
         return $cache;
     }

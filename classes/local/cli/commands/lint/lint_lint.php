@@ -57,7 +57,8 @@ class lint_lint extends Command {
         #[Option('Enable/disable the progress bar')] bool $progress = true,
     ): int {
         global $CFG;
-        chdir($CFG->root);
+        $moodleroot = isset($CFG->root) ? $CFG->root : $CFG->dirroot;
+        chdir($moodleroot);
 
         /** @var array<string, class-string<\local_devtools\local\lint\formatters\base>> $formatterclasses */
         $formatterclasses = [

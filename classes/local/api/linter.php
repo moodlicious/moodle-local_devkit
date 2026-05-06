@@ -93,7 +93,10 @@ class linter {
      * @return file[]
      */
     public static function run(array $paths, array $linterclasses, ?ProgressIndicator $progress = null): array {
-        $linters = array_map(fn(/** @var class-string<base> $linterclass */ $linterclass) => new $linterclass(), $linterclasses);
+        $linters = array_map(
+            fn(/** @var class-string<base> $linterclass */ $linterclass) => new $linterclass($progress),
+            $linterclasses,
+        );
 
         $progress?->start('Starting.');
         $resultsitems = array_map(

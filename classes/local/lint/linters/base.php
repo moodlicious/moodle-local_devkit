@@ -227,6 +227,9 @@ class base {
      * @return bool
      */
     private function path_match_patterns($path, $patterns): bool {
+        // Normalise path to use forward slashes for consistency with glob patterns.
+        $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
+
         // As long as it matches one of the PATTERNS.
         foreach ($patterns as $pattern) {
             $match = fnmatch($pattern, $path);

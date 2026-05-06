@@ -70,7 +70,16 @@ class phpcs extends base {
      * @return file[]
      */
     private function execute_phpcs($path): array {
-        $process = new Process(['phpcs', '--cache', '-q', '--report=json', $path], timeout: MINSECS * 15);
+        $excludepatterns = self::get_exclude_patterns();
+        $exclude = $excludepatterns ? ['--ignore=' . implode(',', $excludepatterns)] : [];
+        $process = new Process([
+            'phpcs',
+            '--cache',
+            '-q',
+            '--report=json',
+            ...$exclude,
+            $path,
+        ], timeout: MINSECS * 15);
         $process->run();
 
         $output = $process->getOutput();

@@ -24,9 +24,20 @@ use RecursiveIteratorIterator;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 use function array_key_exists;
 use function get_called_class;
+use function is_array;
 
 /**
  * The abstract base linter.
+ *
+ * Linter patterns can be overridden in config.php, example:
+ * <code>
+ * $CFG->devtools = [
+ *     'linters' => [
+ *         'base' => ['exclude_patterns' => ['*\/.venv/*']],
+ *         'phpcs' => ['exclude_patterns' => ['*\/classes/*']],
+ *     ],
+ * ];
+ * </code>
  *
  * @package   local_devtools
  * @copyright 2026 Felix Yeung
@@ -88,6 +99,16 @@ class base {
      * @return string[]
      */
     public static function get_include_patterns(): array {
+        $includepatterns = static::get_config_value('include_patterns');
+        if ($includepatterns !== null) {
+            return $includepatterns;
+        }
+
+        $baseincludepatterns = self::get_config_value('include_patterns', 'base');
+        if ($baseincludepatterns !== null) {
+            return $baseincludepatterns;
+        }
+
         return [];
     }
 
@@ -96,6 +117,16 @@ class base {
      * @return string[]
      */
     public static function get_exclude_patterns(): array {
+        $includepatterns = static::get_config_value('exclude_patterns');
+        if ($includepatterns !== null) {
+            return $includepatterns;
+        }
+
+        $baseexcludepatterns = self::get_config_value('exclude_patterns', 'base');
+        if ($baseexcludepatterns !== null) {
+            return $baseexcludepatterns;
+        }
+
         return [
             '**/.git/**',
             '**/node_modules/**',
@@ -251,5 +282,54 @@ class base {
         }
 
         return array_values($filemap);
+    }
+
+    /**
+     * Gets the linter configuration from $CFG.
+     * @param string|null $lintername
+     * @return array<string, mixed>|null
+     */
+    protected static function get_config(?string $lintername = null): ?array {
+        global $CFG;
+        static $cache = [];
+
+        $lintername = $lintername ?? static::get_name();
+        if (array_key_exists($lintername, $cache)) {
+            return $cache[$lintername];
+        }
+
+        if (!isset($CFG->devtools)) {
+            return $cache[$lintername] = null;
+        }
+
+        if (!isset($CFG->devtools['linters'][$lintername])) {
+            return $cache[$lintername] = null;
+        }
+
+        $config = $CFG->devtools['linters'][$lintername];
+        if (!is_array($config)) {
+            return $cache[$lintername] = null;
+        }
+
+        return $cache[$lintername] = $config;
+    }
+
+    /**
+     * Helper function to get a specific linter config value, returns null if not set.
+     * @param string $key
+     * @param string|null $lintername
+     * @return mixed
+     */
+    protected static function get_config_value(string $key, ?string $lintername = null): mixed {
+        $config = static::get_config($lintername);
+        if ($config === null) {
+            return $config;
+        }
+
+        if (!array_key_exists($key, $config)) {
+            return null;
+        }
+
+        return $config[$key];
     }
 }

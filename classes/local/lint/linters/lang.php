@@ -19,6 +19,7 @@ namespace local_devtools\local\lint\linters;
 use local_devtools\local\lint\schemas\issue;
 use local_devtools\local\lint\severity;
 use local_devtools\local\lint\schemas\file;
+use local_devtools\local\utils;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use function array_key_exists;
@@ -105,7 +106,7 @@ class lang extends base {
     private static function find_nearest_langdir_up(string $directorypath): string {
         global $CFG;
 
-        $root = realpath($CFG->root);
+        $root = realpath(utils::get_moodle_root_dir());
         if ($root === false) {
             return $directorypath;
         }

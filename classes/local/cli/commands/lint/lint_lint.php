@@ -17,6 +17,7 @@
 namespace local_devtools\local\cli\commands\lint;
 
 use local_devtools\local\api\linter;
+use local_devtools\local\utils;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
@@ -56,8 +57,7 @@ class lint_lint extends Command {
         #[Option('Add file:// links to output')] bool $decorate = true,
         #[Option('Enable/disable the progress bar')] bool $progress = true,
     ): int {
-        global $CFG;
-        chdir($CFG->root);
+        chdir(utils::get_moodle_root_dir());
 
         /** @var array<string, class-string<\local_devtools\local\lint\formatters\base>> $formatterclasses */
         $formatterclasses = [

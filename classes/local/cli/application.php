@@ -17,7 +17,7 @@
 namespace local_devtools\local\cli;
 
 use local_devtools\local\cli\commands\database\database_list;
-use local_devtools\local\cli\commands\lint\lint_lint;
+use local_devtools\local\cli\commands\lint\handler;
 use local_devtools\local\cli\commands\mcp\mcp_serve;
 use local_devtools\local\cli\commands\plugins\plugins_list;
 use Symfony\Component\Console\Application as BaseApplication;
@@ -38,6 +38,6 @@ class application extends BaseApplication {
         $this->addCommand(new plugins_list());
         $this->addCommand(new database_list());
         $this->addCommand(new mcp_serve());
-        $this->addCommand(new lint_lint());
+        handler::register($this);
     }
 }

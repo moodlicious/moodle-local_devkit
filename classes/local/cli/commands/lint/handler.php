@@ -35,8 +35,8 @@ use function array_key_exists;
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[AsCommand(name: 'lint:lint', description: 'All linters are enabled by default unless explicitly selected.')]
-class lint_lint extends Command {
+#[AsCommand(name: 'lint', description: 'All linters are enabled by default unless explicitly selected.')]
+class handler extends Command {
     /**
      * Invoke
      * @param string[] $paths

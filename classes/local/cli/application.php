@@ -38,6 +38,6 @@ class application extends BaseApplication {
         $this->addCommand(new plugins_list());
         $this->addCommand(new database_list());
         $this->addCommand(new mcp_serve());
-        $this->addCommand(new handler());
+        handler::register($this);
     }
 }

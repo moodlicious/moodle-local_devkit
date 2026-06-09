@@ -17,12 +17,16 @@
 namespace local_devtools\local\cli\commands\lint;
 
 use local_devtools\local\api\linter;
+use local_devtools\local\lint\linters\base;
 use local_devtools\local\utils;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Attribute\Argument;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressIndicator;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -35,27 +39,28 @@ use function array_key_exists;
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[AsCommand(name: 'lint', description: 'All linters are enabled by default unless explicitly selected.')]
-class handler extends Command {
+class handler {
     /**
      * Invoke
      * @param string[] $paths
+     * @param SymfonyStyle $io
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param string $format
+     * @param bool $decorate
+     * @param bool $progress
+     * @param string[] $linters
      * @return int
      */
-    public function __invoke(
+    private static function invoke(
         #[Argument('Paths to lint (must be absolute or relative to the Moodle root)')] array $paths,
         SymfonyStyle $io,
+        InputInterface $input,
         OutputInterface $output,
-        #[Option('Enable/disable the eslint linter')] bool $eslint = true,
-        #[Option('Enable/disable the lang dir linter')] bool $lang = true,
-        #[Option('Enable/disable the php-codesniffer linter')] bool $phpcs = true,
-        #[Option('Enable/disable the php -l linter')] bool $phplint = true,
-        #[Option('Enable/disable the phpdoc linter')] bool $phpdoc = true,
-        #[Option('Enable/disable the phpstan linter')] bool $phpstan = true,
-        #[Option('Enable/disable the stylelint linter')] bool $stylelint = true,
         #[Option('Format to output as (text/json)')] string $format = 'text',
         #[Option('Add file:// links to output')] bool $decorate = true,
         #[Option('Enable/disable the progress bar')] bool $progress = true,
+        #[Option('Linters to run')] array $linters = [],
     ): int {
         chdir(utils::get_moodle_root_dir());
 
@@ -69,7 +74,7 @@ class handler extends Command {
             $io->writeln('Available format options are:');
             $io->listing(array_keys($formatterclasses));
             $io->error("Unknown format specified");
-            return -1;
+            return Command::FAILURE;
         }
 
         $formatterclass = $formatterclasses[$format];
@@ -84,32 +89,81 @@ class handler extends Command {
             $realpath = realpath($path);
             if ($realpath === false) {
                 $io->error("Invalid path: $path");
-                return -1;
+                return Command::FAILURE;
             }
             $realpaths[] = $realpath;
         }
 
         if ($realpaths === []) {
             $io->error('No paths provided');
-            return -1;
+            return Command::FAILURE;
         }
 
         $progressindicator = $progress && $output instanceof ConsoleOutputInterface
             ? new ProgressIndicator($output->getErrorOutput())
             : null;
 
-        $linters = linter::get_linters_classnames(
-            eslint: $eslint,
-            lang: $lang,
-            phpcs: $phpcs,
-            phplint: $phplint,
-            phpdoc: $phpdoc,
-            phpstan: $phpstan,
-            stylelint: $stylelint
+        // Build an associative array of lintername -> enabled.
+        $linternames = array_map(
+            fn(/** @var class-string<base> $linter */ $linter) => $linter::get_name(),
+            linter::get_linters_classnames(),
         );
+        $enabledlinters = array_fill_keys($linternames, false);
+
+        foreach ($linters as $linter) {
+            if (!array_key_exists($linter, $enabledlinters)) {
+                continue;
+            }
+            $enabledlinters[$linter] = true;
+        }
+
+        $linters = linter::get_linters_classnames(...$enabledlinters);
 
         $results = linter::run($realpaths, $linters, progress: $progressindicator);
 
         return $formatter->output($linters, $results);
+    }
+
+    /**
+     * Builds the command for linters
+     * @param string $name
+     * @param class-string<base>[] $linters
+     * @return Command
+     */
+    private static function build_command(string $name, array $linters): Command {
+        $linternames = array_map(
+            fn(/** @var class-string<base> $linter */ $linter) => $linter::get_name(),
+            $linters,
+        );
+        $command = new Command($name);
+        $command->addArgument('paths', mode: InputArgument::IS_ARRAY)
+            ->addOption('format', mode: InputOption::VALUE_REQUIRED, default: 'text')
+            ->addOption('decorate', mode: InputOption::VALUE_NEGATABLE, default: true)
+            ->addOption('progress', mode: InputOption::VALUE_NEGATABLE, default: true)
+            ->addOption('linters', mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, default: $linternames)
+            ->setCode(self::invoke(...));
+        return $command;
+    }
+
+    /**
+     * Register linter command
+     * @param Application $app
+     * @return void
+     */
+    public static function register(Application $app): void {
+        $linters = linter::get_linters_classnames();
+
+        // Make the command for running all linters.
+        $command = self::build_command('lint', $linters);
+        $app->addCommand($command);
+
+        // Make commands for running each individual linter.
+        foreach ($linters as $linter) {
+            $name = $linter::get_name();
+            $command = self::build_command("lint:$name", [$linter]);
+            $app->addCommand($command);
+        }
+
+        return;
     }
 }

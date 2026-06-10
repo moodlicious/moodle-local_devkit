@@ -79,7 +79,7 @@ abstract class base {
         $class = new ReflectionClass(static::class);
         /** @var ReflectionAttribute<linter>[] $attributes */
         $attributes = $class->getAttributes(linter::class);
-        [$attribute] = $attributes;
+        [$attribute] = $attributes ?: [null];
 
         if (!$attribute) {
             throw new coding_exception('linter classes must have the linter attribute set');

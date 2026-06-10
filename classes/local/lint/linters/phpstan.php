@@ -16,6 +16,7 @@
 
 namespace local_devtools\local\lint\linters;
 
+use local_devtools\local\attributes\linter;
 use local_devtools\local\lint\schemas\issue\phpstan as phpstan_issue;
 use local_devtools\local\lint\severity;
 use local_devtools\local\lint\schemas\file;
@@ -29,12 +30,11 @@ use Symfony\Component\Process\Process;
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[linter(
+    name: 'phpstan',
+    description: 'executes phpstan for static code analysis',
+)]
 class phpstan extends base {
-    #[\Override]
-    public static function get_description(): ?string {
-        return 'executes phpstan for static code analysis';
-    }
-
     #[\Override]
     public static function get_include_patterns(): array {
         return [

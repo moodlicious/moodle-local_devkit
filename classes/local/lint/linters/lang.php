@@ -16,6 +16,7 @@
 
 namespace local_devtools\local\lint\linters;
 
+use local_devtools\local\attributes\linter;
 use local_devtools\local\lint\schemas\issue;
 use local_devtools\local\lint\severity;
 use local_devtools\local\lint\schemas\file;
@@ -53,12 +54,11 @@ use function strlen;
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[linter(
+    name: 'lang',
+    description: 'executes language string consistency checking against lang/*/*.php files',
+)]
 class lang extends base {
-    #[\Override]
-    public static function get_description(): ?string {
-        return 'executes language string consistency checking against lang/*/*.php files';
-    }
-
     #[\Override]
     public static function get_include_patterns(): array {
         return [

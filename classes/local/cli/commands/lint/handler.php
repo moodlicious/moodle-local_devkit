@@ -63,7 +63,6 @@ class handler {
         #[Option('Linters to run')] array $linters = [],
     ): int {
         chdir(utils::get_moodle_root_dir());
-
         /** @var array<string, class-string<\local_devtools\local\lint\formatters\base>> $formatterclasses */
         $formatterclasses = [
             'json' => \local_devtools\local\lint\formatters\json::class,
@@ -103,21 +102,7 @@ class handler {
             ? new ProgressIndicator($output->getErrorOutput())
             : null;
 
-        // Build an associative array of lintername -> enabled.
-        $linternames = array_map(
-            fn(/** @var class-string<base> $linter */ $linter) => $linter::get_name(),
-            linter::get_linters_classnames(),
-        );
-        $enabledlinters = array_fill_keys($linternames, false);
-
-        foreach ($linters as $linter) {
-            if (!array_key_exists($linter, $enabledlinters)) {
-                continue;
-            }
-            $enabledlinters[$linter] = true;
-        }
-
-        $linters = linter::get_linters_classnames(...$enabledlinters);
+        $linters = linter::get_linters_classnames($linters);
 
         $results = linter::run($realpaths, $linters, progress: $progressindicator);
 

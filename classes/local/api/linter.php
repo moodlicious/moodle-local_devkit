@@ -16,14 +16,8 @@
 
 namespace local_devtools\local\api;
 
+use core\component;
 use local_devtools\local\lint\linters\base;
-use local_devtools\local\lint\linters\eslint;
-use local_devtools\local\lint\linters\lang;
-use local_devtools\local\lint\linters\phpcs;
-use local_devtools\local\lint\linters\phpdoc;
-use local_devtools\local\lint\linters\phplint;
-use local_devtools\local\lint\linters\phpstan;
-use local_devtools\local\lint\linters\stylelint;
 use local_devtools\local\lint\schemas\file;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 
@@ -37,35 +31,33 @@ use Symfony\Component\Console\Helper\ProgressIndicator;
 class linter {
     /**
      * Utility function to get enabled linters.
-     * @param bool $eslint
-     * @param bool $lang
-     * @param bool $phpcs
-     * @param bool $phplint
-     * @param bool $phpdoc
-     * @param bool $phpstan
-     * @param bool $stylelint
+     * @param string[]|null $linternames list of linters to return, if null then return all available linters
      * @return class-string<base>[]
      */
-    public static function get_linters_classnames(
-        bool $eslint = true,
-        bool $lang = true,
-        bool $phpcs = true,
-        bool $phplint = true,
-        bool $phpdoc = true,
-        bool $phpstan = true,
-        bool $stylelint = true,
-    ): array {
-        $linters = [
-            $eslint ? eslint::class : null,
-            $lang ? lang::class : null,
-            $phpcs ? phpcs::class : null,
-            $phplint ? phplint::class : null,
-            $phpdoc ? phpdoc::class : null,
-            $phpstan ? phpstan::class : null,
-            $stylelint ? stylelint::class : null,
-        ];
-        $linters = array_values(array_filter($linters, fn($linter) => $linter !== null));
-        return $linters;
+    public static function get_linters_classnames(?array $linternames = null): array {
+        /** @var class-string<base>[] $linters */
+        $linters = array_map(
+            fn($linter) => "\\$linter",
+            array_keys(component::get_component_classes_in_namespace('local_devtools', 'local\lint\linters')),
+        );
+
+        $linters = array_filter(
+            $linters,
+            function ($linter) use ($linternames) {
+                if (!is_subclass_of($linter, base::class)) {
+                    return false;
+                }
+
+                if ($linternames === null) {
+                    return true;
+                }
+
+                return in_array($linter::get_name(), $linternames);
+            },
+        );
+
+        sort($linters);
+        return [...$linters];
     }
 
     /**

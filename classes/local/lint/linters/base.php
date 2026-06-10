@@ -76,6 +76,13 @@ abstract class base {
      * @return linter
      */
     public static function get_linter_attribute(): linter {
+        /** @var linter[] $cachedinstances */
+        static $cachedinstances = [];
+
+        if (array_key_exists(static::class, $cachedinstances)) {
+            return $cachedinstances[static::class];
+        }
+
         $class = new ReflectionClass(static::class);
         /** @var ReflectionAttribute<linter>[] $attributes */
         $attributes = $class->getAttributes(linter::class);
@@ -85,7 +92,8 @@ abstract class base {
             throw new coding_exception('linter classes must have the linter attribute set');
         }
 
-        return $attribute->newInstance();
+        $cachedinstances[static::class] = $instance = $attribute->newInstance();
+        return $instance;
     }
 
     /**

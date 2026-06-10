@@ -131,11 +131,24 @@ class handler {
      * @return Command
      */
     private static function build_command(string $name, array $linters): Command {
+        $linter = null;
+        if (\count($linters) === 1) {
+            $linter = $linters[0];
+        }
+
         $linternames = array_map(
             fn(/** @var class-string<base> $linter */ $linter) => $linter::get_name(),
             $linters,
         );
         $command = new Command($name);
+        if ($linter) {
+            $description = $linter::get_description();
+            if ($description) {
+                $command->setDescription($description);
+            }
+        } else {
+            $command->setDescription('Executes linters');
+        }
         $command->addArgument('paths', mode: InputArgument::IS_ARRAY)
             ->addOption('format', mode: InputOption::VALUE_REQUIRED, default: 'text')
             ->addOption('decorate', mode: InputOption::VALUE_NEGATABLE, default: true)

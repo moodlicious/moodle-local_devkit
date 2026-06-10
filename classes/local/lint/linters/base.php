@@ -16,11 +16,14 @@
 
 namespace local_devtools\local\lint\linters;
 
+use local_devtools\local\attributes\linter;
 use local_devtools\local\lint\schemas\issue;
 use local_devtools\local\lint\severity;
 use local_devtools\local\lint\schemas\file;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use ReflectionAttribute;
+use ReflectionClass;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 use function array_key_exists;
 use function get_called_class;
@@ -68,10 +71,27 @@ class base {
     }
 
     /**
+     * Gets the {@see linter} attribute for this class.
+     * @return linter|null
+     */
+    public static function get_linter_attribute(): ?linter {
+        $class = new ReflectionClass(static::class);
+        /** @var ReflectionAttribute<linter>[] $attributes */
+        $attributes = $class->getAttributes(linter::class);
+        [$attribute] = $attributes;
+        return $attribute ? $attribute->newInstance() : null;
+    }
+
+    /**
      * Gets the name of the linter.
      * @return string
      */
     public static function get_name(): string {
+        $name = self::get_linter_attribute()?->name;
+        if ($name) {
+            return $name;
+        }
+
         $classname = get_called_class();
         $parts = explode('\\', $classname);
         $name = array_pop($parts) ?: 'unknown';
@@ -83,7 +103,7 @@ class base {
      * @return string|null
      */
     public static function get_description(): ?string {
-        return null;
+        return self::get_linter_attribute()?->description;
     }
 
     /**

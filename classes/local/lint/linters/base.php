@@ -47,10 +47,7 @@ use function is_array;
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[linter(
-    name: 'base',
-)]
-class base {
+abstract class base {
     /** @var ProgressIndicator|null */
     protected ?ProgressIndicator $progress;
 
@@ -76,9 +73,9 @@ class base {
 
     /**
      * Gets the {@see linter} attribute for this class.
-     * @return linter|null
+     * @return linter
      */
-    public static function get_linter_attribute(): ?linter {
+    public static function get_linter_attribute(): linter {
         $class = new ReflectionClass(static::class);
         /** @var ReflectionAttribute<linter>[] $attributes */
         $attributes = $class->getAttributes(linter::class);
@@ -88,7 +85,7 @@ class base {
             throw new coding_exception('linter classes must have the linter attribute set');
         }
 
-        return $attribute ? $attribute->newInstance() : null;
+        return $attribute->newInstance();
     }
 
     /**
@@ -96,15 +93,7 @@ class base {
      * @return string
      */
     public static function get_name(): string {
-        $name = self::get_linter_attribute()?->name;
-        if ($name) {
-            return $name;
-        }
-
-        $classname = get_called_class();
-        $parts = explode('\\', $classname);
-        $name = array_pop($parts) ?: 'unknown';
-        return $name;
+        return self::get_linter_attribute()->name;
     }
 
     /**
@@ -112,7 +101,7 @@ class base {
      * @return string|null
      */
     public static function get_description(): ?string {
-        return self::get_linter_attribute()?->description;
+        return self::get_linter_attribute()->description;
     }
 
     /**

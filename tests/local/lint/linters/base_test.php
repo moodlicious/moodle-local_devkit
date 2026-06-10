@@ -19,6 +19,7 @@ declare(strict_types=1);
 namespace local_devtools\local\lint\linters;
 
 use advanced_testcase;
+use local_devtools\local\attributes\linter;
 use local_devtools\local\lint\linters\phplint;
 use local_devtools\local\lint\schemas\file;
 use local_devtools\local\lint\schemas\issue;
@@ -36,10 +37,19 @@ use Symfony\Component\Console\Output\NullOutput;
  */
 final class base_test extends advanced_testcase {
     /**
+     * Returns a simple base class for testing.
+     * @param ProgressIndicator|null $progress
+     * @return base
+     */
+    public function create_simple_base_class(?ProgressIndicator $progress = null): base {
+        return new #[linter('base')] class ($progress) extends base {
+        };
+    }
+    /**
      * Test that get_name returns the short class name.
      */
     public function test_get_name_returns_classname(): void {
-        $name = base::get_name();
+        $name = $this->create_simple_base_class()::get_name();
         $this->assertSame('base', $name);
     }
 
@@ -47,7 +57,7 @@ final class base_test extends advanced_testcase {
      * Test that get_description returns null for base class.
      */
     public function test_get_description_returns_null(): void {
-        $description = base::get_description();
+        $description = $this->create_simple_base_class()::get_description();
         $this->assertNull($description);
     }
 
@@ -55,7 +65,7 @@ final class base_test extends advanced_testcase {
      * Test that get_include_patterns returns empty array for base class.
      */
     public function test_get_include_patterns_returns_empty_array(): void {
-        $patterns = base::get_include_patterns();
+        $patterns = $this->create_simple_base_class()::get_include_patterns();
         $this->assertSame([], $patterns);
     }
 
@@ -63,7 +73,7 @@ final class base_test extends advanced_testcase {
      * Test that get_exclude_patterns returns default exclusion patterns.
      */
     public function test_get_exclude_patterns_returns_default_patterns(): void {
-        $patterns = base::get_exclude_patterns();
+        $patterns = $this->create_simple_base_class()::get_exclude_patterns();
         $this->assertSame([
             '**/.git/**',
             '**/node_modules/**',
@@ -75,7 +85,7 @@ final class base_test extends advanced_testcase {
      * Test that can_lint_file returns false when there are no include patterns.
      */
     public function test_can_lint_file_returns_false_when_no_include_patterns(): void {
-        $linter = new base();
+        $linter = $this->create_simple_base_class();
         $result = $linter->can_lint_file('/some/path/file.php');
         $this->assertFalse($result);
     }
@@ -164,7 +174,7 @@ final class base_test extends advanced_testcase {
      */
     public function test_set_progress_file_does_nothing_when_no_progress(): void {
         $this->expectNotToPerformAssertions();
-        $linter = new base(null);
+        $linter = $this->create_simple_base_class(null);
         $linter->set_progress_file('/some/path/file.php');
     }
 
@@ -175,7 +185,7 @@ final class base_test extends advanced_testcase {
         $this->expectNotToPerformAssertions();
         $output = new NullOutput();
         $progress = new ProgressIndicator($output);
-        $linter = new base($progress);
+        $linter = $this->create_simple_base_class($progress);
         $linter->set_progress_file('/some/path/file.php');
     }
 }

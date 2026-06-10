@@ -116,8 +116,10 @@ final class linter_test extends advanced_testcase {
      * Test that get_linters_info handles null description gracefully.
      */
     public function test_get_linters_info_handles_null_description(): void {
-        $linters = [base::class];
-        $info = linter::get_linters_info($linters);
+        $linter = new #[\local_devtools\local\attributes\linter('base')] class extends base {
+        };
+
+        $info = linter::get_linters_info([$linter::class]);
 
         $this->assertSame(['base'], $info);
     }

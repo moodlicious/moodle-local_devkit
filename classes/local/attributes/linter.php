@@ -30,14 +30,14 @@ class linter {
     /** @var string */
     public string $name;
     /** @var string */
-    public string $description;
+    public string|null $description;
 
     /**
      * Constructor.
      * @param string $name
      * @param string $description
      */
-    public function __construct(string $name, string $description) {
+    public function __construct(string $name, ?string $description = null) {
         $this->name = $name;
         $this->description = $description;
     }

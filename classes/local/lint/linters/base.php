@@ -16,6 +16,7 @@
 
 namespace local_devtools\local\lint\linters;
 
+use core\exception\coding_exception;
 use local_devtools\local\attributes\linter;
 use local_devtools\local\lint\schemas\issue;
 use local_devtools\local\lint\severity;
@@ -46,6 +47,9 @@ use function is_array;
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[linter(
+    name: 'base',
+)]
 class base {
     /** @var ProgressIndicator|null */
     protected ?ProgressIndicator $progress;
@@ -79,6 +83,11 @@ class base {
         /** @var ReflectionAttribute<linter>[] $attributes */
         $attributes = $class->getAttributes(linter::class);
         [$attribute] = $attributes;
+
+        if (!$attribute) {
+            throw new coding_exception('linter classes must have the linter attribute set');
+        }
+
         return $attribute ? $attribute->newInstance() : null;
     }
 

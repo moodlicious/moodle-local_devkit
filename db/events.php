@@ -16,12 +16,12 @@
 
 /**
  * Listen to everything!
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_devtools\local\observer;
+use local_devkit\local\observer;
 
 defined('MOODLE_INTERNAL') || die();
 

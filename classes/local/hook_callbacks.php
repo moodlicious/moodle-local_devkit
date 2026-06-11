@@ -14,16 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local;
+namespace local_devkit\local;
 
 use core\hook\after_config;
 use core\hook\output\before_footer_html_generation;
 use core\hook\output\before_standard_head_html_generation;
-use local_devtools\local\databases\helper;
+use local_devkit\local\databases\helper;
 
 /**
  * Hook callbacks.
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -94,6 +94,6 @@ class hook_callbacks {
      * @return bool
      */
     public static function callbacks_enabled() {
-        return devtools::is_enabled() && \local_devtools\local\config\debugbar::is_enabled();
+        return devkit::is_enabled() && \local_devkit\local\config\debugbar::is_enabled();
     }
 }

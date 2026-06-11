@@ -16,24 +16,24 @@
 
 declare(strict_types=1);
 
-namespace local_devtools\local\lint\api;
+namespace local_devkit\local\lint\api;
 
 use advanced_testcase;
-use local_devtools\local\api\linter;
-use local_devtools\local\lint\linters\base;
-use local_devtools\local\lint\linters\eslint;
-use local_devtools\local\lint\linters\lang;
-use local_devtools\local\lint\linters\phpcs;
-use local_devtools\local\lint\linters\phpdoc;
-use local_devtools\local\lint\linters\phplint;
-use local_devtools\local\lint\linters\phpstan;
-use local_devtools\local\lint\linters\stylelint;
+use local_devkit\local\api\linter;
+use local_devkit\local\lint\linters\base;
+use local_devkit\local\lint\linters\eslint;
+use local_devkit\local\lint\linters\lang;
+use local_devkit\local\lint\linters\phpcs;
+use local_devkit\local\lint\linters\phpdoc;
+use local_devkit\local\lint\linters\phplint;
+use local_devkit\local\lint\linters\phpstan;
+use local_devkit\local\lint\linters\stylelint;
 
 /**
  * Unit tests for the linter API class.
  *
- * @package   local_devtools
- * @covers    \local_devtools\local\api\linter
+ * @package   local_devkit
+ * @covers    \local_devkit\local\api\linter
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -105,7 +105,7 @@ final class linter_test extends advanced_testcase {
      * Test that get_linters_info handles null description gracefully.
      */
     public function test_get_linters_info_handles_null_description(): void {
-        $linter = new #[\local_devtools\local\attributes\linter('base')] class extends base {
+        $linter = new #[\local_devkit\local\attributes\linter('base')] class extends base {
         };
 
         $info = linter::get_linters_info([$linter::class]);

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\databases;
+namespace local_devkit\local\databases;
 
 use DebugBar\DataCollector\PDO\TraceablePDO;
 use mariadb_native_moodle_database;
@@ -22,12 +22,12 @@ use PDO;
 
 /**
  * MariaDB Moodle database wrapper.
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mariadb_native_devtools_database extends mariadb_native_moodle_database implements devtools_database_interface {
-    use devtools_database_trait;
+class mariadb_native_devkit_database extends mariadb_native_moodle_database implements devkit_database_interface {
+    use devkit_database_trait;
 
     /**
      * Constructor.
@@ -42,7 +42,7 @@ class mariadb_native_devtools_database extends mariadb_native_moodle_database im
     }
 
     /**
-     * Wrap the provided database instance with the devtools database class, if not already wrapped.
+     * Wrap the provided database instance with the devkit database class, if not already wrapped.
      * @param mariadb_native_moodle_database $db
      * @return self
      */

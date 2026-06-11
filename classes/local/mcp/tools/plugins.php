@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\mcp\tools;
+namespace local_devkit\local\mcp\tools;
 
 /**
  * Plugins API.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -41,7 +41,7 @@ class plugins {
      * }
      */
     public static function list_plugins(bool $includestandardplugins = false) {
-        $plugins = \local_devtools\local\api\plugins::list($includestandardplugins);
+        $plugins = \local_devkit\local\api\plugins::list($includestandardplugins);
         return (object) ['plugins' => $plugins];
     }
 }

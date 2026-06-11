@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\mcp\tools;
+namespace local_devkit\local\mcp\tools;
 
 /**
  * Plugins API.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -32,7 +32,7 @@ class database {
      */
     public static function list_plugin_tables(string $component): object {
         try {
-            $tables = \local_devtools\local\api\database::list_plugin_tables($component);
+            $tables = \local_devkit\local\api\database::list_plugin_tables($component);
             return (object) ['data' => $tables];
         } catch (\Throwable $th) {
             return (object) ['error' => $th->getMessage()];

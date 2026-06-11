@@ -14,17 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\api;
+namespace local_devkit\local\api;
 
 use core\component;
-use local_devtools\local\lint\linters\base;
-use local_devtools\local\lint\schemas\file;
+use local_devkit\local\lint\linters\base;
+use local_devkit\local\lint\schemas\file;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 
 /**
  * Linter API.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -38,7 +38,7 @@ class linter {
         /** @var class-string<base>[] $linters */
         $linters = array_map(
             fn($linter) => "\\$linter",
-            array_keys(component::get_component_classes_in_namespace('local_devtools', 'local\lint\linters')),
+            array_keys(component::get_component_classes_in_namespace('local_devkit', 'local\lint\linters')),
         );
 
         $linters = array_filter(

@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\debugbar\pdo;
+namespace local_devkit\local\debugbar\pdo;
 
 use DebugBar\DataCollector\PDO\TracedStatement;
-use local_devtools\local\databases\mariadb_native_devtools_database;
-use local_devtools\local\databases\mysqli_native_devtools_database;
+use local_devkit\local\databases\mariadb_native_devkit_database;
+use local_devkit\local\databases\mysqli_native_devkit_database;
 use mariadb_native_moodle_database;
 use moodle_database;
 use mysqli_native_moodle_database;
@@ -33,7 +33,7 @@ use function in_array;
  * @phpstan-type Backtrace BacktraceFrame[]
  * // phpcs:enable moodle.Commenting.ValidTags.Invalid
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -44,9 +44,9 @@ class traced_statement extends TracedStatement {
         // Internal calls, so we skip them.
         static $blacklistedclasses = [
         moodle_database::class,
-        mysqli_native_devtools_database::class,
+        mysqli_native_devkit_database::class,
         mysqli_native_moodle_database::class,
-        mariadb_native_devtools_database::class,
+        mariadb_native_devkit_database::class,
         mariadb_native_moodle_database::class,
         self::class,
         ];

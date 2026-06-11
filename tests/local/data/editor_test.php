@@ -16,15 +16,15 @@
 
 declare(strict_types=1);
 
-namespace local_devtools\local\data;
+namespace local_devkit\local\data;
 
 use advanced_testcase;
 
 /**
  * Unit tests for the editor class.
  *
- * @package   local_devtools
- * @covers    \local_devtools\local\data\editor
+ * @package   local_devkit
+ * @covers    \local_devkit\local\data\editor
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

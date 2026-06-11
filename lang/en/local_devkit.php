@@ -19,12 +19,12 @@
  *
  * @var array<string, string> $string
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'DevTools';
+$string['pluginname'] = 'DevKit';
 $string['settings:debugbar_collect_queries'] = 'Collect Database Queries';
 $string['settings:debugbar_collect_queries_desc'] = 'Collect and display database queries in the Debug Bar.';
 $string['settings:debugbar_editor'] = 'Editor';

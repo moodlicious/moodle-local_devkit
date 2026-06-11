@@ -14,16 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\lint\schemas\issue;
+namespace local_devkit\local\lint\schemas\issue;
 
-use local_devtools\local\lint\schemas\issue;
-use local_devtools\local\lint\severity;
+use local_devkit\local\lint\schemas\issue;
+use local_devkit\local\lint\severity;
 use function in_array;
 
 /**
  * Class representing a single phpcs linter issue.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

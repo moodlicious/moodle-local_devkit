@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\cli\commands\plugins;
+namespace local_devkit\local\cli\commands\plugins;
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
@@ -24,7 +24,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Command to list all installed plugins.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -44,7 +44,7 @@ class plugins_list extends Command {
         // phpcs:ignore moodle.NamingConventions.ValidVariableName.VariableNameLowerCase
         $includestandard = $includeStandard;
 
-        $results = \local_devtools\local\api\plugins::list($includestandard);
+        $results = \local_devkit\local\api\plugins::list($includestandard);
 
         if ($json) {
             $jsonstring = json_encode($results);

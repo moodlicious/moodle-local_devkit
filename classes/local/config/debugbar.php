@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\config;
+namespace local_devkit\local\config;
 
-use local_devtools\local\devtools;
+use local_devkit\local\devkit;
 
 /**
  * Utility class to get plugin config.
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +30,7 @@ class debugbar {
      * @return bool True if enabled, false otherwise.
      */
     public static function is_enabled(): bool {
-        return get_config('local_devtools', 'debugbar_enabled') === '1';
+        return get_config('local_devkit', 'debugbar_enabled') === '1';
     }
 
     /**
@@ -38,7 +38,7 @@ class debugbar {
      * @return bool True if enabled, false otherwise.
      */
     public static function is_collect_queries_enabled(): bool {
-        return get_config('local_devtools', 'debugbar_collect_queries') === '1';
+        return get_config('local_devkit', 'debugbar_collect_queries') === '1';
     }
 
     /**
@@ -46,6 +46,6 @@ class debugbar {
      * @return string|null The editor name or null if not set.
      */
     public static function get_editor(): ?string {
-        return get_config('local_devtools', 'debugbar_editor') ?: null;
+        return get_config('local_devkit', 'debugbar_editor') ?: null;
     }
 }

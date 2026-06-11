@@ -14,20 +14,30 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\databases;
-
-use DebugBar\DataCollector\PDO\TraceablePDO;
+namespace local_devkit\local;
 
 /**
- * Public wrapper functions.
- * @package   local_devtools
+ * Utility class.
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface devtools_database_interface {
+class devkit {
     /**
-     * Get the TraceablePDO instance.
-     * @return TraceablePDO
+     * Determines if the plugin should load.
+     * @return bool
      */
-    public function get_pdo(): TraceablePDO;
+    public static function is_enabled(): bool {
+        // phpcs:ignore moodle.Commenting.InlineComment
+        // @phpstan-ignore if.alwaysFalse
+        if (PHPUNIT_TEST) {
+            return false;
+        }
+
+        if (getenv('MDL_LOCAL_DEVKIT_DISABLE')) {
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -16,32 +16,32 @@
 
 declare(strict_types=1);
 
-namespace local_devtools\local\config;
+namespace local_devkit\local\config;
 
 use advanced_testcase;
 
 /**
  * Unit tests for the debugbar config class.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class debugbar_test extends advanced_testcase {
     /**
      * Test that is_enabled returns true when config is set to 1.
-     * @covers \local_devtools\local\config::is_enabled()
+     * @covers \local_devkit\local\config::is_enabled()
      */
     public function test_is_enabled_returns_true_when_enabled(): void {
         $this->resetAfterTest(true);
-        set_config('debugbar_enabled', '1', 'local_devtools');
+        set_config('debugbar_enabled', '1', 'local_devkit');
 
         $this->assertTrue(debugbar::is_enabled());
     }
 
     /**
      * Test that is_enabled returns false when config is not set.
-     * @covers \local_devtools\local\config::is_enabled()
+     * @covers \local_devkit\local\config::is_enabled()
      */
     public function test_is_enabled_returns_false_when_not_set(): void {
         $this->resetAfterTest(true);
@@ -51,29 +51,29 @@ final class debugbar_test extends advanced_testcase {
 
     /**
      * Test that is_enabled returns false when config is set to 0.
-     * @covers \local_devtools\local\config::is_enabled()
+     * @covers \local_devkit\local\config::is_enabled()
      */
     public function test_is_enabled_returns_false_when_disabled(): void {
         $this->resetAfterTest(true);
-        set_config('debugbar_enabled', '0', 'local_devtools');
+        set_config('debugbar_enabled', '0', 'local_devkit');
 
         $this->assertFalse(debugbar::is_enabled());
     }
 
     /**
      * Test that is_collect_queries_enabled returns true when config is set to 1.
-     * @covers \local_devtools\local\config::is_collect_queries_enabled()
+     * @covers \local_devkit\local\config::is_collect_queries_enabled()
      */
     public function test_is_collect_queries_enabled_returns_true_when_enabled(): void {
         $this->resetAfterTest(true);
-        set_config('debugbar_collect_queries', '1', 'local_devtools');
+        set_config('debugbar_collect_queries', '1', 'local_devkit');
 
         $this->assertTrue(debugbar::is_collect_queries_enabled());
     }
 
     /**
      * Test that is_collect_queries_enabled returns false when config is not set.
-     * @covers \local_devtools\local\config::is_collect_queries_enabled()
+     * @covers \local_devkit\local\config::is_collect_queries_enabled()
      */
     public function test_is_collect_queries_enabled_returns_false_when_not_set(): void {
         $this->resetAfterTest(true);
@@ -83,18 +83,18 @@ final class debugbar_test extends advanced_testcase {
 
     /**
      * Test that get_editor returns the configured editor.
-     * @covers \local_devtools\local\config::get_editor()
+     * @covers \local_devkit\local\config::get_editor()
      */
     public function test_get_editor_returns_configured_editor(): void {
         $this->resetAfterTest(true);
-        set_config('debugbar_editor', 'phpstorm', 'local_devtools');
+        set_config('debugbar_editor', 'phpstorm', 'local_devkit');
 
         $this->assertSame('phpstorm', debugbar::get_editor());
     }
 
     /**
      * Test that get_editor returns null when not configured.
-     * @covers \local_devtools\local\config::get_editor()
+     * @covers \local_devkit\local\config::get_editor()
      */
     public function test_get_editor_returns_null_when_not_set(): void {
         $this->resetAfterTest(true);
@@ -104,11 +104,11 @@ final class debugbar_test extends advanced_testcase {
 
     /**
      * Test that get_editor returns null when config is empty string.
-     * @covers \local_devtools\local\config::get_editor()
+     * @covers \local_devkit\local\config::get_editor()
      */
     public function test_get_editor_returns_null_when_empty_string(): void {
         $this->resetAfterTest(true);
-        set_config('debugbar_editor', '', 'local_devtools');
+        set_config('debugbar_editor', '', 'local_devkit');
 
         $this->assertNull(debugbar::get_editor());
     }

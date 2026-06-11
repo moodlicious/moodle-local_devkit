@@ -1,5 +1,7 @@
 # local_devtools
 
+This branch is for legacy purposes, newer versions have been renamed to local_devkit.
+
 > **⚠️ Warning: Development Use Only**  
 > This plugin is intended for development environments only. Do not use in production as it may cause performance issues and leak database query data.
 
@@ -39,11 +41,14 @@ Add the following configuration to your `mcp.json` file to enable.
 
 ```json
 {
-  "mcpServers": {
-    "moodle-devtools": {
-      "command": "php",
-      "args": ["/path/to/moodle/public/local/devtools/cli/run.php", "mcp:serve"]
+    "mcpServers": {
+        "moodle-devtools": {
+            "command": "php",
+            "args": [
+                "/path/to/moodle/public/local/devtools/cli/run.php",
+                "mcp:serve"
+            ]
+        }
     }
-  }
 }
 ```

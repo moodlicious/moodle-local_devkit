@@ -1,52 +1,20 @@
 # local_devkit
 
-> **⚠️ Warning: Development Use Only**  
-> This plugin is intended for development environments only. Do not use in production as it may cause performance issues and leak database query data.
+> **Warning: Dev use only.** Not for production. Leaks data. Slows things.
 
-A collection of tools to help with the development of Moodle.
+Collection of tools for Moodle development.
 
-## Features
+## Documentation
 
-- [PHP Debug Bar](https://php-debugbar.com/): A powerful debugging tool that provides insights into database queries, request parameters, and more.
+All docs in [docs/index.md](docs/index.md):
 
-### String Manager Logging
-
-To enable, add the following to `config.php`:
-
-```php
-$CFG->customstringmanager = '\local_devkit\local\string_manager';
-```
-
-### AJAX Requests Support
-
-To enable, add the following to `/lib/ajax/service.php`:
-
-```php
-header('Content-Type: application/json; charset=utf-8');
-\local_devkit\local\debugbar::instance()->sendDataInHeaders(); // Add this.
-echo json_encode($responses);
-```
-
-### CLI
-
-Run `php /path/to/moodle/public/local/devkit/cli/run.php` to view available commands.
-
-### MCP Server
-
-The MCP server provides useful tools for agentic coding workflows.
-
-Add the following configuration to your `mcp.json` file to enable.
-
-```json
-{
-    "mcpServers": {
-        "moodle-devkit": {
-            "command": "php",
-            "args": [
-                "/path/to/moodle/public/local/devkit/cli/run.php",
-                "mcp:serve"
-            ]
-        }
-    }
-}
-```
+- [Installation](docs/installation.md)
+- [Configuration](docs/configuration.md)
+- [Debug Bar](docs/debugbar.md)
+- [CLI Commands](docs/cli.md)
+- [Lint Framework](docs/linters.md)
+- [MCP Server](docs/mcp.md)
+- [Database Tracing](docs/database.md)
+- [Hooks & Events](docs/hooks-events.md)
+- [String Manager](docs/string-manager.md)
+- [Development & Extending](docs/development.md)

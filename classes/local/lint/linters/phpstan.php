@@ -152,11 +152,13 @@ class phpstan extends base {
         $neonpath = $neondirpath . "/$runnerid.neon";
 
         $moodleneonpath = realpath($CFG->dirroot . '/local/devtools/vendor/micaherne/phpstan-moodle/extension.neon');
+        $deprecationrules = realpath($CFG->dirroot . '/local/devtools/vendor/phpstan/phpstan-deprecation-rules/rules.neon');
 
         $moodleroot = utils::get_moodle_root_dir();
         $phpstandotneon = <<<NEON
             includes:
             - $moodleneonpath
+            - $deprecationrules
 
             parameters:
                 level: 8

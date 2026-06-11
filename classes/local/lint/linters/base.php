@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\lint\linters;
+namespace local_devkit\local\lint\linters;
 
 use core\exception\coding_exception;
-use local_devtools\local\attributes\linter;
-use local_devtools\local\lint\schemas\issue;
-use local_devtools\local\lint\severity;
-use local_devtools\local\lint\schemas\file;
+use local_devkit\local\attributes\linter;
+use local_devkit\local\lint\schemas\issue;
+use local_devkit\local\lint\severity;
+use local_devkit\local\lint\schemas\file;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionAttribute;
@@ -35,7 +35,7 @@ use function is_array;
  *
  * Linter patterns can be overridden in config.php, example:
  * <code>
- * $CFG->devtools = [
+ * $CFG->devkit = [
  *     'linters' => [
  *         'base' => ['exclude_patterns' => ['*\/.venv/*']],
  *         'phpcs' => ['exclude_patterns' => ['*\/classes/*']],
@@ -43,7 +43,7 @@ use function is_array;
  * ];
  * </code>
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -327,15 +327,15 @@ abstract class base {
             return $cache[$lintername];
         }
 
-        if (!isset($CFG->devtools)) {
+        if (!isset($CFG->devkit)) {
             return $cache[$lintername] = null;
         }
 
-        if (!isset($CFG->devtools['linters'][$lintername])) {
+        if (!isset($CFG->devkit['linters'][$lintername])) {
             return $cache[$lintername] = null;
         }
 
-        $config = $CFG->devtools['linters'][$lintername];
+        $config = $CFG->devkit['linters'][$lintername];
         if (!is_array($config)) {
             return $cache[$lintername] = null;
         }

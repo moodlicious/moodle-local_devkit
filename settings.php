@@ -15,41 +15,41 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Devtools plugin settings.
+ * DevKit plugin settings.
  *
  * @var bool $hassiteconfig
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_devtools\local\data\editor;
+use local_devkit\local\data\editor;
 
 defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
-    $settings = new admin_settingpage('local_devtools', get_string('pluginname', 'local_devtools'));
+    $settings = new admin_settingpage('local_devkit', get_string('pluginname', 'local_devkit'));
     $ADMIN->add('localplugins', $settings);
 
     $settings->add(new admin_setting_configcheckbox(
-        'local_devtools/debugbar_enabled',
-        new lang_string('settings:debugbar_enabled', 'local_devtools'),
-        new lang_string('settings:debugbar_enabled_desc', 'local_devtools'),
+        'local_devkit/debugbar_enabled',
+        new lang_string('settings:debugbar_enabled', 'local_devkit'),
+        new lang_string('settings:debugbar_enabled_desc', 'local_devkit'),
         '0'
     ));
 
     $settings->add(new admin_setting_configcheckbox(
-        'local_devtools/debugbar_collect_queries',
-        new lang_string('settings:debugbar_collect_queries', 'local_devtools'),
-        new lang_string('settings:debugbar_collect_queries_desc', 'local_devtools'),
+        'local_devkit/debugbar_collect_queries',
+        new lang_string('settings:debugbar_collect_queries', 'local_devkit'),
+        new lang_string('settings:debugbar_collect_queries_desc', 'local_devkit'),
         '0'
     ));
 
     $settings->add(new admin_setting_configselect(
-        'local_devtools/debugbar_editor',
-        new lang_string('settings:debugbar_editor', 'local_devtools'),
-        new lang_string('settings:debugbar_editor_desc', 'local_devtools'),
+        'local_devkit/debugbar_editor',
+        new lang_string('settings:debugbar_editor', 'local_devkit'),
+        new lang_string('settings:debugbar_editor_desc', 'local_devkit'),
         '',
         Closure::fromCallable([editor::class, 'get_menu'])
     ));

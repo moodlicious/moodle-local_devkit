@@ -94,7 +94,7 @@ jobs:
               run: moodle-plugin-ci phpdoc --max-warnings 0 || exit 0
               continue-on-error: true
               env:
-                  MDL_LOCAL_DEVTOOLS_DISABLE: 1
+                  MDL_LOCAL_DEVKIT_DISABLE: 1
 
             - name: Validating
               if: ${{ !cancelled() }}
@@ -157,5 +157,5 @@ jobs:
             - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: local_devtools
-                  path: dist/local_devtools.zip
+                  name: local_devkit
+                  path: dist/local_devkit.zip

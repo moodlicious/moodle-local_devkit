@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\lint\schemas;
+namespace local_devkit\local\lint\schemas;
 
 use JsonSerializable;
-use local_devtools\local\lint\schemas\issue;
-use local_devtools\local\utils;
+use local_devkit\local\lint\schemas\issue;
+use local_devkit\local\utils;
 
 /**
  * Class representing a single file with issues.
@@ -27,7 +27,7 @@ use local_devtools\local\utils;
  * @phpstan-type file_data array{file: string, issues: issue[]}
  * // phpcs:enable moodle.Commenting.ValidTags.Invalid
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

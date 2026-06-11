@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local;
+namespace local_devkit\local;
 
 use core\url;
 use DebugBar\DataCollector\DataCollectorInterface;
@@ -28,10 +28,10 @@ use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DebugBar as BaseDebugBar;
 use DebugBar\Storage\SqliteStorage;
 use ErrorException;
-use local_devtools\local\debugbar\collectors\config_collector;
-use local_devtools\local\debugbar\collectors\moodle_collector;
-use local_devtools\local\debugbar\collectors\string_manager_collector;
-use local_devtools\local\debugbar\log_level;
+use local_devkit\local\debugbar\collectors\config_collector;
+use local_devkit\local\debugbar\collectors\moodle_collector;
+use local_devkit\local\debugbar\collectors\string_manager_collector;
+use local_devkit\local\debugbar\log_level;
 use Throwable;
 use function array_key_exists;
 
@@ -40,7 +40,7 @@ require_once(__DIR__ . '/../../vendor/autoload.php');
 
 /**
  * Singleton class to manage the debugbar instance and renderer.
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -55,7 +55,7 @@ class debugbar extends BaseDebugBar {
         $this->init_storage();
         $this->init_renderer();
 
-        $editor = \local_devtools\local\config\debugbar::get_editor();
+        $editor = \local_devkit\local\config\debugbar::get_editor();
         if ($editor) {
             $this->setEditor($editor);
         }
@@ -76,7 +76,7 @@ class debugbar extends BaseDebugBar {
             $this->addCollector(new $collector());
         }
 
-        if (\local_devtools\local\config\debugbar::is_collect_queries_enabled()) {
+        if (\local_devkit\local\config\debugbar::is_collect_queries_enabled()) {
             $this->addCollector(new PDOCollector());
         }
 
@@ -92,7 +92,7 @@ class debugbar extends BaseDebugBar {
         // Configure the message collector to trace messages but ignore this file.
         $message = $this->get_messages_collector();
         $message?->collectFileTrace(true);
-        $message?->addBacktraceExcludePaths(['/local/devtools/classes/local/debugbar.php']);
+        $message?->addBacktraceExcludePaths(['/local/devkit/classes/local/debugbar.php']);
 
         // Set our own handlers to log errors and exceptions to the debugbar.
         set_error_handler([$this, 'error_handler']);
@@ -276,7 +276,7 @@ class debugbar extends BaseDebugBar {
     private function init_storage() {
         global $CFG;
 
-        $plugintempdir = "$CFG->tempdir/local_devtools";
+        $plugintempdir = "$CFG->tempdir/local_devkit";
         if (!is_dir($plugintempdir)) {
             mkdir($plugintempdir, recursive: true);
         }
@@ -298,9 +298,9 @@ class debugbar extends BaseDebugBar {
     private function init_renderer() {
         $renderer = $this->getJavascriptRenderer();
 
-        $baseurl = new url('/local/devtools/vendor/php-debugbar/php-debugbar/resources');
+        $baseurl = new url('/local/devkit/vendor/php-debugbar/php-debugbar/resources');
         $renderer->setBaseUrl($baseurl->out(false));
-        $openurl = new url('/local/devtools/debugbar/open.php');
+        $openurl = new url('/local/devkit/debugbar/open.php');
         $renderer->setOpenHandlerUrl($openurl->out(false));
 
         $renderer->setBindAjaxHandlerToFetch(true);
@@ -325,7 +325,7 @@ class debugbar extends BaseDebugBar {
         string $headerName = 'phpdebugbar',
         int $maxHeaderLength = 4096
     ): static {
-        if (!devtools::is_enabled()) {
+        if (!devkit::is_enabled()) {
             return $this;
         }
         return parent::sendDataInHeaders($useOpenHandler, $headerName, $maxHeaderLength);
@@ -343,7 +343,7 @@ class debugbar extends BaseDebugBar {
             return;
         }
 
-        if (str_contains($url, '/local/devtools/debugbar/open.php')) {
+        if (str_contains($url, '/local/devkit/debugbar/open.php')) {
             return;
         }
 

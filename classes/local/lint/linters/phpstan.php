@@ -14,19 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\lint\linters;
+namespace local_devkit\local\lint\linters;
 
-use local_devtools\local\attributes\linter;
-use local_devtools\local\lint\schemas\issue\phpstan as phpstan_issue;
-use local_devtools\local\lint\severity;
-use local_devtools\local\lint\schemas\file;
-use local_devtools\local\utils;
+use local_devkit\local\attributes\linter;
+use local_devkit\local\lint\schemas\issue\phpstan as phpstan_issue;
+use local_devkit\local\lint\severity;
+use local_devkit\local\lint\schemas\file;
+use local_devkit\local\utils;
 use Symfony\Component\Process\Process;
 
 /**
  * The 'phpstan' linter.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -147,12 +147,12 @@ class phpstan extends base {
         }
 
         $runnerid = time();
-        $neondirpath = $CFG->tempdir . '/local_devtools/phpstan';
+        $neondirpath = $CFG->tempdir . '/local_devkit/phpstan';
         @mkdir($neondirpath);
         $neonpath = $neondirpath . "/$runnerid.neon";
 
-        $moodleneonpath = realpath($CFG->dirroot . '/local/devtools/vendor/micaherne/phpstan-moodle/extension.neon');
-        $deprecationrules = realpath($CFG->dirroot . '/local/devtools/vendor/phpstan/phpstan-deprecation-rules/rules.neon');
+        $moodleneonpath = realpath($CFG->dirroot . '/local/devkit/vendor/micaherne/phpstan-moodle/extension.neon');
+        $deprecationrules = realpath($CFG->dirroot . '/local/devkit/vendor/phpstan/phpstan-deprecation-rules/rules.neon');
 
         $moodleroot = utils::get_moodle_root_dir();
         $phpstandotneon = <<<NEON
@@ -212,7 +212,7 @@ class phpstan extends base {
      */
     public static function get_phpstan_binary_path(): ?string {
         global $CFG;
-        $path = $CFG->dirroot . '/local/devtools/vendor/bin/phpstan';
+        $path = $CFG->dirroot . '/local/devkit/vendor/bin/phpstan';
         return realpath($path) ?: null;
     }
 

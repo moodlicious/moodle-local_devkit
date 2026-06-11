@@ -16,15 +16,15 @@
 
 declare(strict_types=1);
 
-namespace local_devtools\local\lint;
+namespace local_devkit\local\lint;
 
 use advanced_testcase;
 
 /**
  * Unit tests for the severity enum.
  *
- * @package   local_devtools
- * @covers    \local_devtools\local\lint\severity
+ * @package   local_devkit
+ * @covers    \local_devkit\local\lint\severity
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\databases;
+namespace local_devkit\local\databases;
 
 use DebugBar\DataCollector\PDO\TraceablePDO;
 use DebugBar\DataCollector\PDO\TracedStatement;
-use local_devtools\local\debugbar\pdo\traced_statement;
+use local_devkit\local\debugbar\pdo\traced_statement;
 use moodle_database;
 use mysqli_result;
 use ReflectionClass;
@@ -28,11 +28,11 @@ use function is_array;
 /**
  * Common wrapper functions.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-trait devtools_database_trait {
+trait devkit_database_trait {
     /** @var TraceablePDO */
     private TraceablePDO $pdo;
     /** @var (TracedStatement|null)[] */

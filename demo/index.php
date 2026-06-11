@@ -22,7 +22,7 @@
  * @var moodle_page $PAGE
  * @var core_renderer $OUTPUT
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,8 +30,8 @@
 use core\context\system;
 use core\output\html_writer;
 use core\url;
-use local_devtools\local\debugbar;
-use local_devtools\local\debugbar\log_level;
+use local_devkit\local\debugbar;
+use local_devkit\local\debugbar\log_level;
 use Symfony\Component\VarDumper\VarDumper;
 
 require_once(__DIR__ . '/../../../config.php');
@@ -40,7 +40,7 @@ require_login();
 
 $shouldredirect = optional_param('redirect', false, PARAM_INT);
 
-$url = new url('/local/devtools/demo/index.php');
+$url = new url('/local/devkit/demo/index.php');
 $context = system::instance();
 $PAGE->set_context($context);
 $PAGE->set_url($url);

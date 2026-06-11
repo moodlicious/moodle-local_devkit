@@ -3,7 +3,7 @@
 set -e
 
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-OUTPUT_ZIP="$PLUGIN_DIR/dist/local_devtools.zip"
+OUTPUT_ZIP="$PLUGIN_DIR/dist/local_devkit.zip"
 TEMP_DIR="$PLUGIN_DIR/temp/build"
 
 cd "$PLUGIN_DIR"
@@ -11,10 +11,10 @@ cd "$PLUGIN_DIR"
 echo "Creating $OUTPUT_ZIP..."
 
 rm -rf "$TEMP_DIR"
-mkdir -p "$TEMP_DIR/devtools"
+mkdir -p "$TEMP_DIR/devkit"
 mkdir -p "$(dirname "$OUTPUT_ZIP")"
 
-cp -r classes db demo lang version.php vendor README.md "$TEMP_DIR/devtools/"
+cp -r classes db demo lang version.php vendor README.md "$TEMP_DIR/devkit/"
 
 cd "$TEMP_DIR"
 zip -r "$OUTPUT_ZIP" .

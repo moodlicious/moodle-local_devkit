@@ -14,17 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\lint\linters;
+namespace local_devkit\local\lint\linters;
 
-use local_devtools\local\attributes\linter;
-use local_devtools\local\lint\schemas\issue;
-use local_devtools\local\lint\severity;
-use local_devtools\local\lint\schemas\file;
+use local_devkit\local\attributes\linter;
+use local_devkit\local\lint\schemas\issue;
+use local_devkit\local\lint\severity;
+use local_devkit\local\lint\schemas\file;
 use Symfony\Component\Process\Process;
 
 /**
  * The 'php -l' linter.
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\debugbar\collectors;
+namespace local_devkit\local\debugbar\collectors;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
@@ -24,7 +24,7 @@ use DebugBar\DataCollector\Renderable;
 /**
  * Collector to display Moodle information.
  * Like the one seen on Laravel Debugbar https://laraveldebugbar.com/
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

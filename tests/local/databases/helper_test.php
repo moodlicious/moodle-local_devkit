@@ -16,7 +16,7 @@
 
 declare(strict_types=1);
 
-namespace local_devtools\local\databases;
+namespace local_devkit\local\databases;
 
 use advanced_testcase;
 use moodle_database;
@@ -24,16 +24,16 @@ use moodle_database;
 /**
  * Unit tests for the helper class.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class helper_test extends advanced_testcase {
     /**
-     * Test that get_pdo returns null for a non-devtools database object.
-     * @covers \local_devtools\local\databases\helper::get_pdo
+     * Test that get_pdo returns null for a non-devkit database object.
+     * @covers \local_devkit\local\databases\helper::get_pdo
      */
-    public function test_get_pdo_returns_null_for_non_devtools_database(): void {
+    public function test_get_pdo_returns_null_for_non_devkit_database(): void {
         $this->resetAfterTest(true);
 
         $mockdb = $this->createMock(moodle_database::class);

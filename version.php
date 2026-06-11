@@ -15,11 +15,11 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * local_devtools version.php.
+ * local_devkit version.php.
  *
  * @var stdClass $plugin
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,6 +29,6 @@ defined('MOODLE_INTERNAL') || die;
 $plugin->version = 2026040700;
 $plugin->release = 2026040700;
 $plugin->requires = 2024100700;
-$plugin->component = 'local_devtools';
+$plugin->component = 'local_devkit';
 $plugin->maturity = MATURITY_ALPHA;
 $plugin->supported = [405, 502];

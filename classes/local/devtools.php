@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local;
+namespace local_devkit\local;
 
 /**
  * Utility class.
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class devtools {
+class devkit {
     /**
      * Determines if the plugin should load.
      * @return bool
@@ -34,7 +34,7 @@ class devtools {
             return false;
         }
 
-        if (getenv('MDL_LOCAL_DEVTOOLS_DISABLE')) {
+        if (getenv('MDL_LOCAL_DEVKIT_DISABLE')) {
             return false;
         }
 

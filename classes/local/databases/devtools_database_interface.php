@@ -14,17 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\databases;
+namespace local_devkit\local\databases;
 
 use DebugBar\DataCollector\PDO\TraceablePDO;
 
 /**
  * Public wrapper functions.
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface devtools_database_interface {
+interface devkit_database_interface {
     /**
      * Get the TraceablePDO instance.
      * @return TraceablePDO

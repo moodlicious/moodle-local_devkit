@@ -16,22 +16,22 @@
 
 declare(strict_types=1);
 
-namespace local_devtools\local\lint\linters;
+namespace local_devkit\local\lint\linters;
 
 use advanced_testcase;
-use local_devtools\local\attributes\linter;
-use local_devtools\local\lint\linters\phplint;
-use local_devtools\local\lint\schemas\file;
-use local_devtools\local\lint\schemas\issue;
-use local_devtools\local\lint\severity;
+use local_devkit\local\attributes\linter;
+use local_devkit\local\lint\linters\phplint;
+use local_devkit\local\lint\schemas\file;
+use local_devkit\local\lint\schemas\issue;
+use local_devkit\local\lint\severity;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 use Symfony\Component\Console\Output\NullOutput;
 
 /**
  * Unit tests for the base linter class.
  *
- * @package   local_devtools
- * @covers    \local_devtools\local\lint\linters\base
+ * @package   local_devkit
+ * @covers    \local_devkit\local\lint\linters\base
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

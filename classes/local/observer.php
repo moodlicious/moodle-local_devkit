@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local;
+namespace local_devkit\local;
 
 use core\event\base;
 
 /**
  * Observer.
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,7 +31,7 @@ class observer {
      * @return void
      */
     public static function observe_all_events(base $event) {
-        if (!(devtools::is_enabled() && \local_devtools\local\config\debugbar::is_enabled())) {
+        if (!(devkit::is_enabled() && \local_devkit\local\config\debugbar::is_enabled())) {
             return;
         }
 

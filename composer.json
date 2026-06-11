@@ -1,5 +1,5 @@
 {
-    "name": "imfelixyeung/moodle-local_devtools",
+    "name": "imfelixyeung/moodle-local_devkit",
     "description": "A collection of tools to help with the development of Moodle.",
     "require": {
         "php": ">=8.3",

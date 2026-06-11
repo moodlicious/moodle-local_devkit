@@ -14,18 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\cli;
+namespace local_devkit\local\cli;
 
-use local_devtools\local\cli\commands\database\database_list;
-use local_devtools\local\cli\commands\lint\handler;
-use local_devtools\local\cli\commands\mcp\mcp_serve;
-use local_devtools\local\cli\commands\plugins\plugins_list;
+use local_devkit\local\cli\commands\database\database_list;
+use local_devkit\local\cli\commands\lint\handler;
+use local_devkit\local\cli\commands\mcp\mcp_serve;
+use local_devkit\local\cli\commands\plugins\plugins_list;
 use Symfony\Component\Console\Application as BaseApplication;
 
 /**
- * Devtools console application.
+ * DevKit console application.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -34,7 +34,7 @@ class application extends BaseApplication {
      * Constructor.
      */
     public function __construct() {
-        parent::__construct('devtools');
+        parent::__construct('devkit');
         $this->addCommand(new plugins_list());
         $this->addCommand(new database_list());
         $this->addCommand(new mcp_serve());

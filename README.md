@@ -1,4 +1,4 @@
-# local_devtools
+# local_devkit
 
 > **⚠️ Warning: Development Use Only**  
 > This plugin is intended for development environments only. Do not use in production as it may cause performance issues and leak database query data.
@@ -14,7 +14,7 @@ A collection of tools to help with the development of Moodle.
 To enable, add the following to `config.php`:
 
 ```php
-$CFG->customstringmanager = '\local_devtools\local\string_manager';
+$CFG->customstringmanager = '\local_devkit\local\string_manager';
 ```
 
 ### AJAX Requests Support
@@ -23,13 +23,13 @@ To enable, add the following to `/lib/ajax/service.php`:
 
 ```php
 header('Content-Type: application/json; charset=utf-8');
-\local_devtools\local\debugbar::instance()->sendDataInHeaders(); // Add this.
+\local_devkit\local\debugbar::instance()->sendDataInHeaders(); // Add this.
 echo json_encode($responses);
 ```
 
 ### CLI
 
-Run `php /path/to/moodle/public/local/devtools/cli/run.php` to view available commands.
+Run `php /path/to/moodle/public/local/devkit/cli/run.php` to view available commands.
 
 ### MCP Server
 
@@ -39,11 +39,14 @@ Add the following configuration to your `mcp.json` file to enable.
 
 ```json
 {
-  "mcpServers": {
-    "moodle-devtools": {
-      "command": "php",
-      "args": ["/path/to/moodle/public/local/devtools/cli/run.php", "mcp:serve"]
+    "mcpServers": {
+        "moodle-devkit": {
+            "command": "php",
+            "args": [
+                "/path/to/moodle/public/local/devkit/cli/run.php",
+                "mcp:serve"
+            ]
+        }
     }
-  }
 }
 ```

@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\lint\formatters;
+namespace local_devkit\local\lint\formatters;
 
-use local_devtools\local\lint\schemas\file;
+use local_devkit\local\lint\schemas\file;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * The base formatter.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -39,7 +39,7 @@ abstract class base {
 
     /**
      * Outputs the results.
-     * @param class-string<\local_devtools\local\lint\linters\base>[] $linters
+     * @param class-string<\local_devkit\local\lint\linters\base>[] $linters
      * @param file[] $results
      * @return int
      */

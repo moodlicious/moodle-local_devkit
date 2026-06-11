@@ -17,13 +17,13 @@
 /**
  * Debugbar open.php handler.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use DebugBar\OpenHandler;
-use local_devtools\local\debugbar;
+use local_devkit\local\debugbar;
 
 require_once(__DIR__ . '/../../../config.php');
 

@@ -14,11 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\cli\commands\lint;
+namespace local_devkit\local\cli\commands\lint;
 
-use local_devtools\local\api\linter;
-use local_devtools\local\lint\linters\base;
-use local_devtools\local\utils;
+use local_devkit\local\api\linter;
+use local_devkit\local\lint\linters\base;
+use local_devkit\local\utils;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\Option;
@@ -35,7 +35,7 @@ use function array_key_exists;
 /**
  * Command to lint a directory or file.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -63,11 +63,11 @@ class handler {
         #[Option('Linters to run')] array $linters = [],
     ): int {
         chdir(utils::get_moodle_root_dir());
-        /** @var array<string, class-string<\local_devtools\local\lint\formatters\base>> $formatterclasses */
+        /** @var array<string, class-string<\local_devkit\local\lint\formatters\base>> $formatterclasses */
         $formatterclasses = [
-            'json' => \local_devtools\local\lint\formatters\json::class,
-            'jsonl' => \local_devtools\local\lint\formatters\jsonl::class,
-            'text' => \local_devtools\local\lint\formatters\text::class,
+            'json' => \local_devkit\local\lint\formatters\json::class,
+            'jsonl' => \local_devkit\local\lint\formatters\jsonl::class,
+            'text' => \local_devkit\local\lint\formatters\text::class,
         ];
         if (!array_key_exists($format, $formatterclasses)) {
             $io->writeln('Available format options are:');
@@ -79,7 +79,7 @@ class handler {
         $formatterclass = $formatterclasses[$format];
         $formatter = new $formatterclass($io);
 
-        if ($formatter instanceof \local_devtools\local\lint\formatters\text) {
+        if ($formatter instanceof \local_devkit\local\lint\formatters\text) {
             $formatter->decorate = $decorate;
         }
 

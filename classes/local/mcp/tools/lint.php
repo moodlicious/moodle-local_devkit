@@ -14,18 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\mcp\tools;
+namespace local_devkit\local\mcp\tools;
 
 use Exception;
-use local_devtools\local\api\linter;
-use local_devtools\local\utils;
+use local_devkit\local\api\linter;
+use local_devkit\local\utils;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Schema\ToolAnnotations;
 
 /**
  * Lints files.
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -35,7 +35,7 @@ class lint {
      * @param string[] $paths absolute paths to files or directories that needs linting
      * @return object{
      *     linters: string[], // list of linters that have run
-     *     files: \local_devtools\local\lint\schemas\file[], // list of files and their issues
+     *     files: \local_devkit\local\lint\schemas\file[], // list of files and their issues
      * }
      */
     #[McpTool(

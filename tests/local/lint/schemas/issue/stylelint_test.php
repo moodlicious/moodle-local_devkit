@@ -16,16 +16,16 @@
 
 declare(strict_types=1);
 
-namespace local_devtools\local\lint\schemas\issue;
+namespace local_devkit\local\lint\schemas\issue;
 
 use advanced_testcase;
-use local_devtools\local\lint\severity;
+use local_devkit\local\lint\severity;
 
 /**
  * Unit tests for the stylelint issue class.
  *
- * @package   local_devtools
- * @covers    \local_devtools\local\lint\schemas\issue\stylelint
+ * @package   local_devkit
+ * @covers    \local_devkit\local\lint\schemas\issue\stylelint
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

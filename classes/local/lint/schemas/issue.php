@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devtools\local\lint\schemas;
+namespace local_devkit\local\lint\schemas;
 
 use JsonSerializable;
-use local_devtools\local\lint\severity;
+use local_devkit\local\lint\severity;
 
 /**
  * Class representing a single linter issue.
@@ -33,7 +33,7 @@ use local_devtools\local\lint\severity;
  * }
  * // phpcs:enable moodle.Commenting.ValidTags.Invalid
  *
- * @package   local_devtools
+ * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

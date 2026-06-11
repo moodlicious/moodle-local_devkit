@@ -16,20 +16,30 @@
 
 namespace local_devtools\local\cli\commands\database;
 
+use Exception;
 use local_devtools\local\api\database;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command to list all installed plugins.
  *
+ * // phpcs:disable moodle.Commenting.ValidTags.Invalid
+ * @phpstan-import-type PluginDatabase from database
+ * @phpstan-import-type DatabaseField from database
+ * @phpstan-import-type DatabaseKey from database
+ * @phpstan-import-type DatabaseIndex from database
+ * @phpstan-import-type DatabaseKeyReferences from database
+ * // phpcs:enable moodle.Commenting.ValidTags.Invalid
+ *
  * @package   local_devtools
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[AsCommand(name: 'database:list')]
+#[AsCommand(name: 'database:list', description: 'List all database tables of a specific component.')]
 class database_list extends Command {
     /**
      * Invoke
@@ -40,15 +50,82 @@ class database_list extends Command {
     public function __invoke(
         #[Argument('The component name of the plugin.')] string $component,
         SymfonyStyle $io,
+        #[Option('What format to display (table/json)', suggestedValues: ['table', 'json'])] string $format = 'table',
     ): int {
         try {
             $result = database::list_plugin_tables($component);
 
-            $io->writeln(json_encode($result, JSON_THROW_ON_ERROR));
+            match ($format) {
+                'table' => self::display_table($io, $result),
+                'json' => self::display_json($io, $result),
+                default => throw new Exception('Unknown format, available formats are table,json'),
+            };
+
             return 0;
         } catch (\Throwable $th) {
             $io->error($th->getMessage());
             return 1;
         }
+    }
+
+    /**
+     * Displays tables as a table.
+     * @param SymfonyStyle $io
+     * @param PluginDatabase $data
+     * @return void
+     */
+    public static function display_table(SymfonyStyle $io, array $data): void {
+        $io->title($data['name']);
+        $io->comment($data['comment']);
+
+        foreach ($data['tables'] as $table) {
+            $io->section("Table: {$table['name']}");
+            $io->comment($table['comment']);
+
+            $io->text('Fields');
+            $io->table(
+                ['name', 'type', 'comment'],
+                array_map(fn(/** @var DatabaseField $field */ $field) => [
+                    $field['name'],
+                    $field['type'],
+                    $field['comment'],
+                ], $table['fields']),
+            );
+
+            $io->text('Indexes');
+            $io->table(
+                ['name', 'fields', 'unique', 'comment'],
+                array_map(fn(/** @var DatabaseIndex $index */ $index) => [
+                    $index['name'],
+                    implode(',', $index['fields']),
+                    $index['unique'],
+                    $index['comment'],
+                ], $table['indexes']),
+            );
+
+            $io->text('Keys');
+            $io->table(
+                ['name', 'type', 'fields', 'references', 'comment'],
+                array_map(fn(/** @var DatabaseKey $key */ $key) => [
+                    $key['name'],
+                    $key['type'],
+                    implode(',', $key['fields']),
+                    $key['references']['table']
+                    ? $key['references']['table'] . '.' . implode(',', $key['references']['fields'])
+                    : '',
+                    $key['comment'],
+                ], $table['keys']),
+            );
+        }
+    }
+
+    /**
+     * Displays tables as JSON.
+     * @param SymfonyStyle $io
+     * @param PluginDatabase $data
+     * @return void
+     */
+    public static function display_json(SymfonyStyle $io, array $data): void {
+        $io->writeln(json_encode($data, JSON_THROW_ON_ERROR));
     }
 }

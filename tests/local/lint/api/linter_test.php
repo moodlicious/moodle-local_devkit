@@ -42,24 +42,24 @@ final class linter_test extends advanced_testcase {
      * Test that get_linters_classnames returns all linters when all are enabled.
      */
     public function test_get_linters_classnames_returns_all_when_enabled(): void {
-        $linters = linter::get_linters_classnames(
-            eslint: true,
-            lang: true,
-            phpcs: true,
-            phplint: true,
-            phpdoc: true,
-            phpstan: true,
-            stylelint: true,
-        );
+        $linters = linter::get_linters_classnames([
+            'eslint',
+            'lang',
+            'phpcs',
+            'phplint',
+            'phpdoc',
+            'phpstan',
+            'stylelint',
+        ]);
 
         $this->assertSame([
-            eslint::class,
-            lang::class,
-            phpcs::class,
-            phplint::class,
-            phpdoc::class,
-            phpstan::class,
-            stylelint::class,
+            '\\' . eslint::class,
+            '\\' . lang::class,
+            '\\' . phpcs::class,
+            '\\' . phpdoc::class,
+            '\\' . phplint::class,
+            '\\' . phpstan::class,
+            '\\' . stylelint::class,
         ], $linters);
     }
 
@@ -67,15 +67,7 @@ final class linter_test extends advanced_testcase {
      * Test that get_linters_classnames returns empty when all are disabled.
      */
     public function test_get_linters_classnames_returns_empty_when_all_disabled(): void {
-        $linters = linter::get_linters_classnames(
-            eslint: false,
-            lang: false,
-            phpcs: false,
-            phplint: false,
-            phpdoc: false,
-            phpstan: false,
-            stylelint: false,
-        );
+        $linters = linter::get_linters_classnames([]);
 
         $this->assertSame([], $linters);
     }
@@ -84,21 +76,18 @@ final class linter_test extends advanced_testcase {
      * Test that get_linters_classnames excludes specific linters when disabled.
      */
     public function test_get_linters_classnames_excludes_specific_linters(): void {
-        $linters = linter::get_linters_classnames(
-            eslint: true,
-            lang: false,
-            phpcs: true,
-            phplint: true,
-            phpdoc: false,
-            phpstan: false,
-            stylelint: true,
-        );
+        $linters = linter::get_linters_classnames([
+            'eslint',
+            'phpcs',
+            'phplint',
+            'stylelint',
+        ]);
 
         $this->assertSame([
-            eslint::class,
-            phpcs::class,
-            phplint::class,
-            stylelint::class,
+            '\\' . eslint::class,
+            '\\' . phpcs::class,
+            '\\' . phplint::class,
+            '\\' . stylelint::class,
         ], $linters);
     }
 
@@ -116,8 +105,10 @@ final class linter_test extends advanced_testcase {
      * Test that get_linters_info handles null description gracefully.
      */
     public function test_get_linters_info_handles_null_description(): void {
-        $linters = [base::class];
-        $info = linter::get_linters_info($linters);
+        $linter = new #[\local_devtools\local\attributes\linter('base')] class extends base {
+        };
+
+        $info = linter::get_linters_info([$linter::class]);
 
         $this->assertSame(['base'], $info);
     }

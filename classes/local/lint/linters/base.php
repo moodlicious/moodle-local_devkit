@@ -16,11 +16,15 @@
 
 namespace local_devtools\local\lint\linters;
 
+use core\exception\coding_exception;
+use local_devtools\local\attributes\linter;
 use local_devtools\local\lint\schemas\issue;
 use local_devtools\local\lint\severity;
 use local_devtools\local\lint\schemas\file;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use ReflectionAttribute;
+use ReflectionClass;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 use function array_key_exists;
 use function get_called_class;
@@ -43,7 +47,7 @@ use function is_array;
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class base {
+abstract class base {
     /** @var ProgressIndicator|null */
     protected ?ProgressIndicator $progress;
 
@@ -68,14 +72,36 @@ class base {
     }
 
     /**
+     * Gets the {@see linter} attribute for this class.
+     * @return linter
+     */
+    public static function get_linter_attribute(): linter {
+        /** @var linter[] $cachedinstances */
+        static $cachedinstances = [];
+
+        if (array_key_exists(static::class, $cachedinstances)) {
+            return $cachedinstances[static::class];
+        }
+
+        $class = new ReflectionClass(static::class);
+        /** @var ReflectionAttribute<linter>[] $attributes */
+        $attributes = $class->getAttributes(linter::class);
+        [$attribute] = $attributes ?: [null];
+
+        if (!$attribute) {
+            throw new coding_exception('linter classes must have the linter attribute set');
+        }
+
+        $cachedinstances[static::class] = $instance = $attribute->newInstance();
+        return $instance;
+    }
+
+    /**
      * Gets the name of the linter.
      * @return string
      */
     public static function get_name(): string {
-        $classname = get_called_class();
-        $parts = explode('\\', $classname);
-        $name = array_pop($parts) ?: 'unknown';
-        return $name;
+        return self::get_linter_attribute()->name;
     }
 
     /**
@@ -83,7 +109,7 @@ class base {
      * @return string|null
      */
     public static function get_description(): ?string {
-        return null;
+        return self::get_linter_attribute()->description;
     }
 
     /**

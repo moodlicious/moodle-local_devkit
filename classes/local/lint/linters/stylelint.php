@@ -16,6 +16,7 @@
 
 namespace local_devtools\local\lint\linters;
 
+use local_devtools\local\attributes\linter;
 use local_devtools\local\lint\schemas\issue\stylelint as stylelint_issue;
 use local_devtools\local\lint\schemas\file;
 use Symfony\Component\Process\Process;
@@ -26,12 +27,11 @@ use Symfony\Component\Process\Process;
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[linter(
+    name: 'stylelint',
+    description: 'executes "eslint" on stylesheets against project coding standards',
+)]
 class stylelint extends base {
-    #[\Override]
-    public static function get_description(): ?string {
-        return 'executes "eslint" on stylesheets against project coding standards';
-    }
-
     #[\Override]
     public static function get_include_patterns(): array {
         return [

@@ -43,6 +43,12 @@ class phpdoc extends issue {
             return null;
         }
 
+        // The message may contain <b>bolded</b> text, so normalise it to plain text.
+        $message = html_to_text($message);
+
+        // The message may be multiline, we don't want that, normalise it.
+        $message = preg_replace('/\s+/', ' ', $message);
+
         return new self(
             $line,
             0,

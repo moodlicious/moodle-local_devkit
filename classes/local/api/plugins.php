@@ -80,16 +80,12 @@ class plugins {
      */
     public static function get_by_component(string $component): ?array {
         $plugins = self::list(true);
-        $plugin = null;
 
         foreach ($plugins as $potential) {
-            if ($potential['component'] !== $component) {
-                continue;
+            if ($potential['component'] === $component) {
+                return $potential;
             }
-
-            $plugin = $potential;
-            break;
         }
-        return $plugin;
+        return null;
     }
 }

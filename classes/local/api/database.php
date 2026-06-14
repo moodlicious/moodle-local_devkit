@@ -172,8 +172,15 @@ class database {
         $xml = new xmldb_file($xmlpath);
         $xml->setDTD($CFG->dirroot . '/lib/xmldb/xmldb.dtd');
         $xml->setSchema($CFG->dirroot . '/lib/xmldb/xmldb.xsd');
-        $xml->loadXMLStructure();
+
+        if (!$xml->loadXMLStructure()) {
+            throw new Exception("Failed to load XMLDB structure from: $xmlpath");
+        }
+
         $structure = $xml->getStructure();
+        if (!$structure) {
+            throw new Exception("Failed to retrieve XMLDB structure from: $xmlpath");
+        }
 
         return $structure;
     }

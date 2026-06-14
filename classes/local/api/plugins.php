@@ -21,6 +21,18 @@ use core\plugin_manager;
 /**
  * Plugins API.
  *
+ * // phpcs:ignore moodle.Commenting.ValidTags.Invalid
+ * @phpstan-type plugin array{
+ *   component: string,
+ *   directory: string,
+ *   enabled: bool|null,
+ *   name: string,
+ *   release: mixed,
+ *   standard: bool,
+ *   type: string,
+ *   version: int|string
+ * }
+ *
  * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,16 +41,7 @@ class plugins {
     /**
      * List installed plugins
      * @param bool $includestandard
-     * @return array{
-     *   component: string,
-     *   directory: string,
-     *   enabled: bool|null,
-     *   name: string,
-     *   release: mixed,
-     *   standard: bool,
-     *   type: string,
-     *   version: int|string
-     * }[]
+     * @return plugin[]
      */
     public static function list(bool $includestandard = false) {
         $manager = plugin_manager::instance();
@@ -68,5 +71,25 @@ class plugins {
         }
 
         return $results;
+    }
+
+    /**
+     * Gets a plugin by its component name.
+     * @param string $component
+     * @return plugin|null
+     */
+    public static function get_by_component(string $component): ?array {
+        $plugins = self::list(true);
+        $plugin = null;
+
+        foreach ($plugins as $potential) {
+            if ($potential['component'] !== $component) {
+                continue;
+            }
+
+            $plugin = $potential;
+            break;
+        }
+        return $plugin;
     }
 }

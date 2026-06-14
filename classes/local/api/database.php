@@ -44,15 +44,7 @@ class database {
      * @return PluginDatabase
      */
     public static function list_plugin_tables(string $component): array {
-        $plugins = plugins::list(true);
-        $targetplugin = null;
-
-        foreach ($plugins as $plugin) {
-            if ($plugin['component'] !== $component) {
-                continue;
-            }
-            $targetplugin = $plugin;
-        }
+        $targetplugin = plugins::get_by_component($component);
 
         if ($targetplugin === null) {
             throw new Exception("Plugin with component '$component' not found.");

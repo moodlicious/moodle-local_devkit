@@ -165,6 +165,10 @@ class database {
     public static function get_xmldb_structure(string $xmlpath): xmldb_structure {
         global $CFG;
 
+        if (!file_exists($xmlpath)) {
+            throw new Exception("XMLDB file not found: $xmlpath");
+        }
+
         $xml = new xmldb_file($xmlpath);
         $xml->setDTD($CFG->dirroot . '/lib/xmldb/xmldb.dtd');
         $xml->setSchema($CFG->dirroot . '/lib/xmldb/xmldb.xsd');

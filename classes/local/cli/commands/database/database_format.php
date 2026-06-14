@@ -34,8 +34,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class database_format extends Command {
     /**
      * Invoke
-     * @param string $component
-     * @param SymfonyStyle $io
+     * @param string $component The component name of the plugin.
+     * @param SymfonyStyle $io The input/output style interface.
      * @return int
      */
     public function __invoke(
@@ -49,8 +49,17 @@ class database_format extends Command {
         }
 
         $xmlpath = $plugin['directory'] . '/db/install.xml';
+        if (!file_exists($xmlpath)) {
+            $io->error("install.xml not found at $xmlpath.");
+            return Command::FAILURE;
+        }
+
         $structure = database::get_xmldb_structure($xmlpath);
-        file_put_contents($xmlpath, $structure->xmlOutput());
+        $result = file_put_contents($xmlpath, $structure->xmlOutput());
+        if ($result === false) {
+            $io->error("Failed to write install.xml at $xmlpath.");
+            return Command::FAILURE;
+        }
 
         $io->success("Formatted $component db/install.xml at $xmlpath.");
 

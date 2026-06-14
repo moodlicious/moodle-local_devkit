@@ -18,6 +18,7 @@ namespace local_devkit\local\api;
 
 use Exception;
 use xmldb_file;
+use xmldb_structure;
 
 /**
  * Plugins API.
@@ -44,15 +45,7 @@ class database {
      * @return PluginDatabase
      */
     public static function list_plugin_tables(string $component): array {
-        $plugins = plugins::list(true);
-        $targetplugin = null;
-
-        foreach ($plugins as $plugin) {
-            if ($plugin['component'] !== $component) {
-                continue;
-            }
-            $targetplugin = $plugin;
-        }
+        $targetplugin = plugins::get_by_component($component);
 
         if ($targetplugin === null) {
             throw new Exception("Plugin with component '$component' not found.");
@@ -63,12 +56,7 @@ class database {
             throw new Exception("Plugin does not have a install.xml defined.");
         }
 
-        global $CFG;
-        $xml = new xmldb_file($xmlpath);
-        $xml->setDTD($CFG->dirroot . '/lib/xmldb/xmldb.dtd');
-        $xml->setSchema($CFG->dirroot . '/lib/xmldb/xmldb.xsd');
-        $xml->loadXMLStructure();
-        $structure = $xml->getStructure();
+        $structure = self::get_xmldb_structure($xmlpath);
 
         /** @var \xmldb_table[] $tables */
         $tables = $structure->getTables();
@@ -167,5 +155,33 @@ class database {
             5 => 'foreign_and_unique',
             default => 'unknown',
         };
+    }
+
+    /**
+     * Gets the xmldb_structure for a given xmlpath.
+     * @param string $xmlpath
+     * @return xmldb_structure
+     */
+    public static function get_xmldb_structure(string $xmlpath): xmldb_structure {
+        global $CFG;
+
+        if (!file_exists($xmlpath)) {
+            throw new Exception("XMLDB file not found: $xmlpath");
+        }
+
+        $xml = new xmldb_file($xmlpath);
+        $xml->setDTD($CFG->dirroot . '/lib/xmldb/xmldb.dtd');
+        $xml->setSchema($CFG->dirroot . '/lib/xmldb/xmldb.xsd');
+
+        if (!$xml->loadXMLStructure()) {
+            throw new Exception("Failed to load XMLDB structure from: $xmlpath");
+        }
+
+        $structure = $xml->getStructure();
+        if (!$structure) {
+            throw new Exception("Failed to retrieve XMLDB structure from: $xmlpath");
+        }
+
+        return $structure;
     }
 }

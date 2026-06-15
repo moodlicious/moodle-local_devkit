@@ -29,7 +29,7 @@ use Symfony\Component\Process\Process;
  */
 #[linter(
     name: 'stylelint',
-    description: 'executes "eslint" on stylesheets against project coding standards',
+    description: 'executes "stylelint" on stylesheets against project coding standards',
 )]
 class stylelint extends base {
     #[\Override]

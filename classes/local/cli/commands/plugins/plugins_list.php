@@ -49,7 +49,7 @@ class plugins_list extends Command {
         if ($json) {
             $jsonstring = json_encode($results);
             if ($jsonstring === false) {
-                $io->error("Error serialising JSON.");
+                $io->error("Error serializing JSON.");
                 return 1;
             }
 

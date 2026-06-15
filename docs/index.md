@@ -2,7 +2,7 @@
 
 > **WARNING: Dev use only!**  
 > This plugin is for dev environments. Do NOT use in production.  
-> Leaks data. Slows things down. You been warned.
+> Leaks data. Slows things down. You've been warned.
 
 ## What This
 

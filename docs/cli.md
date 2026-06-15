@@ -33,6 +33,16 @@ php local/devkit/cli/run.php database:list mod_assign --format=json
 
 Options: `component` (required), `--format` (`table`|`json`).
 
+### `database:format <component>`
+
+Format the `db/install.xml` file for a plugin.
+
+```bash
+php local/devkit/cli/run.php database:format mod_forum
+```
+
+Options: `component` (required).
+
 ### `lint`
 
 Run all linters on paths.

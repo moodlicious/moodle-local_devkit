@@ -26,6 +26,7 @@ enum severity: string {
     case info = 'info';
     case warning = 'warning';
     case error = 'error';
+    case fatal = 'fatal';
     case unknown = 'unknown';
 
     /**

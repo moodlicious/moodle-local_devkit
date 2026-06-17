@@ -55,7 +55,7 @@ class database_table extends Command {
             }
 
             match ($format) {
-                'table' => database_list::display_table_table($io, $table),
+                'table' => database_show::display_table_table($io, $table),
                 'json' => self::display_json($io, $table),
                 default => throw new Exception('Unknown format, available formats are table,json'),
             };

@@ -40,25 +40,34 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[AsCommand(name: 'database:list', description: 'List all database tables of a specific component.')]
-class database_list extends Command {
+#[AsCommand(name: 'database:show', description: 'List all database tables or only tables of a specific component.')]
+class database_show extends Command {
     /**
      * Invoke
-     * @param string $component
+     * @param string|null $component
      * @param SymfonyStyle $io
      * @return int
      */
     public function __invoke(
-        #[Argument('The component name of the plugin.')] string $component,
         SymfonyStyle $io,
+        #[Argument('The component name of the plugin.')] ?string $component = null,
         #[Option('What format to display (table/json)', suggestedValues: ['table', 'json'])] string $format = 'table',
     ): int {
+        $plugintables = [];
         try {
-            $result = database::list_plugin_tables($component);
+            if ($component) {
+                $plugintable = database::list_plugin_tables($component);
+                if (!$plugintable) {
+                    throw new Exception("Component '$component' not found.");
+                }
+                $plugintables[] = $plugintable;
+            } else {
+                $plugintables = database::list_tables();
+            }
 
             match ($format) {
-                'table' => self::display_table($io, $result),
-                'json' => self::display_json($io, $result),
+                'table' => self::display_table($io, $plugintables),
+                'json' => self::display_json($io, $plugintables),
                 default => throw new Exception('Unknown format, available formats are table,json'),
             };
 
@@ -72,15 +81,18 @@ class database_list extends Command {
     /**
      * Displays tables as a table.
      * @param SymfonyStyle $io
-     * @param PluginDatabase $data
+     * @param PluginDatabase[] $data
      * @return void
      */
     public static function display_table(SymfonyStyle $io, array $data): void {
-        $io->title($data['name']);
-        $io->comment($data['comment']);
+        foreach ($data as $database) {
+            $io->title($database['name']);
+            $io->comment($database['comment']);
 
-        foreach ($data['tables'] as $table) {
-            self::display_table_table($io, $table);
+            $io->text('Tables');
+            $io->listing(
+                array_map(fn(/** @var DatabaseTable $table */ $table) => $table['name'], $database['tables'])
+            );
         }
     }
 
@@ -133,7 +145,7 @@ class database_list extends Command {
     /**
      * Displays tables as JSON.
      * @param SymfonyStyle $io
-     * @param PluginDatabase $data
+     * @param PluginDatabase[] $data
      * @return void
      */
     public static function display_json(SymfonyStyle $io, array $data): void {

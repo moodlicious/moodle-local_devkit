@@ -49,10 +49,7 @@ class database_table extends Command {
         #[Option('What format to display (table/json)', suggestedValues: ['table', 'json'])] string $format = 'table',
     ): int {
         try {
-            $table = database::find_table($tablename);
-            if (!$table) {
-                throw new Exception("Table with name '$tablename' not found.");
-            }
+            $table = self::get_data($tablename);
 
             match ($format) {
                 'table' => database_show::display_table_table($io, $table),
@@ -68,12 +65,35 @@ class database_table extends Command {
     }
 
     /**
+     * Helper function to get required data for this command.
+     * @param string $tablename
+     * @throws Exception
+     * @return DatabaseTable
+     */
+    public static function get_data(string $tablename) {
+        $table = database::find_table($tablename);
+        if (!$table) {
+            throw new Exception("Table with name '$tablename' not found.");
+        }
+        return $table;
+    }
+
+    /**
      * Displays table as JSON.
      * @param SymfonyStyle $io
      * @param DatabaseTable $data
      * @return void
      */
     public static function display_json(SymfonyStyle $io, array $data): void {
-        $io->writeln(json_encode($data, JSON_THROW_ON_ERROR));
+        $io->writeln(json_encode(self::process_json($data), JSON_THROW_ON_ERROR));
+    }
+
+    /**
+     * Processes json for output.
+     * @param DatabaseTable $data
+     * @return DatabaseTable
+     */
+    public static function process_json(array $data) {
+        return $data;
     }
 }

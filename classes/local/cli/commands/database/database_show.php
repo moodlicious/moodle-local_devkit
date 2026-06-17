@@ -55,15 +55,7 @@ class database_show extends Command {
     ): int {
         $plugintables = [];
         try {
-            if ($component) {
-                $plugintable = database::list_plugin_tables($component);
-                if (!$plugintable) {
-                    throw new Exception("Component '$component' not found.");
-                }
-                $plugintables[] = $plugintable;
-            } else {
-                $plugintables = database::list_tables();
-            }
+            $plugintables = self::get_data($component);
 
             match ($format) {
                 'table' => self::display_table($io, $plugintables),
@@ -76,6 +68,26 @@ class database_show extends Command {
             $io->error($th->getMessage());
             return 1;
         }
+    }
+
+    /**
+     * Helper function to get the data for this command.
+     * @param mixed $component
+     * @throws Exception
+     * @return PluginDatabase[]
+     */
+    public static function get_data(?string $component) {
+        if ($component) {
+            $plugintable = database::list_plugin_tables($component);
+            if (!$plugintable) {
+                throw new Exception("Component '$component' not found.");
+            }
+            $plugintables[] = $plugintable;
+        } else {
+            $plugintables = database::list_tables();
+        }
+
+        return $plugintables;
     }
 
     /**
@@ -149,6 +161,22 @@ class database_show extends Command {
      * @return void
      */
     public static function display_json(SymfonyStyle $io, array $data): void {
-        $io->writeln(json_encode($data, JSON_THROW_ON_ERROR));
+        $io->writeln(json_encode(self::process_json($data), JSON_THROW_ON_ERROR));
+    }
+
+    /**
+     * Process json for display.
+     * @param PluginDatabase[] $data
+     * @return array{name: string, tables: array}[]
+     */
+    public static function process_json(array $data): array {
+        $json = [];
+        foreach ($data as $database) {
+            $json[] = [
+                'name' => $database['name'],
+                'tables' => array_map(fn(/** @var DatabaseTable $table */ $table) => $table['name'], $database['tables']),
+            ];
+        }
+        return $json;
     }
 }

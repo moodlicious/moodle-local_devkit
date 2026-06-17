@@ -16,6 +16,9 @@
 
 namespace local_devkit\local\mcp\tools;
 
+use local_devkit\local\cli\commands\database\database_show;
+use local_devkit\local\cli\commands\database\database_table;
+
 /**
  * Plugins API.
  *
@@ -25,17 +28,22 @@ namespace local_devkit\local\mcp\tools;
  */
 class database {
     /**
-     * List database schema defined for a given plugin.
-     * This will return the tables, fields, keys and indexes for the plugin.
-     * @param string $component The plugin component name. E.g. mod_assign.
+     * Show database tables defined, all or for a specific plugin component.
+     * @param string|null $component The plugin component name. E.g. mod_assign.
      * @return object
      */
-    public static function list_plugin_tables(string $component): object {
-        try {
-            $tables = \local_devkit\local\api\database::list_plugin_tables($component);
-            return (object) ['data' => $tables];
-        } catch (\Throwable $th) {
-            return (object) ['error' => $th->getMessage()];
-        }
+    public static function db_show_tables(?string $component): object {
+        $data = database_show::get_data($component);
+        return (object) ['data' => $data];
+    }
+
+    /**
+     * Get the fields, indexes and keys of a specific database table.
+     * @param string|null $tablename The database table name.
+     * @return object
+     */
+    public static function db_get_table(string $tablename): object {
+        $data = database_table::get_data($tablename);
+        return (object) ['data' => $data];
     }
 }

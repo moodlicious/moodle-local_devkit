@@ -39,7 +39,8 @@ class mcp_serve extends Command {
         $server = Server::builder()
             ->setServerInfo('Moodle devkit plugin MCP server', '0.0.1')
             ->addTool([\local_devkit\local\mcp\tools\plugins::class, 'list_plugins'])
-            ->addTool([\local_devkit\local\mcp\tools\database::class, 'list_plugin_tables'])
+            ->addTool([\local_devkit\local\mcp\tools\database::class, 'db_show_tables'])
+            ->addTool([\local_devkit\local\mcp\tools\database::class, 'db_get_table'])
             ->addTool([\local_devkit\local\mcp\tools\lint::class, 'lint_files'])
             ->build();
 

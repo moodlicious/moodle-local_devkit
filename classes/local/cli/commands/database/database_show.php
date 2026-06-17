@@ -80,7 +80,7 @@ class database_show extends Command {
         if ($component) {
             $plugintable = database::list_plugin_tables($component);
             if (!$plugintable) {
-                throw new Exception("Component '$component' not found.");
+                throw new Exception("Component '$component' does not define db/install.xml.");
             }
             $plugintables[] = $plugintable;
         } else {

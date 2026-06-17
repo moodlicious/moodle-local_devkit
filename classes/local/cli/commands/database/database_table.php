@@ -27,6 +27,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Get information about a specific database table.
  *
+ * // phpcs:disable moodle.Commenting.ValidTags.Invalid
+ * @phpstan-import-type DatabaseTable from database
+ * // phpcs:enable moodle.Commenting.ValidTags.Invalid
+ *
  * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -50,11 +54,26 @@ class database_table extends Command {
                 throw new Exception("Table with name '$tablename' not found.");
             }
 
-            database_list::display_table_table($io, $table);
+            match ($format) {
+                'table' => database_list::display_table_table($io, $table),
+                'json' => self::display_json($io, $table),
+                default => throw new Exception('Unknown format, available formats are table,json'),
+            };
+
             return Command::SUCCESS;
         } catch (\Throwable $th) {
             $io->error($th->getMessage());
             return COMMAND::FAILURE;
         }
+    }
+
+    /**
+     * Displays table as JSON.
+     * @param SymfonyStyle $io
+     * @param DatabaseTable $data
+     * @return void
+     */
+    public static function display_json(SymfonyStyle $io, array $data): void {
+        $io->writeln(json_encode($data, JSON_THROW_ON_ERROR));
     }
 }

@@ -103,7 +103,10 @@ class database_show extends Command {
 
             $io->text('Tables');
             $io->listing(
-                array_map(fn(/** @var DatabaseTable $table */ $table) => $table['name'], $database['tables'])
+                array_map(
+                    fn(/** @var DatabaseTable $table */ $table) => "{$table['name']}: {$table['comment']}",
+                    $database['tables'],
+                )
             );
         }
     }
@@ -174,7 +177,11 @@ class database_show extends Command {
         foreach ($data as $database) {
             $json[] = [
                 'name' => $database['name'],
-                'tables' => array_map(fn(/** @var DatabaseTable $table */ $table) => $table['name'], $database['tables']),
+                'comment' => $database['comment'],
+                'tables' => array_map(fn(/** @var DatabaseTable $table */ $table) => [
+                    'name' => $table['name'],
+                    'comment' => $table['comment'],
+                ], $database['tables']),
             ];
         }
         return $json;

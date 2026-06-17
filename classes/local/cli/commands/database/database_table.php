@@ -60,7 +60,7 @@ class database_table extends Command {
             return Command::SUCCESS;
         } catch (\Throwable $th) {
             $io->error($th->getMessage());
-            return COMMAND::FAILURE;
+            return Command::FAILURE;
         }
     }
 

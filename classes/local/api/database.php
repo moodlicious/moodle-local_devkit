@@ -59,6 +59,11 @@ class database {
         return self::list_tables_from_xml($xmlpath);
     }
 
+    /**
+     * Gets database tables from a specific db/install.xml file.
+     * @param string $xmlpath
+     * @return PluginDatabase|null
+     */
     public static function list_tables_from_xml(string $xmlpath) {
         $structure = self::get_xmldb_structure($xmlpath);
 

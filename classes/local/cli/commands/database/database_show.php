@@ -72,7 +72,7 @@ class database_show extends Command {
 
     /**
      * Helper function to get the data for this command.
-     * @param mixed $component
+     * @param string|null $component
      * @throws Exception
      * @return PluginDatabase[]
      */
@@ -170,7 +170,7 @@ class database_show extends Command {
     /**
      * Process json for display.
      * @param PluginDatabase[] $data
-     * @return array{name: string, tables: array}[]
+     * @return array{name: string, tables: array{name: string, comment: string}[]}[]
      */
     public static function process_json(array $data): array {
         $json = [];

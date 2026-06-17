@@ -45,7 +45,7 @@ class database {
 
     /**
      * Get the fields, indexes and keys of a specific database table.
-     * @param string|null $tablename The database table name.
+     * @param string $tablename The database table name.
      * @return object
      */
     public static function db_get_table(string $tablename): object {

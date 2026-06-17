@@ -147,7 +147,10 @@ class database {
         }
 
         $corexmlpath = $CFG->libdir . '/db/install.xml';
-        $plugintables[] = self::list_tables_from_xml($corexmlpath);
+        $coretables = self::list_tables_from_xml($corexmlpath);
+        if (!$coretables) {
+            throw new Exception('Unable to load tables from core moodle /lib/db/install.xml');
+        }
 
         return $plugintables;
     }

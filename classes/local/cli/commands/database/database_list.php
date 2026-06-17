@@ -32,6 +32,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @phpstan-import-type DatabaseField from database
  * @phpstan-import-type DatabaseKey from database
  * @phpstan-import-type DatabaseIndex from database
+ * @phpstan-import-type DatabaseTable from database
  * @phpstan-import-type DatabaseKeyReferences from database
  * // phpcs:enable moodle.Commenting.ValidTags.Invalid
  *
@@ -79,44 +80,54 @@ class database_list extends Command {
         $io->comment($data['comment']);
 
         foreach ($data['tables'] as $table) {
-            $io->section("Table: {$table['name']}");
-            $io->comment($table['comment']);
-
-            $io->text('Fields');
-            $io->table(
-                ['name', 'type', 'comment'],
-                array_map(fn(/** @var DatabaseField $field */ $field) => [
-                    $field['name'],
-                    $field['type'],
-                    $field['comment'],
-                ], $table['fields']),
-            );
-
-            $io->text('Indexes');
-            $io->table(
-                ['name', 'fields', 'unique', 'comment'],
-                array_map(fn(/** @var DatabaseIndex $index */ $index) => [
-                    $index['name'],
-                    implode(',', $index['fields']),
-                    $index['unique'],
-                    $index['comment'],
-                ], $table['indexes']),
-            );
-
-            $io->text('Keys');
-            $io->table(
-                ['name', 'type', 'fields', 'references', 'comment'],
-                array_map(fn(/** @var DatabaseKey $key */ $key) => [
-                    $key['name'],
-                    $key['type'],
-                    implode(',', $key['fields']),
-                    $key['references']['table']
-                    ? $key['references']['table'] . '.' . implode(',', $key['references']['fields'])
-                    : '',
-                    $key['comment'],
-                ], $table['keys']),
-            );
+            self::display_table_table($io, $table);
         }
+    }
+
+    /**
+     * Displays table
+     * @param SymfonyStyle $io
+     * @param DatabaseTable $table
+     * @return void
+     */
+    public static function display_table_table(SymfonyStyle $io, array $table): void {
+        $io->section("Table: {$table['name']}");
+        $io->comment($table['comment']);
+
+        $io->text('Fields');
+        $io->table(
+            ['name', 'type', 'comment'],
+            array_map(fn(/** @var DatabaseField $field */ $field) => [
+                $field['name'],
+                $field['type'],
+                $field['comment'],
+            ], $table['fields']),
+        );
+
+        $io->text('Indexes');
+        $io->table(
+            ['name', 'fields', 'unique', 'comment'],
+            array_map(fn(/** @var DatabaseIndex $index */ $index) => [
+                $index['name'],
+                implode(',', $index['fields']),
+                $index['unique'],
+                $index['comment'],
+            ], $table['indexes']),
+        );
+
+        $io->text('Keys');
+        $io->table(
+            ['name', 'type', 'fields', 'references', 'comment'],
+            array_map(fn(/** @var DatabaseKey $key */ $key) => [
+                $key['name'],
+                $key['type'],
+                implode(',', $key['fields']),
+                $key['references']['table']
+                ? $key['references']['table'] . '.' . implode(',', $key['references']['fields'])
+                : '',
+                $key['comment'],
+            ], $table['keys']),
+        );
     }
 
     /**

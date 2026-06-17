@@ -42,9 +42,9 @@ class database {
     /**
      * List database tables for a given plugin.
      * @param string $component
-     * @return PluginDatabase
+     * @return PluginDatabase|null
      */
-    public static function list_plugin_tables(string $component): array {
+    public static function list_plugin_tables(string $component): ?array {
         $targetplugin = plugins::get_by_component($component);
 
         if ($targetplugin === null) {
@@ -53,9 +53,13 @@ class database {
 
         $xmlpath = $targetplugin['directory'] . '/db/install.xml';
         if (!file_exists($xmlpath)) {
-            throw new Exception("Plugin does not have a install.xml defined.");
+            return null;
         }
 
+        return self::list_tables_from_xml($xmlpath);
+    }
+
+    public static function list_tables_from_xml(string $xmlpath) {
         $structure = self::get_xmldb_structure($xmlpath);
 
         /** @var \xmldb_table[] $tables */
@@ -118,6 +122,51 @@ class database {
         ];
 
         return $result;
+    }
+
+    /**
+     * Returns every single plugin tables.
+     * @return PluginDatabase[]
+     */
+    public static function list_tables(): array {
+        global $CFG;
+
+        $plugins = plugins::list(true);
+        $plugintables = [];
+        foreach ($plugins as $plugin) {
+            $tables = self::list_plugin_tables($plugin['component']);
+            if ($tables === null) {
+                continue;
+            }
+            $plugintables[] = $tables;
+        }
+
+        $corexmlpath = $CFG->libdir . '/db/install.xml';
+        $plugintables[] = self::list_tables_from_xml($corexmlpath);
+
+        return $plugintables;
+    }
+
+    /**
+     * Find a specific table.
+     * @param string $tablename
+     * @return DatabaseTable|null
+     */
+    public static function find_table(string $tablename): ?array {
+        $result = self::list_tables();
+
+        $foundtable = null;
+        foreach ($result as $plugintables) {
+            foreach ($plugintables['tables'] as $table) {
+                if ($table['name'] !== $tablename) {
+                    continue;
+                }
+                $foundtable = $table;
+                break;
+            }
+        }
+
+        return $foundtable;
     }
 
     /**

@@ -16,10 +16,10 @@
 
 namespace local_devkit\local\mcp\tools;
 
-use Exception;
 use local_devkit\local\cli\commands\database\database_show;
 use local_devkit\local\cli\commands\database\database_table;
 use Mcp\Exception\ToolCallException;
+use Throwable;
 
 /**
  * Plugins API.
@@ -34,11 +34,11 @@ class database {
      * @param string|null $component The plugin component name. E.g. mod_assign.
      * @return object
      */
-    public static function db_show_tables(?string $component): object {
+    public static function db_show_tables(?string $component = null): object {
         try {
             $data = database_show::get_data($component);
             return (object) ['data' => $data];
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw new ToolCallException($e->getMessage());
         }
     }
@@ -52,7 +52,7 @@ class database {
         try {
             $data = database_table::get_data($tablename);
             return (object) ['data' => $data];
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             throw new ToolCallException($e->getMessage());
         }
     }

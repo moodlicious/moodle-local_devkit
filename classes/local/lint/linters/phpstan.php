@@ -155,7 +155,7 @@ class phpstan extends base {
 
         $runnerid = time();
         $neondirpath = $CFG->tempdir . '/local_devkit/phpstan';
-        @mkdir($neondirpath);
+        @mkdir($neondirpath, recursive: true);
         $neonpath = $neondirpath . "/$runnerid.neon";
 
         $moodleneonpath = realpath($CFG->dirroot . '/local/devkit/vendor/micaherne/phpstan-moodle/extension.neon');

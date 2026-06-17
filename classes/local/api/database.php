@@ -151,6 +151,7 @@ class database {
         if (!$coretables) {
             throw new Exception('Unable to load tables from core moodle /lib/db/install.xml');
         }
+        $plugintables[] = $coretables;
 
         return $plugintables;
     }

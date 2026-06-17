@@ -40,7 +40,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[AsCommand(name: 'database:show', description: 'List all database tables or only tables of a specific component.')]
+#[AsCommand(name: 'db:show|database:show', description: 'List all database tables or only tables of a specific component.')]
 class database_show extends Command {
     /**
      * Invoke

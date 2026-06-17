@@ -35,7 +35,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[AsCommand(name: 'database:table', description: 'Get information about a specific database table.')]
+#[AsCommand(name: 'db:table|database:table', description: 'Get information about a specific database table.')]
 class database_table extends Command {
     /**
      * Invoke

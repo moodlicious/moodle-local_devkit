@@ -30,7 +30,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[AsCommand(name: 'database:format', description: 'Format the db/install.xml file for a specific component.')]
+#[AsCommand(name: 'db:format|database:format', description: 'Format the db/install.xml file for a specific component.')]
 class database_format extends Command {
     /**
      * Invoke

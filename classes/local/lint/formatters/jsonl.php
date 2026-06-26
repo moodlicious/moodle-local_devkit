@@ -16,6 +16,8 @@
 
 namespace local_devkit\local\lint\formatters;
 
+use local_devkit\local\utils;
+
 /**
  * Jsonl formatter.
  *
@@ -29,9 +31,13 @@ class jsonl extends base {
         foreach ($results as $fileresult) {
             $issues = $fileresult->issues;
 
+            $filepath = $this->relative
+                ? utils::get_path_relative_to_moodle_root($fileresult->file)
+                : $fileresult->file;
+
             foreach ($issues as $issue) {
                 $jsonstring = json_encode([
-                    'file' => $fileresult->file,
+                    'file' => $filepath,
                     ...$issue->jsonSerialize(),
                 ]);
                 if ($jsonstring === false) {

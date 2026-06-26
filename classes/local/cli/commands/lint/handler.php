@@ -61,7 +61,7 @@ class handler {
         #[Option('Format to output as (text/json)')] string $format = 'text',
         #[Option('Add file:// links to output')] bool $decorate = true,
         #[Option('Enable/disable the progress bar')] bool $progress = true,
-        #[Option('Output relative paths')] bool $relative = true,
+        #[Option('Output relative paths')] bool $relative = false,
         #[Option('Linters to run')] array $linters = [],
     ): int {
         chdir(utils::get_moodle_root_dir());
@@ -146,7 +146,7 @@ class handler {
                 'relative',
                 mode: InputOption::VALUE_NEGATABLE,
                 description: 'Output paths relative to Moodle root directory',
-                default: true,
+                default: false,
             )
             ->addOption('linters', mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, default: $linternames)
             ->setCode(self::invoke(...));

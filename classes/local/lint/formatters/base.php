@@ -28,7 +28,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 abstract class base {
     /** @var bool */
-    public bool $relative = true;
+    public bool $relative = false;
 
     /**
      * Constructor.

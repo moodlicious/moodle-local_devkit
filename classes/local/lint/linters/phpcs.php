@@ -20,6 +20,7 @@ use local_devkit\local\attributes\linter;
 use local_devkit\local\lint\schemas\issue\phpcs as phpcs_issue;
 use local_devkit\local\lint\severity;
 use local_devkit\local\lint\schemas\file;
+use MoodleQuickForm;
 use Symfony\Component\Process\Process;
 
 /**
@@ -34,12 +35,30 @@ use Symfony\Component\Process\Process;
     description: 'executes "phpcs" php-codesniffer against project coding standards',
 )]
 class phpcs extends base {
+    /** @var string */
+    public const CONFIG_KEY_EXCLUDED_SNIFFS_ENABLED = 'excluded_sniffs_enabled';
+    /** @var string */
+    public const CONFIG_KEY_EXCLUDED_SNIFFS = 'excluded_sniffs';
+
     #[\Override]
     public static function get_include_patterns(): array {
         return [
             ...parent::get_include_patterns(),
             ...['*.php'],
         ];
+    }
+
+    /**
+     * Get the sniffs to be excluded.
+     * @return string[]
+     */
+    public static function get_excluded_sniffs(): array {
+        $config = self::get_config_value(self::CONFIG_KEY_EXCLUDED_SNIFFS, self::CONFIG_KEY_EXCLUDED_SNIFFS_ENABLED);
+        if (!$config) {
+            return [];
+        }
+
+        return self::parse_multiline_string_as_array($config);
     }
 
     #[\Override]
@@ -71,12 +90,15 @@ class phpcs extends base {
      */
     private function execute_phpcs($path): array {
         $excludepatterns = self::get_exclude_patterns();
-        $exclude = $excludepatterns ? ['--ignore=' . implode(',', $excludepatterns)] : [];
+        $excludedsniffs = self::get_excluded_sniffs();
+        $ignore = $excludepatterns ? ['--ignore=' . implode(',', $excludepatterns)] : [];
+        $exclude = $excludedsniffs ? ['--exclude=' . implode(',', $excludedsniffs)] : [];
         $process = new Process([
             'phpcs',
             '--cache',
             '-q',
             '--report=json',
+            ...$ignore,
             ...$exclude,
             $path,
         ], timeout: MINSECS * 15);
@@ -122,5 +144,11 @@ class phpcs extends base {
         }
 
         return $results;
+    }
+
+    #[\Override]
+    public static function define_config(MoodleQuickForm $form): void {
+        parent::define_config($form);
+        self::define_config_textarea($form, self::CONFIG_KEY_EXCLUDED_SNIFFS, self::CONFIG_KEY_EXCLUDED_SNIFFS_ENABLED);
     }
 }

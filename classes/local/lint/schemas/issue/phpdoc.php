@@ -39,7 +39,7 @@ class phpdoc extends issue {
         $severity = self::object_property($object, 'severity');
         $message = self::object_property($object, 'message');
 
-        if (in_array(null, [$line, $severity, $message], strict: true)) {
+        if ($line === null || $severity === null || $message === null) {
             return null;
         }
 
@@ -52,7 +52,7 @@ class phpdoc extends issue {
         return new self(
             $line,
             0,
-            $message,
+            (string) $message,
             $source,
             'phpdoc',
             severity::from_phpdoc($severity),

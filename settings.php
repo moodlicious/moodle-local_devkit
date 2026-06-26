@@ -24,7 +24,9 @@
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\output\html_writer;
 use local_devkit\local\data\editor;
+use local_devkit\output\tables\linter_config;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -52,5 +54,11 @@ if ($hassiteconfig) {
         new lang_string('settings:debugbar_editor_desc', 'local_devkit'),
         '',
         Closure::fromCallable([editor::class, 'get_menu'])
+    ));
+
+    $settings->add(new admin_setting_description(
+        'local_devkit/linter_config',
+        new lang_string('linter_config_table:title', 'local_devkit'),
+        html_writer::table(new linter_config()),
     ));
 }

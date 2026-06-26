@@ -159,6 +159,7 @@ final class utils_test extends advanced_testcase {
         global $CFG;
 
         $root = make_temp_directory('devkit_test_rel_root5');
+        self::assertNotFalse($root);
         $CFG->root = null;
         $CFG->dirroot = $root;
 

@@ -108,9 +108,10 @@ jobs:
               if: ${{ !cancelled() }}
               run: moodle-plugin-ci mustache
 
-            - name: Grunt
-              if: ${{ !cancelled() }}
-              run: moodle-plugin-ci grunt --max-lint-warnings 0
+            # Grunt is disabled because of the gitignored amd/build will always fail this step.
+            # - name: Grunt
+            #   if: ${{ !cancelled() }}
+            #   run: moodle-plugin-ci grunt --max-lint-warnings 0
 
             - name: PHPUnit tests
               if: ${{ !cancelled() }}

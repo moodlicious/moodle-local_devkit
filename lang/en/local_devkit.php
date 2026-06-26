@@ -24,6 +24,13 @@
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['linter_config:title'] = 'Configuring {$a}';
+$string['linter_config_table:actions'] = 'Actions';
+$string['linter_config_table:config'] = 'Config';
+$string['linter_config_table:configure'] = 'Configure';
+$string['linter_config_table:linter'] = 'Linter';
+$string['linter_config_table:notconfigured'] = 'Not configured';
+$string['linter_config_table:title'] = 'Linter Configuration';
 $string['pluginname'] = 'DevKit';
 $string['settings:debugbar_collect_queries'] = 'Collect Database Queries';
 $string['settings:debugbar_collect_queries_desc'] = 'Collect and display database queries in the Debug Bar.';

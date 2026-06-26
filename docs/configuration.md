@@ -9,19 +9,18 @@ Site admin > Plugins > Local plugins > DevKit:
 | Debug Bar Enabled | `debugbar_enabled` | checkbox | Show debug bar at page bottom. |
 | Collect Database Queries | `debugbar_collect_queries` | checkbox | Show DB queries in debug bar. |
 | Editor | `debugbar_editor` | select | Code editor for file links in debug bar (23 editors). |
+| Linter Configuration | `local_devkit/linter_config` | table | Per-linter settings via dynamic modal form. |
 
-## $CFG Config
+## Linter Configuration
 
-Override linter settings in `config.php`:
+Each linter can be configured individually via Site administration > Plugins > DevKit > Linter Configuration. Settings are stored in the `config_plugins` table and include:
 
-```php
-$CFG->devkit = [
-    'linters' => [
-        'base' => ['exclude_patterns' => ['*/.venv/*']],
-        'phpcs' => ['exclude_patterns' => ['*/classes/*']],
-    ],
-];
-```
+- **Status**: enable/disable each linter independently.
+- **Include patterns**: glob patterns for files the linter should process (disabled by default — uses linter's built-in defaults).
+- **Exclude patterns**: glob patterns to skip (disabled by default — uses built-in defaults like `.git/`, `node_modules/`, `vendor/`).
+- **Per-linter extras**:
+  - `phpcs`: excluded sniffs list.
+  - `phpstan`: rule level (0–10, default 8).
 
 ## AJAX Support
 

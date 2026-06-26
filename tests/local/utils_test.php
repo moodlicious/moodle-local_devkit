@@ -78,4 +78,102 @@ final class utils_test extends advanced_testcase {
 
         $this->assertSame([], $result);
     }
+
+    /**
+     * Test that get_path_relative_to_moodle_root returns path relative to dirroot.
+     */
+    public function test_get_path_relative_to_moodle_root(): void {
+        global $CFG;
+
+        $root = make_temp_directory('devkit_test_rel_root');
+        $CFG->root = null;
+        $CFG->dirroot = $root;
+
+        $subdir = $root . '/public/mod/forum';
+        check_dir_exists($subdir, true, true);
+        touch($subdir . '/version.php');
+
+        $path = $subdir . '/version.php';
+        $result = utils::get_path_relative_to_moodle_root($path);
+
+        $this->assertSame('./public/mod/forum/version.php', $result);
+    }
+
+    /**
+     * Test that get_path_relative_to_moodle_root uses $CFG->root when set.
+     */
+    public function test_get_path_relative_to_moodle_root_uses_cfg_root(): void {
+        global $CFG;
+
+        $root = make_temp_directory('devkit_test_rel_root2');
+        $CFG->root = $root;
+
+        $subdir = $root . '/mod/forum';
+        check_dir_exists($subdir, true, true);
+        touch($subdir . '/version.php');
+
+        $path = $subdir . '/version.php';
+        $result = utils::get_path_relative_to_moodle_root($path);
+
+        $this->assertSame('./mod/forum/version.php', $result);
+    }
+
+    /**
+     * Test that path outside root is returned as-is.
+     */
+    public function test_get_path_relative_to_moodle_root_outside_root(): void {
+        global $CFG;
+
+        $root = make_temp_directory('devkit_test_rel_root3');
+        $CFG->root = $root;
+
+        $outside = make_temp_directory('devkit_test_rel_outside');
+        touch($outside . '/file.php');
+
+        $path = $outside . '/file.php';
+        $result = utils::get_path_relative_to_moodle_root($path);
+
+        $this->assertSame($path, $result);
+    }
+
+    /**
+     * Test that non-existent path returns the path as-is.
+     */
+    public function test_get_path_relative_to_moodle_root_nonexistent(): void {
+        global $CFG;
+
+        $root = make_temp_directory('devkit_test_rel_root4');
+        $CFG->root = null;
+        $CFG->dirroot = $root;
+
+        $path = $root . '/nonexistent/file.php';
+        $result = utils::get_path_relative_to_moodle_root($path);
+
+        $this->assertSame($path, $result);
+    }
+
+    /**
+     * Test that the root path itself returns './'.
+     */
+    public function test_get_path_relative_to_moodle_root_self(): void {
+        global $CFG;
+
+        $root = make_temp_directory('devkit_test_rel_root5');
+        $CFG->root = null;
+        $CFG->dirroot = $root;
+
+        $result = utils::get_path_relative_to_moodle_root($root);
+
+        $this->assertSame('./', $result);
+    }
+
+    /**
+     * Test that nonexistent root returns the path as-is.
+     */
+    public function test_get_path_relative_to_moodle_root_nonexistent_root(): void {
+        $path = '/nonexistent/path/file.php';
+        $result = utils::get_path_relative_to_moodle_root($path);
+
+        $this->assertSame($path, $result);
+    }
 }

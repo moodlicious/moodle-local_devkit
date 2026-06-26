@@ -59,4 +59,37 @@ class utils {
 
         return $CFG->dirroot;
     }
+
+    /**
+     * Returns the relative path from Moodle root directory to the provided path.
+     * The returned path will use forward slashes '/' regardless of platform.
+     * E.g. /path/to/moodle/public/mod/forum/version.php -> ./public/mod/forum/version.php.
+     *
+     * Any errors the path will be returned as is, e.g. path does not exist.
+     * @param string $path
+     * @return string
+     */
+    public static function get_path_relative_to_moodle_root(string $path): string {
+        $root = self::get_moodle_root_dir();
+
+        $realroot = realpath($root);
+        $realpath = realpath($path);
+
+        if ($realroot === false || $realpath === false) {
+            return $path;
+        }
+
+        $rootnormalised = str_replace('\\', '/', $realroot);
+        $pathnormalised = str_replace('\\', '/', $realpath);
+
+        $rootdir = rtrim($rootnormalised, '/') . '/';
+        $pathdir = rtrim($pathnormalised, '/') . '/';
+
+        if (strpos($pathdir, $rootdir) !== 0) {
+            return $path;
+        }
+
+        $relative = rtrim(substr($pathdir, strlen($rootdir)), '/');
+        return './' . $relative;
+    }
 }

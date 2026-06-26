@@ -326,7 +326,8 @@ class lang extends base {
                 $results[] = self::single_file_issue(
                     self::compose_lang_filepath($langdir, $component, $missinglocale),
                     "Identifier '$identifier' missing from '$missinglocale' locale",
-                    'identifier-missing'
+                    'identifier-missing',
+                    line: self::identifier_line($identifier, $englishlangfilepath),
                 );
             }
 
@@ -488,17 +489,51 @@ class lang extends base {
         $tokens = token_get_all($source);
         $count = count($tokens);
 
-        for ($i = 0; $i < $count - 3; $i++) {
+        $skiptokens = [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT];
+
+        for ($i = 0; $i < $count; $i++) {
             if (
-                is_array($tokens[$i]) &&
-                $tokens[$i][0] === T_VARIABLE &&
-                $tokens[$i][1] === '$string' &&
-                $tokens[$i + 1] === '[' &&
-                is_array($tokens[$i + 2]) &&
-                $tokens[$i + 2][0] === T_CONSTANT_ENCAPSED_STRING &&
-                trim($tokens[$i + 2][1], "'\"") === $identifier &&
-                $tokens[$i + 3] === ']'
+                !is_array($tokens[$i]) ||
+                $tokens[$i][0] !== T_VARIABLE ||
+                $tokens[$i][1] !== '$string'
             ) {
+                continue;
+            }
+
+            $j = $i + 1;
+            while ($j < $count && is_array($tokens[$j]) && in_array($tokens[$j][0], $skiptokens)) {
+                $j++;
+            }
+            if ($j >= $count || $tokens[$j] !== '[') {
+                continue;
+            }
+
+            $k = $j + 1;
+            while ($k < $count && is_array($tokens[$k]) && in_array($tokens[$k][0], $skiptokens)) {
+                $k++;
+            }
+            if (
+                $k >= $count ||
+                !is_array($tokens[$k]) ||
+                $tokens[$k][0] !== T_CONSTANT_ENCAPSED_STRING ||
+                trim($tokens[$k][1], "'\"") !== $identifier
+            ) {
+                continue;
+            }
+
+            $l = $k + 1;
+            while ($l < $count && is_array($tokens[$l]) && in_array($tokens[$l][0], $skiptokens)) {
+                $l++;
+            }
+            if ($l >= $count || $tokens[$l] !== ']') {
+                continue;
+            }
+
+            $m = $l + 1;
+            while ($m < $count && is_array($tokens[$m]) && in_array($tokens[$m][0], $skiptokens)) {
+                $m++;
+            }
+            if ($m < $count && $tokens[$m] === '=') {
                 return $tokens[$i][2];
             }
         }

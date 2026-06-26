@@ -73,20 +73,21 @@ class file implements JsonSerializable {
      * @param int|null $line
      * @param int|null $column
      * @param bool $decorate
+     * @param bool $relative
      * @return string
      */
-    public function format_path(?int $line = null, ?int $column = null, bool $decorate = false): string {
-        $path = $this->file;
+    public function format_path(?int $line = null, ?int $column = null, bool $decorate = false, bool $relative = false): string {
+        $displaypath = $relative ? utils::get_path_relative_to_moodle_root($this->file) : $this->file;
 
         static $filter = fn(?string $item) => (bool) $item;
 
-        $location = implode(":", utils::array_filter_left([$path, $line, $column], $filter));
+        $location = implode(":", utils::array_filter_left([$displaypath, $line, $column], $filter));
 
         if (!$decorate) {
             return $location;
         }
 
-        $encodedpath = str_replace('%2F', '/', rawurlencode($path));
+        $encodedpath = str_replace('%2F', '/', rawurlencode($this->file));
         $encodedlocation = implode(":", utils::array_filter_left([$encodedpath, $line, $column], $filter));
 
         $link = "<href=vscode://file/$encodedlocation>$location</>";

@@ -49,6 +49,7 @@ class handler {
      * @param string $format
      * @param bool $decorate
      * @param bool $progress
+     * @param bool $relative
      * @param string[] $linters
      * @return int
      */
@@ -60,6 +61,7 @@ class handler {
         #[Option('Format to output as (text/json)')] string $format = 'text',
         #[Option('Add file:// links to output')] bool $decorate = true,
         #[Option('Enable/disable the progress bar')] bool $progress = true,
+        #[Option('Output relative paths')] bool $relative = false,
         #[Option('Linters to run')] array $linters = [],
     ): int {
         chdir(utils::get_moodle_root_dir());
@@ -78,6 +80,8 @@ class handler {
 
         $formatterclass = $formatterclasses[$format];
         $formatter = new $formatterclass($io);
+
+        $formatter->relative = $relative;
 
         if ($formatter instanceof \local_devkit\local\lint\formatters\text) {
             $formatter->decorate = $decorate;
@@ -138,6 +142,12 @@ class handler {
             ->addOption('format', mode: InputOption::VALUE_REQUIRED, default: 'text')
             ->addOption('decorate', mode: InputOption::VALUE_NEGATABLE, default: true)
             ->addOption('progress', mode: InputOption::VALUE_NEGATABLE, default: true)
+            ->addOption(
+                'relative',
+                mode: InputOption::VALUE_NEGATABLE,
+                description: 'Output paths relative to Moodle root directory',
+                default: false,
+            )
             ->addOption('linters', mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, default: $linternames)
             ->setCode(self::invoke(...));
         return $command;

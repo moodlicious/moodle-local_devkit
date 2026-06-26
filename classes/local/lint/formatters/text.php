@@ -44,7 +44,7 @@ class text extends base {
                 $severity = $issue->severity->value;
                 $message = $issue->message;
                 $rule = "$issue->source/$issue->rule";
-                $filelink = $fileresult->format_path($issue->line, $issue->column, $decorateoutput);
+                $filelink = $fileresult->format_path($issue->line, $issue->column, $decorateoutput, $this->relative);
                 $out = "$filelink: $severity: $message ($rule)";
                 $this->io->writeln($out);
             }

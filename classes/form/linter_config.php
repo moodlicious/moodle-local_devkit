@@ -70,7 +70,7 @@ class linter_config extends dynamic_form {
 
     #[\Override]
     protected function check_access_for_dynamic_submission(): void {
-        return;
+        require_capability('moodle/site:config', $this->get_context_for_dynamic_submission());
     }
 
     #[\Override]

@@ -58,7 +58,7 @@ if ($hassiteconfig) {
 
     $settings->add(new admin_setting_description(
         'local_devkit/linter_config',
-        'Linter Configuration',
+        new lang_string('linter_config_table:title', 'local_devkit'),
         html_writer::table(new linter_config()),
     ));
 }

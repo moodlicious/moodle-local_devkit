@@ -53,11 +53,16 @@ class phpstan extends base {
      */
     public static function get_rule_level(): int {
         $config = self::get_config_value(self::CONFIG_KEY_RULE_LEVEL);
-        if ($config === null) {
+        if ($config === null || !is_numeric($config)) {
             return 8;
         }
 
-        return (int) $config;
+        $level = (int) $config;
+        if ($level < 0 || $level > 10) {
+            return 8;
+        }
+
+        return $level;
     }
 
     #[\Override]

@@ -40,10 +40,13 @@ class linter_config extends dynamic_form {
             return $classname;
         }
 
-        /** @var class-string<\local_devkit\local\lint\linters\base>|null $classname */
-        $classname = $this->get_data()->classname;
-        if ($classname) {
-            return $classname;
+        $data = $this->get_data();
+        if ($data && property_exists($data, 'classname')) {
+            /** @var class-string<\local_devkit\local\lint\linters\base>|null $classname */
+            $classname = $data->classname;
+            if ($classname) {
+                return $classname;
+            }
         }
 
         return null;
@@ -55,7 +58,9 @@ class linter_config extends dynamic_form {
         $form->addElement('hidden', 'classname');
 
         $classname = $this->get_linter_classname();
-        $classname::define_config($form);
+        if ($classname) {
+            $classname::define_config($form);
+        }
     }
 
     #[\Override]
@@ -71,8 +76,14 @@ class linter_config extends dynamic_form {
     #[\Override]
     public function process_dynamic_submission() {
         $data = $this->get_data();
+        if (!$data) {
+            return ['success' => false];
+        }
         unset($data->classname);
         $linter = $this->get_linter_classname();
+        if (!$linter) {
+            return ['success' => false];
+        }
         $linter::save_config($data);
         return ['success' => true];
     }
@@ -80,14 +91,15 @@ class linter_config extends dynamic_form {
     #[\Override]
     public function set_data_for_dynamic_submission(): void {
         $linter = $this->get_linter_classname();
-        $data = $linter::get_config();
-
-        if ($data) {
-            $data->classname = $linter;
-        } else {
-            $data = (object) ['classname' => $linter];
+        if (!$linter) {
+            return;
         }
 
+        $config = $linter::get_config();
+        $data = (object) [
+            ...(array) ($config ?: new \stdClass()),
+            'classname' => $linter,
+        ];
         $this->set_data($data);
         return;
     }

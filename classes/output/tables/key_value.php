@@ -35,8 +35,8 @@ class key_value extends html_table {
         $this->head = ['Key', 'Value'];
         $this->attributes['class'] = 'table table-hover';
         $this->data = [];
-        foreach ($data as $key => $value) {
-            $this->data[] = [$key, html_writer::tag('code', json_encode($value, JSON_PRETTY_PRINT))];
+        foreach ((array) $data as $key => $value) {
+            $this->data[] = [$key, html_writer::tag('code', (string) json_encode($value, JSON_PRETTY_PRINT))];
         }
     }
 }

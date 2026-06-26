@@ -42,7 +42,7 @@ export const init = () => {
 
             e.preventDefault();
 
-            const title = await getString("linter_config_title", "local_devkit", linterName);
+            const title = await getString("linter_config:title", "local_devkit", linterName);
             const modalForm = new ModalForm({
                 formClass: "local_devkit\\form\\linter_config",
                 args: {classname: linterClassname},
@@ -52,7 +52,7 @@ export const init = () => {
                 returnFocus: element,
             });
             // @ts-ignore
-            modalForm.addEventListener(modalForm.events.FORM_SUBMITTED, (e) => {
+            modalForm.addEventListener(modalForm.events.FORM_SUBMITTED, () => {
                 window.location.reload();
             });
 

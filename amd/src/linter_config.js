@@ -14,6 +14,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 import ModalForm from "core_form/modalform";
+import {get_string as getString} from "core/str";
 
 /**
  * Finds all config form buttons and initialises it.
@@ -28,7 +29,7 @@ export const init = () => {
         "[data-linter-config-form][data-linter-classname]",
     );
     configButtons.forEach((button) =>
-        button.addEventListener("click", (e) => {
+        button.addEventListener("click", async(e) => {
             const element = e.target;
             if (!(element instanceof HTMLAnchorElement)) {
                 return;
@@ -41,11 +42,12 @@ export const init = () => {
 
             e.preventDefault();
 
+            const title = await getString("linter_config_title", "local_devkit", linterName);
             const modalForm = new ModalForm({
                 formClass: "local_devkit\\form\\linter_config",
                 args: {classname: linterClassname},
                 modalConfig: {
-                    title: `Configuring ${linterName}`,
+                    title,
                 },
                 returnFocus: element,
             });

@@ -31,3 +31,4 @@ $string['settings:debugbar_editor'] = 'Editor';
 $string['settings:debugbar_editor_desc'] = 'Select the editor to use for opening files from the debug bar.';
 $string['settings:debugbar_enabled'] = 'Debug Bar Enabled';
 $string['settings:debugbar_enabled_desc'] = 'Show the PHP Debug Bar at the bottom of the page.';
+$string['linter_config_title'] = 'Configuring {$a}';

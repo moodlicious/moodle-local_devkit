@@ -1,4 +1,8 @@
+# Developers are expected to run `composer install` themselves
 /vendor/
+
+# Developers are expected to run `grunt amd` themselves
+/amd/build/
 
 /temp/
 /dist/

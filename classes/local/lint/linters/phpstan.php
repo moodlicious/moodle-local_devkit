@@ -21,6 +21,7 @@ use local_devkit\local\lint\schemas\issue\phpstan as phpstan_issue;
 use local_devkit\local\lint\severity;
 use local_devkit\local\lint\schemas\file;
 use local_devkit\local\utils;
+use MoodleQuickForm;
 use Symfony\Component\Process\Process;
 
 /**
@@ -35,12 +36,28 @@ use Symfony\Component\Process\Process;
     description: 'executes phpstan for static code analysis',
 )]
 class phpstan extends base {
+    /** @var string */
+    public const CONFIG_KEY_RULE_LEVEL = 'rule_level';
+
     #[\Override]
     public static function get_include_patterns(): array {
         return [
             ...parent::get_include_patterns(),
             ...['*.php'],
         ];
+    }
+
+    /**
+     * Get the rule level to be analysed.
+     * @return int
+     */
+    public static function get_rule_level(): int {
+        $config = self::get_config_value(self::CONFIG_KEY_RULE_LEVEL);
+        if ($config === null) {
+            return 8;
+        }
+
+        return (int) $config;
     }
 
     #[\Override]
@@ -162,20 +179,20 @@ class phpstan extends base {
         $deprecationrules = realpath($CFG->dirroot . '/local/devkit/vendor/phpstan/phpstan-deprecation-rules/rules.neon');
 
         $moodleroot = utils::get_moodle_root_dir();
+        $rulelevel = self::get_rule_level();
         $phpstandotneon = <<<NEON
             includes:
             - $moodleneonpath
             - $deprecationrules
 
             parameters:
-                level: 8
+                level: $rulelevel
                 paths:
                     - .
                 excludePaths:
                     - */vendor/*
                 moodle:
                     rootDirectory: $moodleroot
-
             NEON;
 
         file_put_contents($neonpath, $phpstandotneon);
@@ -233,5 +250,18 @@ class phpstan extends base {
      */
     public function __destruct() {
         @unlink($this->generate_temp_config_neon());
+    }
+
+    #[\Override]
+    public static function define_config(MoodleQuickForm $form): void {
+        parent::define_config($form);
+
+        $levels = [];
+        foreach (range(0, 10) as $level) {
+            $levels["$level"] = "Level $level";
+        }
+
+        $form->addElement('select', self::CONFIG_KEY_RULE_LEVEL, 'Rule level', $levels);
+        $form->setDefault(self::CONFIG_KEY_RULE_LEVEL, "8");
     }
 }

@@ -17,10 +17,12 @@
 namespace local_devkit\local\lint\linters;
 
 use core\exception\coding_exception;
+use Exception;
 use local_devkit\local\attributes\linter;
 use local_devkit\local\lint\schemas\issue;
 use local_devkit\local\lint\severity;
 use local_devkit\local\lint\schemas\file;
+use MoodleQuickForm;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionAttribute;
@@ -48,6 +50,21 @@ use function is_array;
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class base {
+    /** @var string */
+    public const LINTER_STATUS_ENABLED = 'enabled';
+    /** @var string */
+    public const LINTER_STATUS_DISABLED = 'disabled';
+    /** @var string */
+    public const CONFIG_KEY_STATUS = 'status';
+    /** @var string */
+    public const CONFIG_KEY_INCLUDE_PATTERNS_ENABLED = 'include_patterns_enabled';
+    /** @var string */
+    public const CONFIG_KEY_INCLUDE_PATTERNS = 'include_patterns';
+    /** @var string */
+    public const CONFIG_KEY_EXCLUDE_PATTERNS_ENABLED = 'exclude_patterns_enabled';
+    /** @var string */
+    public const CONFIG_KEY_EXCLUDE_PATTERNS = 'exclude_patterns';
+
     /** @var ProgressIndicator|null */
     protected ?ProgressIndicator $progress;
 
@@ -113,6 +130,15 @@ abstract class base {
     }
 
     /**
+     * Determines if the given linter is enabled.
+     * @return bool
+     */
+    public static function is_enabled(): bool {
+        $status = self::get_config_value(self::CONFIG_KEY_STATUS);
+        return $status === null || $status === self::LINTER_STATUS_ENABLED;
+    }
+
+    /**
      * Determines if the given linter is installed.
      * @return bool
      */
@@ -125,14 +151,9 @@ abstract class base {
      * @return string[]
      */
     public static function get_include_patterns(): array {
-        $includepatterns = static::get_config_value('include_patterns');
+        $includepatterns = static::get_config_value(self::CONFIG_KEY_INCLUDE_PATTERNS, self::CONFIG_KEY_INCLUDE_PATTERNS_ENABLED);
         if ($includepatterns !== null) {
-            return $includepatterns;
-        }
-
-        $baseincludepatterns = self::get_config_value('include_patterns', 'base');
-        if ($baseincludepatterns !== null) {
-            return $baseincludepatterns;
+            return self::parse_multiline_string_as_array($includepatterns);
         }
 
         return [];
@@ -143,14 +164,9 @@ abstract class base {
      * @return string[]
      */
     public static function get_exclude_patterns(): array {
-        $includepatterns = static::get_config_value('exclude_patterns');
-        if ($includepatterns !== null) {
-            return $includepatterns;
-        }
-
-        $baseexcludepatterns = self::get_config_value('exclude_patterns', 'base');
-        if ($baseexcludepatterns !== null) {
-            return $baseexcludepatterns;
+        $excludepatterns = static::get_config_value(self::CONFIG_KEY_EXCLUDE_PATTERNS, self::CONFIG_KEY_EXCLUDE_PATTERNS_ENABLED);
+        if ($excludepatterns !== null) {
+            return self::parse_multiline_string_as_array($excludepatterns);
         }
 
         return [
@@ -214,6 +230,17 @@ abstract class base {
      * @return file[]
      */
     public function lint(string $path): array {
+        if (!static::is_enabled()) {
+            $issue = issue::simple(
+                'Linter disabled by user',
+                'linter-disabled',
+                static::get_name(),
+                severity::info
+            );
+            $file = new file($path, [$issue]);
+            return [$file];
+        }
+
         if (!static::is_installed()) {
             $issue = issue::simple(
                 'Linter not available or is not installed',
@@ -314,51 +341,112 @@ abstract class base {
     }
 
     /**
-     * Gets the linter configuration from $CFG.
-     * @param string|null $lintername
-     * @return array<string, mixed>|null
-     */
-    protected static function get_config(?string $lintername = null): ?array {
-        global $CFG;
-        static $cache = [];
-
-        $lintername = $lintername ?? static::get_name();
-        if (array_key_exists($lintername, $cache)) {
-            return $cache[$lintername];
-        }
-
-        if (!isset($CFG->devkit)) {
-            return $cache[$lintername] = null;
-        }
-
-        if (!isset($CFG->devkit['linters'][$lintername])) {
-            return $cache[$lintername] = null;
-        }
-
-        $config = $CFG->devkit['linters'][$lintername];
-        if (!is_array($config)) {
-            return $cache[$lintername] = null;
-        }
-
-        return $cache[$lintername] = $config;
-    }
-
-    /**
      * Helper function to get a specific linter config value, returns null if not set.
+     * Optionally set togglekey to only return the value if it is set.
      * @param string $key
-     * @param string|null $lintername
+     * @param string|null $togglekey
      * @return mixed
      */
-    protected static function get_config_value(string $key, ?string $lintername = null): mixed {
-        $config = static::get_config($lintername);
-        if ($config === null) {
-            return $config;
+    protected static function get_config_value(string $key, ?string $togglekey = null): mixed {
+        if ($togglekey !== null) {
+            $enabled = self::get_config_value($togglekey);
+            if (!$enabled) {
+                return null;
+            }
         }
 
-        if (!array_key_exists($key, $config)) {
+        $config = static::get_config();
+        if ($config === null) {
             return null;
         }
 
-        return $config[$key];
+        if (!property_exists($config, $key)) {
+            return null;
+        }
+
+        return $config->$key;
+    }
+
+    /**
+     * Defines all configurable options for the current linter.
+     * @param MoodleQuickForm $form
+     * @return void
+     */
+    public static function define_config(MoodleQuickForm $form): void {
+        $enabledoptions = [
+            self::LINTER_STATUS_ENABLED => get_string('enable'),
+            self::LINTER_STATUS_DISABLED => get_string('disable'),
+        ];
+        $form->addElement('select', self::CONFIG_KEY_STATUS, 'Linter status', $enabledoptions);
+        $form->setDefault(self::CONFIG_KEY_STATUS, self::LINTER_STATUS_ENABLED);
+
+        $patterns = [
+            self::CONFIG_KEY_EXCLUDE_PATTERNS_ENABLED => self::CONFIG_KEY_EXCLUDE_PATTERNS,
+            self::CONFIG_KEY_INCLUDE_PATTERNS_ENABLED => self::CONFIG_KEY_INCLUDE_PATTERNS,
+        ];
+        foreach ($patterns as $togglename => $name) {
+            self::define_config_textarea($form, $name, $togglename);
+        }
+
+        return;
+    }
+
+    /**
+     * Utility function for adding a toggleable textarea.
+     * @param MoodleQuickForm $form
+     * @param string $name
+     * @param string $togglename
+     * @return void
+     */
+    public static function define_config_textarea(MoodleQuickForm $form, string $name, string $togglename): void {
+        $form->addElement('checkbox', $togglename, "Enable $name");
+        $form->addElement('textarea', $name, $name);
+        $form->disabledIf($name, $togglename);
+        $form->hideIf($name, $togglename);
+    }
+
+    /**
+     * Get the configuration name for this linter.
+     * @return string
+     */
+    public static function get_config_name(): string {
+        $name = self::get_name();
+        return "linter_config:$name";
+    }
+
+    /**
+     * Gets the linter config.
+     * @return object|null
+     */
+    public static function get_config(): ?object {
+        $configstring = get_config('local_devkit', self::get_config_name());
+        if (!$configstring) {
+            return null;
+        }
+        return json_decode($configstring, false);
+    }
+
+    /**
+     * Saves the linter config.
+     * @param object $config
+     * @return void
+     */
+    public static function save_config(object $config): void {
+        $configstring = json_encode($config);
+        if ($configstring === false) {
+            throw new Exception('Something went while wrong encoding linter config.');
+        }
+        set_config(self::get_config_name(), $configstring, 'local_devkit');
+    }
+
+    /**
+     * Utility function to parse textarea multiline strings as an array.
+     * Splits at new lines, trims each line, and filters empty lines.
+     * @param string $string
+     * @return string[]
+     */
+    protected static function parse_multiline_string_as_array(string $string): array {
+        $excludes = explode("\n", $string);
+        return array_filter(array_map(trim(...), $excludes));
     }
 }

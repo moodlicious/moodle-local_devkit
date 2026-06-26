@@ -22,22 +22,35 @@ php local/devkit/cli/run.php plugins:list --include-standard
 
 Options: `--json`, `--include-standard`.
 
-### `database:list <component>`
+### `db:show` / `database:show`
 
-List database tables for a plugin.
+List all database tables, or tables for a specific plugin component.
 
 ```bash
-php local/devkit/cli/run.php database:list mod_forum
-php local/devkit/cli/run.php database:list mod_assign --format=json
+php local/devkit/cli/run.php db:show
+php local/devkit/cli/run.php db:show mod_forum
+php local/devkit/cli/run.php database:show mod_assign --format=json
 ```
 
-Options: `component` (required), `--format` (`table`|`json`).
+Options: `component` (optional), `--format` (`table`|`json`).
 
-### `database:format <component>`
+### `db:table` / `database:table`
+
+Get detailed info (fields, indexes, keys) for a specific database table.
+
+```bash
+php local/devkit/cli/run.php db:table forum
+php local/devkit/cli/run.php database:table assign --format=json
+```
+
+Options: `tablename` (required), `--format` (`table`|`json`).
+
+### `db:format` / `database:format`
 
 Format the `db/install.xml` file for a plugin.
 
 ```bash
+php local/devkit/cli/run.php db:format mod_forum
 php local/devkit/cli/run.php database:format mod_forum
 ```
 

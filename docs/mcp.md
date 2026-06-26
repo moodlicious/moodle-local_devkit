@@ -35,7 +35,8 @@ Runs on stdio (bidirectional JSON-RPC).
 | Tool | Description | Params |
 |------|-------------|--------|
 | `list_plugins` | List installed plugins | `includestandardplugins` (bool) |
-| `list_plugin_tables` | List DB schema for a plugin | `component` (string, e.g. `mod_assign`) |
+| `db_show_tables` | Show database tables, all or for a specific plugin | `component` (string, optional, e.g. `mod_assign`) |
+| `db_get_table` | Get fields, indexes and keys of a specific table | `tablename` (string, e.g. `forum`) |
 | `lint_files` | Run linters on paths | `paths` (string[]) |
 
 ## In This Plugin

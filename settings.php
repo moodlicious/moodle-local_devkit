@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($hassiteconfig) {
     $settings = new admin_settingpage('local_devkit', get_string('pluginname', 'local_devkit'));
-    $ADMIN->add('localplugins', $settings);
+    $ADMIN->add('development', $settings);
 
     $settings->add(new admin_setting_configcheckbox(
         'local_devkit/debugbar_enabled',

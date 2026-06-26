@@ -2,7 +2,7 @@
 
 ## Admin Settings
 
-Site admin > Plugins > Local plugins > DevKit:
+Site admin > Development > DevKit:
 
 | Setting | Key | Type | Description |
 |---------|-----|------|-------------|
@@ -13,7 +13,7 @@ Site admin > Plugins > Local plugins > DevKit:
 
 ## Linter Configuration
 
-Each linter can be configured individually via Site administration > Plugins > DevKit > Linter Configuration. Settings are stored in the `config_plugins` table and include:
+Each linter can be configured individually via Site administration > Development > DevKit > Linter Configuration. Settings are stored in the `config_plugins` table and include:
 
 - **Status**: enable/disable each linter independently.
 - **Include patterns**: glob patterns for files the linter should process (disabled by default — uses linter's built-in defaults).

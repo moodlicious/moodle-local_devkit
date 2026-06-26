@@ -4,30 +4,25 @@ Extensible lint system. Runs external tools and parses output.
 
 ## 7 Linters
 
-| Linter | Tool | Files | Config key |
-|--------|------|-------|------------|
-| phplint | `php -l` | `*.php` | `phplint` |
-| phpcs | `phpcs --report=json` | `*.php` | `phpcs` |
-| phpstan | `phpstan analyze` | `*.php` | `phpstan` |
-| eslint | `bunx eslint --format json` | `*.js` (excludes `amd/build/`, `yui/build/`) | `eslint` |
-| stylelint | `bunx stylelint --formatter json` | `*.css`, `*.scss` | `stylelint` |
-| phpdoc | `local_moodlecheck` | `*.php` | `phpdoc` |
-| lang | Custom PHP logic | `**/lang/*/*.php` | `lang` |
+| Linter | Tool | Files |
+|--------|------|-------|
+| phplint | `php -l` | `*.php` |
+| phpcs | `phpcs --report=json` | `*.php` |
+| phpstan | `phpstan analyze` | `*.php` |
+| eslint | `bunx eslint --format json` | `*.js` (excludes `amd/build/`, `yui/build/`) |
+| stylelint | `bunx stylelint --formatter json` | `*.css`, `*.scss` |
+| phpdoc | `local_moodlecheck` | `*.php` |
+| lang | Custom PHP logic | `**/lang/*/*.php` |
 
-## Exclude Patterns
+## Configuration
 
-Default excludes: `.git/`, `node_modules/`, `vendor/`.
+Linters can be configured per-linter via the admin UI (Plugins > Local plugins > DevKit > Linter Configuration) or programmatically. See [Configuration docs](configuration.md).
 
-Override via `$CFG->devkit`:
-
-```php
-$CFG->devkit = [
-    'linters' => [
-        'base' => ['exclude_patterns' => ['*/.venv/*']],
-        'phpcs' => ['exclude_patterns' => ['*/classes/*']],
-    ],
-];
-```
+Each linter supports:
+- **Status**: enable/disable.
+- **Include patterns**: glob patterns to narrow which files to lint.
+- **Exclude patterns**: glob patterns to skip (defaults: `.git/`, `node_modules/`, `vendor/`).
+- **Per-linter options**: e.g. PHPStan rule level (0–10), PHPCS excluded sniffs.
 
 ## Output Formats
 
@@ -37,6 +32,8 @@ $CFG->devkit = [
 | `json` | All results as one JSON object `{linters, files}` |
 | `jsonl` | One JSON line per issue |
 
+All formats support `--relative` to output paths relative to the Moodle root directory.
+
 ## Lang Linter
 
 Validates language string consistency:
@@ -45,6 +42,7 @@ Validates language string consistency:
 - Every string in `en` must exist in all other locales.
 - No orphaned strings in translations.
 - `{$a}` and `{$a->key}` placeholders match between `en` and translations.
+- Issues include line numbers pointing to the relevant string definition.
 
 ## Issue Schema
 
@@ -55,6 +53,7 @@ Each issue: `line`, `column`, `message`, `rule`, `source`, `severity` (`info`|`w
 ```bash
 php local/devkit/cli/run.php lint path/to/code
 php local/devkit/cli/run.php lint:phpcs path/to/code --format=json
+php local/devkit/cli/run.php lint path/to/code --relative
 ```
 
 See [CLI docs](cli.md).

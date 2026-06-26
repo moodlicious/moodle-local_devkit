@@ -64,9 +64,10 @@ Run all linters on paths.
 php local/devkit/cli/run.php lint local/devkit/
 php local/devkit/cli/run.php lint mod/assign/ --format=json
 php local/devkit/cli/run.php lint local/devkit/ --linters=phpcs --linters=phplint
+php local/devkit/cli/run.php lint local/devkit/ --relative
 ```
 
-Options: `paths` (array arg), `--format` (`text`|`json`|`jsonl`), `--decorate`/`--no-decorate`, `--progress`/`--no-progress`, `--linters` (filter).
+Options: `paths` (array arg), `--format` (`text`|`json`|`jsonl`), `--decorate`/`--no-decorate`, `--progress`/`--no-progress`, `--relative`/`--no-relative`, `--linters` (filter).
 
 ### `lint:phpcs`
 
@@ -78,7 +79,7 @@ PHP syntax check only.
 
 ### `lint:phpstan`
 
-Static analysis (level 8) only.
+Static analysis (configurable rule level, default 8) only.
 
 ### `lint:eslint`
 

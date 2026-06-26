@@ -25,6 +25,11 @@
  */
 
 $string['linter_config:title'] = 'Configuring {$a}';
+$string['linter_config_table:actions'] = 'Actions';
+$string['linter_config_table:config'] = 'Config';
+$string['linter_config_table:configure'] = 'Configure';
+$string['linter_config_table:linter'] = 'Linter';
+$string['linter_config_table:notconfigured'] = 'Not configured';
 $string['pluginname'] = 'DevKit';
 $string['settings:debugbar_collect_queries'] = 'Collect Database Queries';
 $string['settings:debugbar_collect_queries_desc'] = 'Collect and display database queries in the Debug Bar.';

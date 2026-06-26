@@ -33,7 +33,11 @@ class linter_config extends html_table {
      */
     public function __construct() {
         parent::__construct();
-        $this->head = ['Linter', 'Config', 'Actions'];
+        $this->head = [
+            get_string('linter_config_table:linter', 'local_devkit'),
+            get_string('linter_config_table:config', 'local_devkit'),
+            get_string('linter_config_table:actions', 'local_devkit'),
+        ];
 
         $linters = $linters = linter::get_linters_classnames();
         $this->data = [];
@@ -42,12 +46,18 @@ class linter_config extends html_table {
             $config = $linter::get_config();
             $row = [
                 $linter::get_name(),
-                $config ? html_writer::table(new key_value($config)) : 'Not configured',
-                html_writer::link('#', 'Configure', [
-                    'data-linter-config-form' => 'true',
-                    'data-linter-classname' => $linter,
-                    'data-linter-name' => $linter::get_name(),
-                ]),
+                $config
+                    ? html_writer::table(new key_value($config))
+                    : get_string('linter_config_table:notconfigured', 'local_devkit'),
+                html_writer::link(
+                    '#',
+                    get_string('linter_config_table:configure', 'local_devkit'),
+                    [
+                        'data-linter-config-form' => 'true',
+                        'data-linter-classname' => $linter,
+                        'data-linter-name' => $linter::get_name(),
+                    ],
+                ),
             ];
             $this->data[] = $row;
         }

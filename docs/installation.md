@@ -11,7 +11,7 @@
 1. Copy `local/devkit/` to your Moodle `local/` directory.
 2. Run `composer install` in `local/devkit/` to install deps.
 3. Visit Site admin > Notifications to install.
-4. Enable in Settings > Plugins > Local plugins > DevKit.
+4. Enable in Settings > Development > DevKit.
 
 ## Kill Switch
 

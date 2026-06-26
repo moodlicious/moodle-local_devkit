@@ -16,7 +16,7 @@ Extensible lint system. Runs external tools and parses output.
 
 ## Configuration
 
-Linters can be configured per-linter via the admin UI (Plugins > Local plugins > DevKit > Linter Configuration) or programmatically. See [Configuration docs](configuration.md).
+Linters can be configured per-linter via the admin UI (Development > DevKit > Linter Configuration) or programmatically. See [Configuration docs](configuration.md).
 
 Each linter supports:
 - **Status**: enable/disable.

@@ -331,13 +331,14 @@ class lang extends base {
             }
 
             // Validate that there are no extra locales.
-            // Validate that if a string has the 'en' locale, it should also have all other locales.
             $extralocales = array_diff($identifierlocales, $locales);
             foreach ($extralocales as $extralocale) {
+                $extralangfile = self::compose_lang_filepath($langdir, $component, $extralocale);
                 $results[] = self::single_file_issue(
-                    self::compose_lang_filepath($langdir, $component, $extralocale),
+                    $extralangfile,
                     "Identifier '$identifier' has extra '$extralocale' locale",
-                    'identifier-extra'
+                    'identifier-extra',
+                    line: self::identifier_line($identifier, $extralangfile),
                 );
             }
 
@@ -345,14 +346,16 @@ class lang extends base {
             $requiredplaceholders = self::extract_placeholders($englishstring);
 
             foreach ($localesdata as $locale => $string) {
+                $localelangfile = self::compose_lang_filepath($langdir, $component, $locale);
                 $placeholders = self::extract_placeholders($string);
                 $missingplaceholders = array_diff($requiredplaceholders, $placeholders);
                 if ($missingplaceholders) {
                     $placeholdersmsg = self::placeholders_to_string($missingplaceholders);
                     $results[] = self::single_file_issue(
-                        self::compose_lang_filepath($langdir, $component, $locale),
+                        $localelangfile,
                         "Identifier '$identifier' is missing placeholders $placeholdersmsg in the '$locale' locale",
-                        'identifier-placeholders-missing'
+                        'identifier-placeholders-missing',
+                        line: self::identifier_line($identifier, $localelangfile),
                     );
                 }
 
@@ -360,9 +363,10 @@ class lang extends base {
                 if ($extraplaceholders) {
                     $placeholdersmsg = self::placeholders_to_string($extraplaceholders);
                     $results[] = self::single_file_issue(
-                        self::compose_lang_filepath($langdir, $component, $locale),
+                        $localelangfile,
                         "Identifier '$identifier' has extra placeholders $placeholdersmsg in the '$locale' locale",
-                        'identifier-placeholders-extra'
+                        'identifier-placeholders-extra',
+                        line: self::identifier_line($identifier, $localelangfile),
                     );
                 }
 
@@ -409,8 +413,11 @@ class lang extends base {
 
     /**
      * Helper function to create a simple issue.
+     * @param string $path
      * @param string $message
      * @param string|null $rule
+     * @param int $line
+     * @param int $column
      * @param string $source
      * @param severity $severity
      * @return file
@@ -419,13 +426,25 @@ class lang extends base {
         string $path,
         string $message,
         ?string $rule,
+        int $line = 0,
+        int $column = 0,
         string $source = 'lang',
         severity $severity = severity::error,
     ): file {
         return new file(
             $path,
-            [issue::simple($message, $rule, $source, $severity)]
+            [new issue($line, $column, $message, $rule, $source, $severity)]
         );
+    }
+
+    /**
+     * Resolves the line number for a specific identifier in a language file, falling back to 0.
+     * @param string $identifier
+     * @param string $langfile
+     * @return int
+     */
+    private static function identifier_line(string $identifier, string $langfile): int {
+        return self::find_identifier_line_number_in_file($identifier, $langfile) ?? 0;
     }
 
     /**
@@ -452,5 +471,38 @@ class lang extends base {
         $placeholders = array_map(fn($placeholder) => "`$placeholder`", $placeholders);
         $string = implode(',', $placeholders);
         return "($string)";
+    }
+
+    /**
+     * Resolves the line number for a specific identifier in a language file.
+     * @param string $identifier
+     * @param string $langfile
+     * @return int|null
+     */
+    private static function find_identifier_line_number_in_file(string $identifier, string $langfile): ?int {
+        $source = file_get_contents($langfile);
+        if ($source === false) {
+            return null;
+        }
+
+        $tokens = token_get_all($source);
+        $count = count($tokens);
+
+        for ($i = 0; $i < $count - 3; $i++) {
+            if (
+                is_array($tokens[$i]) &&
+                $tokens[$i][0] === T_VARIABLE &&
+                $tokens[$i][1] === '$string' &&
+                $tokens[$i + 1] === '[' &&
+                is_array($tokens[$i + 2]) &&
+                $tokens[$i + 2][0] === T_CONSTANT_ENCAPSED_STRING &&
+                trim($tokens[$i + 2][1], "'\"") === $identifier &&
+                $tokens[$i + 3] === ']'
+            ) {
+                return $tokens[$i][2];
+            }
+        }
+
+        return null;
     }
 }

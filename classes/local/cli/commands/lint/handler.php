@@ -41,6 +41,10 @@ use function array_key_exists;
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class handler {
+    /**
+     * Pattern to detect explicitly-delimited regex (e.g. /pattern/flags).
+     * @var string
+     */
     private const string REGEX_PATTERN = '/^\/.+\/[a-z]*$/i';
 
     /**

@@ -51,9 +51,9 @@ Each issue: `line`, `column`, `message`, `rule`, `source`, `severity` (`info`|`w
 ## Usage
 
 ```bash
-php local/devkit/cli/run.php lint path/to/code
-php local/devkit/cli/run.php lint:phpcs path/to/code --format=json
-php local/devkit/cli/run.php lint path/to/code --relative
+./devkit lint path/to/code
+./devkit lint:phpcs path/to/code --format=json
+./devkit lint path/to/code --relative
 ```
 
 See [CLI docs](cli.md).

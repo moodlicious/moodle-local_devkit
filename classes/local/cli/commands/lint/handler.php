@@ -66,7 +66,7 @@ class handler {
         #[Option('Add file:// links to output')] bool $decorate = true,
         #[Option('Enable/disable the progress bar')] bool $progress = true,
         #[Option('Output relative paths')] bool $relative = false,
-        #[Option('Filter by rule name (regex)')] array $rules = [],
+        #[Option('Filter by rule name (case-insensitive substring, or /pattern/flags for regex)')] array $rules = [],
         #[Option('Linters to run')] array $linters = [],
     ): int {
         chdir(utils::get_moodle_root_dir());
@@ -149,7 +149,7 @@ class handler {
     }
 
     /**
-     * Filters results by rule names using regex.
+     * Filters results by rule names using case-insensitive substring or regex patterns.
      * @param file[] $results
      * @param string[] $rules
      * @return file[]
@@ -226,7 +226,7 @@ class handler {
                 'rules',
                 mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 default: [],
-                description: 'Filter by rule name (regex)',
+                description: 'Filter by rule name (case-insensitive substring, or /pattern/flags for regex)',
             )
             ->addOption('linters', mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, default: $linternames)
             ->setCode(self::invoke(...));

@@ -68,7 +68,7 @@ php local/devkit/cli/run.php lint local/devkit/ --relative
 php local/devkit/cli/run.php lint local/devkit/ --rules=/moodle\.Commenting/ --rules=no-unused-vars
 ```
 
-Options: `paths` (array arg), `--format` (`text`|`json`|`jsonl`), `--decorate`/`--no-decorate`, `--progress`/`--no-progress`, `--relative`/`--no-relative`, `--rules` (regex filter), `--linters` (filter).
+Options: `paths` (array arg), `--format` (`text`|`json`|`jsonl`), `--decorate`/`--no-decorate`, `--progress`/`--no-progress`, `--relative`/`--no-relative`, `--rules` (case-insensitive substring or /pattern/flags regex), `--linters` (filter).
 
 ### `lint:phpcs`
 

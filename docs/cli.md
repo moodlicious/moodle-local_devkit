@@ -1,10 +1,23 @@
 # CLI Commands
 
-Entry point:
+## Entry Points
+
+### Long form
 
 ```bash
 php local/devkit/cli/run.php
 ```
+
+### Binary (shorthand)
+
+Symlink or copy `bin/devkit` to your Moodle root:
+
+```bash
+ln -s public/local/devkit/bin/devkit devkit
+./devkit
+```
+
+All examples below work with both `php local/devkit/cli/run.php` and `./devkit`.
 
 Uses Symfony Console (v7.x).
 

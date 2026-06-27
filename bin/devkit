@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 // This file is part of Moodle - https://moodle.org/
 //
@@ -15,23 +16,23 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * DevKit CLI Entry point.
- *
- * @var stdClass $plugin
+ * DevKit binary.
+ * To use, copy/symlink this file to your Moodle root directory.
+ * Usage: ./devkit
  *
  * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_devkit\local\cli\application;
-
-// phpcs:ignore moodle.Files.MoodleInternal
-if (!defined('CLI_SCRIPT')) {
+// Detect if config.php is in the same directory as this file. If so require it.
+$configpath = __DIR__ . '/config.php';
+if (file_exists($configpath)) {
     define('CLI_SCRIPT', true);
+    require_once($configpath);
+    require_once($CFG->dirroot . '/local/devkit/cli/run.php');
+    die;
 }
 
-require_once(__DIR__ . '/../../../config.php');
-
-$application = new application();
-$application->run();
+// This file is likely located at ./local/devkit/bin/devkit
+require(__DIR__ . '/../cli/run.php');

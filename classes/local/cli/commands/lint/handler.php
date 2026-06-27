@@ -30,6 +30,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use local_devkit\local\lint\schemas\file;
 use function array_key_exists;
 
 /**
@@ -50,6 +51,7 @@ class handler {
      * @param bool $decorate
      * @param bool $progress
      * @param bool $relative
+     * @param string[] $rules
      * @param string[] $linters
      * @return int
      */
@@ -62,6 +64,7 @@ class handler {
         #[Option('Add file:// links to output')] bool $decorate = true,
         #[Option('Enable/disable the progress bar')] bool $progress = true,
         #[Option('Output relative paths')] bool $relative = false,
+        #[Option('Filter by rule name (regex)')] array $rules = [],
         #[Option('Linters to run')] array $linters = [],
     ): int {
         chdir(utils::get_moodle_root_dir());
@@ -110,7 +113,49 @@ class handler {
 
         $results = linter::run($realpaths, $linters, progress: $progressindicator);
 
+        if ($rules) {
+            $results = self::filter_results_by_rules($results, $rules);
+        }
+
         return $formatter->output($linters, $results);
+    }
+
+    /**
+     * Filters results by rule names using regex.
+     * @param file[] $results
+     * @param string[] $rules
+     * @return file[]
+     */
+    private static function filter_results_by_rules(array $results, array $rules): array {
+        $patterns = array_map(function (string $rule): string {
+            if (preg_match('/^\/.+\/[a-z]*$/i', $rule)) {
+                return $rule;
+            }
+            return '#' . preg_quote($rule, '#') . '#i';
+        }, $rules);
+
+        return array_map(function (file $file) use ($patterns): file {
+            $file->issues = array_filter(
+                $file->issues,
+                fn($issue) => $issue->rule !== null && self::matches_any_pattern($issue->rule, $patterns),
+            );
+            return $file;
+        }, $results);
+    }
+
+    /**
+     * Checks if a value matches any of the given regex patterns.
+     * @param string $value
+     * @param string[] $patterns
+     * @return bool
+     */
+    private static function matches_any_pattern(string $value, array $patterns): bool {
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -148,6 +193,7 @@ class handler {
                 description: 'Output paths relative to Moodle root directory',
                 default: false,
             )
+            ->addOption('rules', mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, default: [], description: 'Filter by rule name (regex)')
             ->addOption('linters', mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, default: $linternames)
             ->setCode(self::invoke(...));
         return $command;

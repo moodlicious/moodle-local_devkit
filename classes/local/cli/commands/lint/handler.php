@@ -114,10 +114,36 @@ class handler {
         $results = linter::run($realpaths, $linters, progress: $progressindicator);
 
         if ($rules) {
+            $error = self::validate_rules($rules);
+            if ($error) {
+                $io->error($error);
+                return Command::FAILURE;
+            }
             $results = self::filter_results_by_rules($results, $rules);
         }
 
         return $formatter->output($linters, $results);
+    }
+
+    /**
+     * Validates rule filter patterns.
+     * @param string[] $rules
+     * @return string|null Error message, or null if all patterns are valid.
+     */
+    private static function validate_rules(array $rules): ?string {
+        foreach ($rules as $rule) {
+            if (preg_match('/^\/.+\/[a-z]*$/i', $rule)) {
+                if (@preg_match($rule, '') === false) {
+                    return "Invalid regex pattern \"{$rule}\": " . preg_last_error_msg();
+                }
+            } else {
+                $pattern = '#' . $rule . '#i';
+                if (@preg_match($pattern, '') === false) {
+                    return "Invalid regex pattern \"{$rule}\": " . preg_last_error_msg();
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -131,7 +157,7 @@ class handler {
             if (preg_match('/^\/.+\/[a-z]*$/i', $rule)) {
                 return $rule;
             }
-            return '#' . preg_quote($rule, '#') . '#i';
+            return '#' . $rule . '#i';
         }, $rules);
 
         return array_map(function (file $file) use ($patterns): file {

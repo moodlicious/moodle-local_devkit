@@ -52,7 +52,6 @@ class stylelint extends base {
             return [];
         }
 
-        $this->set_progress_file($filepath);
         $process = new Process(['bunx', 'stylelint', '--formatter', 'json', $filepath]);
         $process->run();
 

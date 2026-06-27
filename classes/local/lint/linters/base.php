@@ -85,6 +85,7 @@ abstract class base {
         if (!$this->progress) {
             return;
         }
+
         $this->progress->setMessage("Running {$this->get_name()} on $path...");
     }
 
@@ -186,6 +187,8 @@ abstract class base {
             return [];
         }
 
+        $this->set_progress_file($filepath);
+
         $result = new file($filepath);
 
         if (!file_exists($filepath)) {
@@ -208,13 +211,13 @@ abstract class base {
      * @return file[]
      */
     public function lint_directory(string $directorypath): array {
+        $this->set_progress_file($directorypath);
         $results = [];
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($directorypath, RecursiveDirectoryIterator::SKIP_DOTS)
         );
 
         foreach ($iterator as $path) {
-            $this->set_progress_file($path);
             $lintresults = $this->lint_file($path);
             if ($lintresults) {
                 $results = [...$results, ...$lintresults];

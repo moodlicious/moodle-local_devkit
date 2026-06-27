@@ -52,6 +52,7 @@ class env {
         /** @var array<string, mixed> $overview */
         $overview = array_merge(...$overviewitems);
         $overview['gitbranch'] = "MOODLE_{$overview['branch']}_STABLE";
+        unset($overview['branch']);
 
         return $overview;
     }

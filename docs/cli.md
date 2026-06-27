@@ -17,7 +17,7 @@ ln -s public/local/devkit/bin/devkit devkit
 ./devkit
 ```
 
-All examples below work with both `php local/devkit/cli/run.php` and `./devkit`.
+All examples below use `./devkit` — replace with `php local/devkit/cli/run.php` if you prefer the long form.
 
 Uses Symfony Console (v7.x).
 
@@ -28,9 +28,9 @@ Uses Symfony Console (v7.x).
 List all installed plugins.
 
 ```bash
-php local/devkit/cli/run.php plugins:list
-php local/devkit/cli/run.php plugins:list --json
-php local/devkit/cli/run.php plugins:list --include-standard
+./devkit plugins:list
+./devkit plugins:list --json
+./devkit plugins:list --include-standard
 ```
 
 Options: `--json`, `--include-standard`.
@@ -40,9 +40,9 @@ Options: `--json`, `--include-standard`.
 List all database tables, or tables for a specific plugin component.
 
 ```bash
-php local/devkit/cli/run.php db:show
-php local/devkit/cli/run.php db:show mod_forum
-php local/devkit/cli/run.php database:show mod_assign --format=json
+./devkit db:show
+./devkit db:show mod_forum
+./devkit database:show mod_assign --format=json
 ```
 
 Options: `component` (optional), `--format` (`table`|`json`).
@@ -52,8 +52,8 @@ Options: `component` (optional), `--format` (`table`|`json`).
 Get detailed info (fields, indexes, keys) for a specific database table.
 
 ```bash
-php local/devkit/cli/run.php db:table forum
-php local/devkit/cli/run.php database:table assign --format=json
+./devkit db:table forum
+./devkit database:table assign --format=json
 ```
 
 Options: `tablename` (required), `--format` (`table`|`json`).
@@ -63,8 +63,8 @@ Options: `tablename` (required), `--format` (`table`|`json`).
 Format the `db/install.xml` file for a plugin.
 
 ```bash
-php local/devkit/cli/run.php db:format mod_forum
-php local/devkit/cli/run.php database:format mod_forum
+./devkit db:format mod_forum
+./devkit database:format mod_forum
 ```
 
 Options: `component` (required).
@@ -74,10 +74,10 @@ Options: `component` (required).
 Run all linters on paths.
 
 ```bash
-php local/devkit/cli/run.php lint local/devkit/
-php local/devkit/cli/run.php lint mod/assign/ --format=json
-php local/devkit/cli/run.php lint local/devkit/ --linters=phpcs --linters=phplint
-php local/devkit/cli/run.php lint local/devkit/ --relative
+./devkit lint local/devkit/
+./devkit lint mod/assign/ --format=json
+./devkit lint local/devkit/ --linters=phpcs --linters=phplint
+./devkit lint local/devkit/ --relative
 ```
 
 Options: `paths` (array arg), `--format` (`text`|`json`|`jsonl`), `--decorate`/`--no-decorate`, `--progress`/`--no-progress`, `--relative`/`--no-relative`, `--linters` (filter).

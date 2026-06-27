@@ -25,7 +25,7 @@ Add to your `mcp.json`:
 Start via CLI:
 
 ```bash
-php local/devkit/cli/run.php mcp:serve
+./devkit mcp:serve
 ```
 
 Runs on stdio (bidirectional JSON-RPC).

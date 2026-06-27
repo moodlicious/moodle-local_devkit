@@ -193,7 +193,12 @@ class handler {
                 description: 'Output paths relative to Moodle root directory',
                 default: false,
             )
-            ->addOption('rules', mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, default: [], description: 'Filter by rule name (regex)')
+            ->addOption(
+                'rules',
+                mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                default: [],
+                description: 'Filter by rule name (regex)',
+            )
             ->addOption('linters', mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, default: $linternames)
             ->setCode(self::invoke(...));
         return $command;

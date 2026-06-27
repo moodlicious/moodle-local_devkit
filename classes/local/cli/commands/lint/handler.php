@@ -41,6 +41,8 @@ use function array_key_exists;
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class handler {
+    private const string REGEX_PATTERN = '/^\/.+\/[a-z]*$/i';
+
     /**
      * Invoke
      * @param string[] $paths
@@ -132,7 +134,7 @@ class handler {
      */
     private static function validate_rules(array $rules): ?string {
         foreach ($rules as $rule) {
-            if (preg_match('/^\/.+\/[a-z]*$/i', $rule)) {
+            if (preg_match(self::REGEX_PATTERN, $rule)) {
                 if (@preg_match($rule, '') === false) {
                     return "Invalid regex pattern \"{$rule}\": " . preg_last_error_msg();
                 }
@@ -154,7 +156,7 @@ class handler {
      */
     private static function filter_results_by_rules(array $results, array $rules): array {
         $patterns = array_map(function (string $rule): string {
-            if (preg_match('/^\/.+\/[a-z]*$/i', $rule)) {
+            if (preg_match(self::REGEX_PATTERN, $rule)) {
                 return $rule;
             }
             return '#' . $rule . '#i';

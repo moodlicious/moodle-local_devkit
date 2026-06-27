@@ -65,7 +65,7 @@ php local/devkit/cli/run.php lint local/devkit/
 php local/devkit/cli/run.php lint mod/assign/ --format=json
 php local/devkit/cli/run.php lint local/devkit/ --linters=phpcs --linters=phplint
 php local/devkit/cli/run.php lint local/devkit/ --relative
-php local/devkit/cli/run.php lint local/devkit/ --rules=/^phpcs/ --rules=no-unused-vars
+php local/devkit/cli/run.php lint local/devkit/ --rules=/moodle\.Commenting/ --rules=no-unused-vars
 ```
 
 Options: `paths` (array arg), `--format` (`text`|`json`|`jsonl`), `--decorate`/`--no-decorate`, `--progress`/`--no-progress`, `--relative`/`--no-relative`, `--rules` (regex filter), `--linters` (filter).

@@ -135,10 +135,11 @@ class handler {
         }, $rules);
 
         return array_map(function (file $file) use ($patterns): file {
-            $file->issues = array_filter(
+            $filtered = array_filter(
                 $file->issues,
                 fn($issue) => $issue->rule !== null && self::matches_any_pattern($issue->rule, $patterns),
             );
+            $file->issues = array_values($filtered);
             return $file;
         }, $results);
     }

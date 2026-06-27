@@ -30,6 +30,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use local_devkit\local\lint\schemas\file;
 use function array_key_exists;
 
 /**
@@ -41,6 +42,12 @@ use function array_key_exists;
  */
 class handler {
     /**
+     * Pattern to detect explicitly-delimited regex (e.g. /pattern/flags).
+     * @var string
+     */
+    private const string REGEX_PATTERN = '/^\/.+\/[a-z]*$/i';
+
+    /**
      * Invoke
      * @param string[] $paths
      * @param SymfonyStyle $io
@@ -50,6 +57,7 @@ class handler {
      * @param bool $decorate
      * @param bool $progress
      * @param bool $relative
+     * @param string[] $rules
      * @param string[] $linters
      * @return int
      */
@@ -62,6 +70,7 @@ class handler {
         #[Option('Add file:// links to output')] bool $decorate = true,
         #[Option('Enable/disable the progress bar')] bool $progress = true,
         #[Option('Output relative paths')] bool $relative = false,
+        #[Option('Filter by rule name (case-insensitive substring, or /pattern/flags for regex)')] array $rules = [],
         #[Option('Linters to run')] array $linters = [],
     ): int {
         chdir(utils::get_moodle_root_dir());
@@ -110,7 +119,76 @@ class handler {
 
         $results = linter::run($realpaths, $linters, progress: $progressindicator);
 
+        if ($rules) {
+            $error = self::validate_rules($rules);
+            if ($error) {
+                $io->error($error);
+                return Command::FAILURE;
+            }
+            $results = self::filter_results_by_rules($results, $rules);
+        }
+
         return $formatter->output($linters, $results);
+    }
+
+    /**
+     * Validates rule filter patterns.
+     * @param string[] $rules
+     * @return string|null Error message, or null if all patterns are valid.
+     */
+    private static function validate_rules(array $rules): ?string {
+        foreach ($rules as $rule) {
+            if (preg_match(self::REGEX_PATTERN, $rule)) {
+                if (@preg_match($rule, '') === false) {
+                    return "Invalid regex pattern \"{$rule}\": " . preg_last_error_msg();
+                }
+            } else {
+                $pattern = '#' . $rule . '#i';
+                if (@preg_match($pattern, '') === false) {
+                    return "Invalid regex pattern \"{$rule}\": " . preg_last_error_msg();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Filters results by rule names using case-insensitive substring or regex patterns.
+     * @param file[] $results
+     * @param string[] $rules
+     * @return file[]
+     */
+    private static function filter_results_by_rules(array $results, array $rules): array {
+        $patterns = array_map(function (string $rule): string {
+            if (preg_match(self::REGEX_PATTERN, $rule)) {
+                return $rule;
+            }
+            return '#' . $rule . '#i';
+        }, $rules);
+
+        return array_map(function (file $file) use ($patterns): file {
+            $filtered = array_filter(
+                $file->issues,
+                fn($issue) => $issue->rule !== null && self::matches_any_pattern($issue->rule, $patterns),
+            );
+            $file->issues = array_values($filtered);
+            return $file;
+        }, $results);
+    }
+
+    /**
+     * Checks if a value matches any of the given regex patterns.
+     * @param string $value
+     * @param string[] $patterns
+     * @return bool
+     */
+    private static function matches_any_pattern(string $value, array $patterns): bool {
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -147,6 +225,12 @@ class handler {
                 mode: InputOption::VALUE_NEGATABLE,
                 description: 'Output paths relative to Moodle root directory',
                 default: false,
+            )
+            ->addOption(
+                'rules',
+                mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                default: [],
+                description: 'Filter by rule name (case-insensitive substring, or /pattern/flags for regex)',
             )
             ->addOption('linters', mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, default: $linternames)
             ->setCode(self::invoke(...));

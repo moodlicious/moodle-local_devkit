@@ -78,9 +78,10 @@ Run all linters on paths.
 ./devkit lint mod/assign/ --format=json
 ./devkit lint local/devkit/ --linters=phpcs --linters=phplint
 ./devkit lint local/devkit/ --relative
+./devkit lint local/devkit/ --rules=/moodle\.Commenting/ --rules=no-unused-vars
 ```
 
-Options: `paths` (array arg), `--format` (`text`|`json`|`jsonl`), `--decorate`/`--no-decorate`, `--progress`/`--no-progress`, `--relative`/`--no-relative`, `--linters` (filter).
+Options: `paths` (array arg), `--format` (`text`|`json`|`jsonl`), `--decorate`/`--no-decorate`, `--progress`/`--no-progress`, `--relative`/`--no-relative`, `--rules` (case-insensitive substring or /pattern/flags regex), `--linters` (filter).
 
 ### `lint:phpcs`
 

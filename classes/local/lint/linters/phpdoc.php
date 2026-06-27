@@ -60,7 +60,6 @@ class phpdoc extends base {
             return [];
         }
 
-        $this->set_progress_file($filepath);
         $checker = new \local_moodlecheck_file($filepath);
         $errors = $checker->validate();
 

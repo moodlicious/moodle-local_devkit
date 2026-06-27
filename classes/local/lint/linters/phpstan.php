@@ -77,7 +77,6 @@ class phpstan extends base {
             return [];
         }
 
-        $this->set_progress_file($filepath);
         return [...$results, ...$this->execute($filepath)];
     }
 

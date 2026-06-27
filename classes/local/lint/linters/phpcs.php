@@ -73,7 +73,6 @@ class phpcs extends base {
             return [];
         }
 
-        $this->set_progress_file($filepath);
         return [...$results, ...$this->execute_phpcs($filepath)];
     }
 

@@ -14,40 +14,37 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_devkit\local\cli\commands\mcp;
+namespace local_devkit\local\cli\commands\env;
 
-use Mcp\Server;
-use Mcp\Server\Transport\StdioTransport;
+use local_devkit\local\api\env;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Command to start the MCP server.
+ * Command to show the current Moodle environment.
  *
  * @package   local_devkit
  * @copyright 2026 Felix Yeung
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[AsCommand(name: 'mcp:serve')]
-class mcp_serve extends Command {
+#[AsCommand(name: 'env:show|env', description: 'Shows the current Moodle environment.')]
+class env_show extends Command {
     /**
      * Invoke
+     * @param SymfonyStyle $io The input/output style interface.
      * @return int
      */
-    public function __invoke(): int {
-        // Build and run the server.
-        $server = Server::builder()
-            ->setServerInfo('Moodle devkit plugin MCP server', '0.0.1')
-            ->addTool([\local_devkit\local\mcp\tools\plugins::class, 'list_plugins'])
-            ->addTool([\local_devkit\local\mcp\tools\database::class, 'db_show_tables'])
-            ->addTool([\local_devkit\local\mcp\tools\database::class, 'db_get_table'])
-            ->addTool([\local_devkit\local\mcp\tools\lint::class, 'lint_files'])
-            ->addTool([\local_devkit\local\mcp\tools\env::class, 'env_overview'])
-            ->build();
+    public function __invoke(
+        SymfonyStyle $io,
+    ): int {
+        $env = env::overview();
+        $list = [];
+        foreach ($env as $key => $value) {
+            $list[] = [$key => $value];
+        }
 
-        $transport = new StdioTransport();
-        $server->run($transport);
-
-        return 0;
+        $io->definitionList(...$list);
+        return Command::SUCCESS;
     }
 }

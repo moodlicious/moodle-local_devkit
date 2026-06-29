@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f0e842462e448c966879617024ca894b",
+    "content-hash": "5bc02189a1dbe8bb3fd172d675370513",
     "packages": [
         {
             "name": "doctrine/deprecations",
@@ -2270,31 +2270,26 @@
     "packages-dev": [
         {
             "name": "micaherne/phpstan-moodle",
-            "version": "v1.0.3",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/micaherne/phpstan-moodle.git",
-                "reference": "a795b40075f471d5d6ec924278294aca8634f203"
+                "reference": "95df7a321d51e932066d36855894f62652ae9713"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/micaherne/phpstan-moodle/zipball/a795b40075f471d5d6ec924278294aca8634f203",
-                "reference": "a795b40075f471d5d6ec924278294aca8634f203",
+                "url": "https://api.github.com/repos/micaherne/phpstan-moodle/zipball/95df7a321d51e932066d36855894f62652ae9713",
+                "reference": "95df7a321d51e932066d36855894f62652ae9713",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.2",
-                "phpstan/phpstan": "^2.0"
+                "php": "^7.4|^8.0",
+                "phpstan/phpstan": "^2.1.18"
             },
             "require-dev": {
                 "nikic/php-parser": "^5.0",
                 "phpunit/phpunit": "^11.0",
-                "psr/log": "^3.0",
-                "rector/rector": "^2.0",
-                "symfony/console": "^7.0",
-                "symfony/filesystem": "^7.0",
-                "symfony/finder": "^7.0",
-                "symfony/process": "^7.0"
+                "rector/rector": "^2.0"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -2322,17 +2317,17 @@
             "description": "Rules and utilities for using PHPStan on Moodle code.",
             "support": {
                 "issues": "https://github.com/micaherne/phpstan-moodle/issues",
-                "source": "https://github.com/micaherne/phpstan-moodle/tree/v1.0.3"
+                "source": "https://github.com/micaherne/phpstan-moodle/tree/v1.1.0"
             },
-            "time": "2026-03-29T21:15:01+00:00"
+            "time": "2026-06-09T21:29:58+00:00"
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.50",
+            "version": "2.2.2",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d452086fb4cf648c6b2d8cf3b639351f79e4f3e2",
-                "reference": "d452086fb4cf648c6b2d8cf3b639351f79e4f3e2",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e5cc34d491a90e79c216d824f60fe21fd4d93bd6",
+                "reference": "e5cc34d491a90e79c216d824f60fe21fd4d93bd6",
                 "shasum": ""
             },
             "require": {
@@ -2354,6 +2349,17 @@
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ondřej Mirtes"
+                },
+                {
+                    "name": "Markus Staab"
+                },
+                {
+                    "name": "Vincent Langlet"
+                }
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
             "keywords": [
@@ -2377,7 +2383,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-17T13:10:32+00:00"
+            "time": "2026-06-05T09:00:01+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",

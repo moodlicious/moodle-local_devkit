@@ -31,6 +31,11 @@ if (!defined('CLI_SCRIPT')) {
     define('CLI_SCRIPT', true);
 }
 
+$vendorautoload = __DIR__ . '/../vendor/autoload.php';
+if (file_exists($vendorautoload)) {
+    require_once($vendorautoload);
+}
+
 require_once(__DIR__ . '/../../../config.php');
 
 $application = new application();

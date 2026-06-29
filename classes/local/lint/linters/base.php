@@ -17,6 +17,7 @@
 namespace local_devkit\local\lint\linters;
 
 use core\exception\coding_exception;
+use dml_exception;
 use Exception;
 use local_devkit\local\attributes\linter;
 use local_devkit\local\lint\schemas\issue;
@@ -422,7 +423,11 @@ abstract class base {
      * @return object|null
      */
     public static function get_config(): ?object {
-        $configstring = get_config('local_devkit', self::get_config_name());
+        try {
+            $configstring = get_config('local_devkit', self::get_config_name());
+        } catch (dml_exception) {
+            return null;
+        }
         if (!$configstring) {
             return null;
         }

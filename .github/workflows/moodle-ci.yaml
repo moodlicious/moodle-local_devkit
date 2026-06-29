@@ -100,9 +100,14 @@ jobs:
               if: ${{ !cancelled() }}
               run: |
                   DEVKIT=./moodle/local/devkit/bin/devkit
-                  [ ! -f "$DEVKIT" ] && DEVKIT=./moodle/public/local/devkit/bin/devkit
+                  if [ -f "$DEVKIT" ]; then
+                      PLUGINPATH=./moodle/local/devkit/
+                  else
+                      DEVKIT=./moodle/public/local/devkit/bin/devkit
+                      PLUGINPATH=./moodle/public/local/devkit/
+                  fi
                   [ ! -f "$DEVKIT" ] && { echo "devkit binary not found"; exit 1; }
-                  $DEVKIT lint:phpstan ./local/devkit/
+                  $DEVKIT lint:phpstan "$PWD/$PLUGINPATH"
               env:
                   MDL_LOCAL_DEVKIT_DISABLE: 1
 

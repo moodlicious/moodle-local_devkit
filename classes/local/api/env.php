@@ -28,7 +28,7 @@ use local_devkit\local\utils;
 class env {
     /**
      * Gets an overview of the current Moodle environment.
-     * @return void
+     * @return array<string, mixed>
      */
     public static function overview(): array {
         $configkeys = [

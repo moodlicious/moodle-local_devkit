@@ -181,6 +181,7 @@ class phpstan extends base {
 
         $moodleneonpath = realpath($CFG->dirroot . '/local/devkit/vendor/micaherne/phpstan-moodle/extension.neon');
         $deprecationrules = realpath($CFG->dirroot . '/local/devkit/vendor/phpstan/phpstan-deprecation-rules/rules.neon');
+        $devkitbootstrap = realpath($CFG->dirroot . '/local/devkit/phpstan-bootstrap.php');
 
         $moodleroot = utils::get_moodle_root_dir();
         $rulelevel = self::get_rule_level();
@@ -197,6 +198,8 @@ class phpstan extends base {
                     - */vendor/*
                 moodle:
                     rootDirectory: $moodleroot
+                bootstrapFiles:
+                - $devkitbootstrap
             NEON;
 
         file_put_contents($neonpath, $phpstandotneon);

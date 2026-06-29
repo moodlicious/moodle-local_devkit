@@ -49,6 +49,6 @@ class jsonl extends base {
             }
         }
 
-        return 0;
+        return self::exit_code($results);
     }
 }

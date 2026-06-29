@@ -17,6 +17,7 @@
 namespace local_devkit\local\lint\formatters;
 
 use local_devkit\local\lint\schemas\file;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
@@ -38,6 +39,20 @@ abstract class base {
         /** @var SymfonyStyle $io */
         protected readonly SymfonyStyle $io
     ) {
+    }
+
+    /**
+     * Return the appropriate exit code based on whether any issues were found.
+     * @param file[] $results
+     * @return int
+     */
+    protected static function exit_code(array $results): int {
+        foreach ($results as $file) {
+            if ($file->issues) {
+                return Command::FAILURE;
+            }
+        }
+        return Command::SUCCESS;
     }
 
     /**

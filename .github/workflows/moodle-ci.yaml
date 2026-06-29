@@ -96,6 +96,15 @@ jobs:
               env:
                   MDL_LOCAL_DEVKIT_DISABLE: 1
 
+            - name: Install PHPStan dependencies
+              if: ${{ !cancelled() }}
+              working-directory: plugin
+              run: composer install --no-interaction
+
+            - name: PHPStan
+              if: ${{ !cancelled() }}
+              run: plugin/vendor/bin/phpstan analyse --configuration=plugin/phpstan.neon.dist --no-progress --error-format=github plugin/
+
             - name: Validating
               if: ${{ !cancelled() }}
               run: moodle-plugin-ci validate

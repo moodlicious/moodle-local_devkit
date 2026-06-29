@@ -99,6 +99,8 @@ jobs:
             - name: PHPStan
               if: ${{ !cancelled() }}
               run: ./moodle/local/devkit/bin/devkit lint:phpstan
+              env:
+                  MDL_LOCAL_DEVKIT_DISABLE: 1
 
             - name: Validating
               if: ${{ !cancelled() }}

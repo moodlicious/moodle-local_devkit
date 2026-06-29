@@ -98,7 +98,11 @@ jobs:
 
             - name: PHPStan
               if: ${{ !cancelled() }}
-              run: ./moodle/local/devkit/bin/devkit lint:phpstan
+              run: |
+                  DEVKIT=./moodle/local/devkit/bin/devkit
+                  [ ! -f "$DEVKIT" ] && DEVKIT=./moodle/public/local/devkit/bin/devkit
+                  [ ! -f "$DEVKIT" ] && { echo "devkit binary not found"; exit 1; }
+                  $DEVKIT lint:phpstan ./local/devkit/
               env:
                   MDL_LOCAL_DEVKIT_DISABLE: 1
 

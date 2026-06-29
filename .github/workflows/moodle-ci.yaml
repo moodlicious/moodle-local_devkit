@@ -98,7 +98,7 @@ jobs:
 
             - name: PHPStan
               if: ${{ !cancelled() }}
-              run: ./local/devkit/bin/devkit lint:phpstan
+              run: ./moodle/local/devkit/bin/devkit lint:phpstan
 
             - name: Validating
               if: ${{ !cancelled() }}

@@ -278,6 +278,20 @@ abstract class base {
     }
 
     /**
+     * Creates a file object with a fatal-level issue.
+     */
+    protected static function create_file_with_fatal_issue(string $path, string $message): file {
+        return new file($path, [
+            issue::simple(
+                message: $message,
+                rule: 'devkit-internal-fatal',
+                severity: severity::fatal,
+                source: self::get_name(),
+            ),
+        ]);
+    }
+
+    /**
      * Checks if a given path matches some patterns.
      * @param string $path
      * @param string[] $patterns

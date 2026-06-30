@@ -140,11 +140,11 @@ class phpstan extends base {
             return $results;
         }
 
-        // Log and fatal errors.
+        // Log any fatal errors.
         foreach ($jsonoutput->errors as $error) {
-            $results[] = new file($path, [
-                phpstan_issue::simple($error, severity: severity::fatal),
-            ]);
+            // Log the fatal issue but don't return it yet,
+            // as there may still be things to log below in $jsonoutput->files loop.
+            $results[] = self::create_file_with_fatal_issue($path, $error);
         }
 
         foreach ($jsonoutput->files as $path => $lintedfile) {

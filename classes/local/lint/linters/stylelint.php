@@ -58,7 +58,9 @@ class stylelint extends base {
         $output = $process->getOutput();
         $jsonoutput = json_decode($output);
         if ($jsonoutput === null) {
-            return [];
+            $output = $output ?: $process->getErrorOutput();
+            $results[] = self::create_file_with_fatal_issue($filepath, "Error decoding stylelint output: '$output'");
+            return $results;
         }
 
         foreach ($jsonoutput as $lintedfile) {

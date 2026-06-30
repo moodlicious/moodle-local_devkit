@@ -117,15 +117,7 @@ class phpcs extends base {
         $results = [];
         $jsonoutput = json_decode($output);
         if ($jsonoutput === null) {
-            $issue = new phpcs_issue(
-                0,
-                0,
-                "'phpcs' returned non-JSON output.",
-                'phpcs-json-error',
-                $this->get_name(),
-                severity::error,
-            );
-            $results[] = new file($path, [$issue]);
+            $results[] = self::create_file_with_fatal_issue($path, "Unable to parse phpcs output '$output'");
             return $results;
         }
 

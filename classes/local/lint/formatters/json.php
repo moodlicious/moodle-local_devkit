@@ -45,6 +45,6 @@ class json extends base {
             return -1;
         }
         $this->io->writeln($jsonstring);
-        return 0;
+        return self::exit_code($results);
     }
 }

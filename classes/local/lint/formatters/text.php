@@ -52,6 +52,6 @@ class text extends base {
 
         $this->io->writeln('');
         $this->io->writeln("Linted $filecount files with $issuecount issues.");
-        return 0;
+        return self::exit_code($results);
     }
 }

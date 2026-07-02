@@ -77,11 +77,11 @@ class mustachelint extends base {
         }
 
         $comments = self::extract_comments_from_template($content);
-        [$license, $documentation] = self::get_license_documentation_comments($comments);
+        [$license, $documentation] = self::get_license_and_documentation_comments($comments);
 
         $issues = [
             ...self::get_issues_for_license_comment($license),
-            ...self::get_issues_for_documentation_comment($documentation, $templatename, $filepath, $content),
+            ...self::get_issues_for_documentation_comment($documentation, $templatename),
         ];
 
         return [new file($filepath, $issues)];
@@ -89,10 +89,10 @@ class mustachelint extends base {
 
     /**
      * Returns the template name in the format of componentname/templatename.
-     * @return string
+     * @return string|null
      */
     private static function resolve_template_name(string $filepath): ?string {
-        $directoriespath = self::get_directories_from_mustache_path($filepath);
+        $directoriespath = self::parse_template_path($filepath);
         if (!$directoriespath) {
             return null;
         }
@@ -112,7 +112,7 @@ class mustachelint extends base {
      * @param string $filepath
      * @return array{string, string}|null
      */
-    private static function get_directories_from_mustache_path(string $filepath): ?array {
+    private static function parse_template_path(string $filepath): ?array {
         $filepath = utils::get_path_relative_to_moodle_root($filepath);
         [$dirpath, $mustachepath] = explode('/templates/', $filepath);
 
@@ -153,7 +153,7 @@ class mustachelint extends base {
      * Results are cached.
      * @return array<string, string>
      */
-    private static function get_component_path_map() {
+    private static function get_component_path_map(): array {
         /** @var array<string, string>|null $result */
         static $result = null;
         if ($result !== null) {
@@ -169,7 +169,7 @@ class mustachelint extends base {
      * @param string $content
      * @return string[]
      */
-    private static function extract_comments_from_template(string $content) {
+    private static function extract_comments_from_template(string $content): array {
         preg_match_all('/^\{\{!$[\s\S]*?^\}\}$/m', $content, $matches);
         $comments = $matches[0];
 
@@ -187,7 +187,7 @@ class mustachelint extends base {
      * @param string[] $comments
      * @return array{string|null, string|null}
      */
-    private static function get_license_documentation_comments(array $comments) {
+    private static function get_license_and_documentation_comments(array $comments): array {
         $license = null;
         $documentation = null;
 
@@ -227,7 +227,7 @@ class mustachelint extends base {
      * @param string|null $license
      * @return issue[]
      */
-    private static function get_issues_for_license_comment(?string $license) {
+    private static function get_issues_for_license_comment(?string $license): array {
         // Templates must contain GPL License.
         // See https://moodledev.io/docs/5.3/guides/templates#include-gpl-at-the-top-of-each-template.
         if ($license === null) {
@@ -250,15 +250,11 @@ class mustachelint extends base {
      * @see \core\output\mustache_template_finder::get_template_filepath() for disabling theme overrides.
      * @param string|null $documentation
      * @param string $templatename
-     * @param string $templatepath
-     * @param string $templatecontent
      * @return issue[]
      */
     private static function get_issues_for_documentation_comment(
         ?string $documentation,
         string $templatename,
-        string $templatepath,
-        string $templatecontent,
     ): array {
         $issues = [];
 

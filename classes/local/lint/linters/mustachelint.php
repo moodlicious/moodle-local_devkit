@@ -16,8 +16,6 @@
 
 namespace local_devkit\local\lint\linters;
 
-use core\output\mustache_engine;
-use core\output\mustache_template_source_loader;
 use local_devkit\local\api\plugins;
 use local_devkit\local\attributes\linter;
 use local_devkit\local\lint\schemas\file;
@@ -31,6 +29,8 @@ use local_devkit\local\utils;
  * Known issues:
  * - Unable to lint moodle core plugins (e.g. public/lib or public/lib/form).
  * - Theme overridden templates might not get linted properly (might raise template-name-incorrect unexpectedly).
+ *
+ * It may be best to implement our own mustache engine for better control.
  *
  * @package   local_devkit
  * @copyright 2026 Felix Yeung
@@ -52,7 +52,7 @@ class mustachelint extends base {
     #[\Override]
     public static function get_exclude_patterns(): array {
         return [
-            ...parent::get_include_patterns(),
+            ...parent::get_exclude_patterns(),
             // Exclude files like
             // ./public/mod/bigbluebuttonbn/tests/fixtures/extension/complex/templates/view_page_addons.mustache.
             ...['*/tests/*'],
@@ -177,37 +177,30 @@ class mustachelint extends base {
                     severity::error,
                 );
             } else {
-                $loader = new mustache_template_source_loader(fn() => $templatepath);
-                $loader->load('', '', '');
-                // Append '!' to end of template name to disable theme override.
-                $rendered = self::get_mustache()->render("$templatename!", $example);
-                if ($rendered === '') {
+                try {
+                    global $OUTPUT;
+                    // Append '!' to end of template name to disable theme override.
+                    $rendered = $OUTPUT->render_from_template("$templatename!", $example);
+                    if ($rendered === '') {
+                        $issues[] = issue::simple(
+                            'Template rendered as empty string with json example',
+                            'template-render-empty',
+                            self::get_name(),
+                            severity::warning,
+                        );
+                    }
+                } catch (\Throwable $th) {
                     $issues[] = issue::simple(
-                        'Template rendered as empty string with json example',
-                        'template-empty',
+                        'Unable to render template with json example',
+                        'template-render-error',
                         self::get_name(),
-                        severity::warning,
+                        severity::error,
                     );
                 }
             }
         }
 
         return $issues;
-    }
-
-    /**
-     * Gets a simple mustache engine.
-     * @return mustache_engine
-     */
-    private static function get_mustache() {
-        static $mustache = null;
-        if ($mustache) {
-            return $mustache;
-        }
-
-        $mustache = new mustache_engine([]);
-
-        return $mustache;
     }
 
     /**

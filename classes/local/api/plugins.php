@@ -17,6 +17,7 @@
 namespace local_devkit\local\api;
 
 use core\plugin_manager;
+use local_devkit\local\utils;
 
 /**
  * Plugins API.
@@ -87,5 +88,18 @@ class plugins {
             }
         }
         return null;
+    }
+
+    /**
+     * Get an associative array with keys of component and values of the component directory.
+     * @return array<string, string>
+     */
+    public static function get_component_path_map(): array {
+        $plugins = self::list(true);
+        $map = [];
+        foreach ($plugins as $plugin) {
+            $map[$plugin['component']] = utils::get_path_relative_to_moodle_root($plugin['directory']);
+        }
+        return $map;
     }
 }

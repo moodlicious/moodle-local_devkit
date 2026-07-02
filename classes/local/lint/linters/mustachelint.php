@@ -1,0 +1,371 @@
+<?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+namespace local_devkit\local\lint\linters;
+
+use core\output\mustache_engine;
+use core\output\mustache_template_source_loader;
+use local_devkit\local\api\plugins;
+use local_devkit\local\attributes\linter;
+use local_devkit\local\lint\schemas\file;
+use local_devkit\local\lint\schemas\issue;
+use local_devkit\local\lint\severity;
+use local_devkit\local\utils;
+
+/**
+ * The mustachelint linter.
+ *
+ * Known issues:
+ * - Unable to lint moodle core plugins (e.g. public/lib or public/lib/form).
+ * - Theme overridden templates might not get linted properly (might raise template-name-incorrect unexpectedly).
+ *
+ * @package   local_devkit
+ * @copyright 2026 Felix Yeung
+ * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+#[linter(
+    name: 'mustachelint',
+    description: 'lints mustache templates against Moodle standards',
+)]
+class mustachelint extends base {
+    #[\Override]
+    public static function get_include_patterns(): array {
+        return [
+            ...parent::get_include_patterns(),
+            ...['*.mustache'],
+        ];
+    }
+
+    #[\Override]
+    public static function get_exclude_patterns(): array {
+        return [
+            ...parent::get_include_patterns(),
+            // Exclude files like
+            // ./public/mod/bigbluebuttonbn/tests/fixtures/extension/complex/templates/view_page_addons.mustache.
+            ...['*/tests/*'],
+        ];
+    }
+
+    #[\Override]
+    public function lint_file(string $filepath): array {
+        $results = parent::lint_file($filepath);
+        if (!$this->can_lint_file($filepath)) {
+            return $results;
+        }
+
+        $templatename = self::resolve_template_name($filepath);
+        if (!$templatename) {
+            return [self::create_file_with_fatal_issue($filepath, "Unable to resolve template name.")];
+        }
+
+        $content = file_get_contents($filepath);
+        if ($content === false) {
+            return [self::create_file_with_fatal_issue($filepath, "Unable to read template file.")];
+        }
+
+        $comments = self::extract_comments_from_template($content);
+        [$license, $documentation] = self::get_license_documentation_comments($comments);
+
+        $issues = [
+            ...self::get_issues_for_license_comment($license),
+            ...self::get_issues_for_documentation_comment($documentation, $templatename, $filepath, $content),
+        ];
+
+        return [new file($filepath, $issues)];
+    }
+
+    /**
+     * Gets all issues related to the license comment.
+     * @param string|null $license
+     * @return issue[]
+     */
+    private static function get_issues_for_license_comment(?string $license) {
+        // Templates must contain GPL License.
+        // See https://moodledev.io/docs/5.3/guides/templates#include-gpl-at-the-top-of-each-template.
+        if ($license === null) {
+            return [
+                issue::simple(
+                    'Template must contain GPL License',
+                    'include-gpl-license',
+                    self::get_name(),
+                    severity::warning,
+                ),
+            ];
+        }
+
+        return [];
+    }
+
+    /**
+     * Gets all issues related to the documentation comment.
+     *
+     * @see \core\output\mustache_template_finder::get_template_filepath() for disabling theme overrides.
+     * @param string|null $documentation
+     * @param string $templatename
+     * @param string $templatepath
+     * @param string $templatecontent
+     * @return issue[]
+     */
+    private static function get_issues_for_documentation_comment(
+        ?string $documentation,
+        string $templatename,
+        string $templatepath,
+        string $templatecontent,
+    ): array {
+        $issues = [];
+
+        // Documentation is required.
+        // See https://moodledev.io/docs/5.3/guides/templates#include-a-documentation-comment-for-each-template.
+        if ($documentation === null) {
+            return [
+                issue::simple(
+                    'Template should contain a documentation comment',
+                    'documentation-required',
+                    self::get_name(),
+                    severity::warning,
+                ),
+            ];
+        }
+
+        $declaredtemplatename = self::get_template_from_comment($documentation);
+        if ($declaredtemplatename !== $templatename) {
+            $issues[] = issue::simple(
+                "Incorrect @template, expected $templatename",
+                'template-name-incorrect',
+                self::get_name(),
+                severity::error,
+            );
+        }
+
+        if (strtolower($templatename) !== $templatename) {
+            $issues[] = issue::simple(
+                'Template name should be in all lowercase',
+                'template-name-casing',
+                self::get_name(),
+                severity::warning,
+            );
+        }
+
+        $examplejson = self::get_example_from_comment($documentation);
+        if ($examplejson === null) {
+            $issues[] = issue::simple(
+                'Template documentation missing example context',
+                'documentation-example-context-required',
+                self::get_name(),
+                severity::warning,
+            );
+        } else {
+            $example = json_decode($examplejson);
+            if ($example === null) {
+                $issues[] = issue::simple(
+                    'Invalid example context, json decoding error',
+                    'documentation-example-context-decode',
+                    self::get_name(),
+                    severity::error,
+                );
+            } else {
+                $loader = new mustache_template_source_loader(fn() => $templatepath);
+                $loader->load('', '', '');
+                // Append '!' to end of template name to disable theme override.
+                $rendered = self::get_mustache()->render("$templatename!", $example);
+                if ($rendered === '') {
+                    $issues[] = issue::simple(
+                        'Template rendered as empty string with json example',
+                        'template-empty',
+                        self::get_name(),
+                        severity::warning,
+                    );
+                }
+            }
+        }
+
+        return $issues;
+    }
+
+    /**
+     * Gets a simple mustache engine.
+     * @return mustache_engine
+     */
+    private static function get_mustache() {
+        static $mustache = null;
+        if ($mustache) {
+            return $mustache;
+        }
+
+        $mustache = new mustache_engine([]);
+
+        return $mustache;
+    }
+
+    /**
+     * Match any mustache comments and return them.
+     * @param string $content
+     * @return string[]
+     */
+    private static function extract_comments_from_template(string $content) {
+        preg_match_all('/^\{\{!$[\s\S]*?^\}\}$/m', $content, $matches);
+        $comments = $matches[0];
+
+        return array_filter(array_map(function (string $comment) {
+            $comment = preg_replace('/^\{\{!\R?/', '', $comment); // Remove opening line.
+            if ($comment) {
+                $comment = preg_replace('/^\}\}$/m', '', $comment);   // Remove closing line.
+            }
+            return $comment;
+        }, $comments));
+    }
+
+    /**
+     * Get the declared template name (@template xxx) from the documentation comment.
+     * @param string $comment
+     */
+    private static function get_template_from_comment(string $comment): ?string {
+        if (!preg_match('/@template ([A-Za-z0-9_\/-]+)/', $comment, $match)) {
+            return null;
+        }
+
+        return $match[1];
+    }
+
+    /**
+     * Get the example json from the documentation comment.
+     * @param string $comment
+     */
+    private static function get_example_from_comment(string $comment): ?string {
+        if (!preg_match('/Example context \(json\):\R\s*([\s\S]*})/', $comment, $match)) {
+            return null;
+        }
+
+        return $match[1];
+    }
+
+    /**
+     * Finds the GPL license comment and the documentation comment.
+     * @param string[] $comments
+     * @return array{string|null, string|null}
+     */
+    private static function get_license_documentation_comments(array $comments) {
+        $license = null;
+        $documentation = null;
+
+        foreach ($comments as $comment) {
+            if ($license !== null && $documentation !== null) {
+                break;
+            }
+
+            $trimmed = trim($comment);
+
+            // Find the comment that looks like a license.
+            if ($license === null) {
+                if (
+                    str_starts_with($trimmed, 'This file is part of Moodle')
+                    && str_contains($trimmed, 'GNU General Public License')
+                    && str_ends_with($trimmed, '//www.gnu.org/licenses/>.')
+                ) {
+                    $license = $comment;
+                    continue;
+                }
+            }
+
+            // Assumes the template that contains '@template' is the documentation comment.
+            if ($documentation === null) {
+                if (str_starts_with($trimmed, '@template')) {
+                    $documentation = $comment;
+                    continue;
+                }
+            }
+        }
+
+        return [$license, $documentation];
+    }
+
+    /**
+     * Returns the template name in the format of componentname/templatename.
+     * @return string
+     */
+    private static function resolve_template_name(string $filepath): ?string {
+        $directoriespath = self::get_directories_from_mustache_path($filepath);
+        if (!$directoriespath) {
+            return null;
+        }
+
+        [$pluginpath, $templatepath] = $directoriespath;
+
+        $component = self::resolve_component_from_directory($pluginpath);
+        if (!$component) {
+            return null;
+        }
+
+        return "$component/$templatepath";
+    }
+
+    /**
+     * Gets the plugin path and mustache path.
+     * @param string $filepath
+     * @return array{string, string}|null
+     */
+    private static function get_directories_from_mustache_path(string $filepath): ?array {
+        $filepath = utils::get_path_relative_to_moodle_root($filepath);
+        [$dirpath, $mustachepath] = explode('/templates/', $filepath);
+
+        if (!$mustachepath) {
+            return null;
+        }
+
+        $mustacheext = '.mustache';
+        if (!str_ends_with($mustachepath, $mustacheext)) {
+            return null;
+        }
+
+        $mustachepath = substr($mustachepath, 0, strlen($mustachepath) - strlen($mustacheext));
+        return [$dirpath, $mustachepath];
+    }
+
+    /**
+     * Given a component directory, find the component name associated with the directory.
+     * @param string $dirpath
+     * @return string|null
+     */
+    private static function resolve_component_from_directory(string $dirpath): ?string {
+        $componentpathmap = self::get_component_path_map();
+        foreach ($componentpathmap as $component => $path) {
+            if ($path !== $dirpath) {
+                continue;
+            }
+
+            return $component;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get an associative array with keys of component and values of the component directory.
+     * Ordered from the longest directory to the shortest, this is so that sub-plugin types can be matched accurately.
+     * Results are cached.
+     * @return array<string, string>
+     */
+    private static function get_component_path_map() {
+        /** @var array<string, string>|null $result */
+        static $result = null;
+        if ($result !== null) {
+            return $result;
+        }
+
+        $result = plugins::get_component_path_map();
+        return $result;
+    }
+}

@@ -88,6 +88,141 @@ class mustachelint extends base {
     }
 
     /**
+     * Returns the template name in the format of componentname/templatename.
+     * @return string
+     */
+    private static function resolve_template_name(string $filepath): ?string {
+        $directoriespath = self::get_directories_from_mustache_path($filepath);
+        if (!$directoriespath) {
+            return null;
+        }
+
+        [$pluginpath, $templatepath] = $directoriespath;
+
+        $component = self::resolve_component_from_directory($pluginpath);
+        if (!$component) {
+            return null;
+        }
+
+        return "$component/$templatepath";
+    }
+
+    /**
+     * Gets the plugin path and mustache path.
+     * @param string $filepath
+     * @return array{string, string}|null
+     */
+    private static function get_directories_from_mustache_path(string $filepath): ?array {
+        $filepath = utils::get_path_relative_to_moodle_root($filepath);
+        [$dirpath, $mustachepath] = explode('/templates/', $filepath);
+
+        if (!$mustachepath) {
+            return null;
+        }
+
+        $mustacheext = '.mustache';
+        if (!str_ends_with($mustachepath, $mustacheext)) {
+            return null;
+        }
+
+        $mustachepath = substr($mustachepath, 0, strlen($mustachepath) - strlen($mustacheext));
+        return [$dirpath, $mustachepath];
+    }
+
+    /**
+     * Given a component directory, find the component name associated with the directory.
+     * @param string $dirpath
+     * @return string|null
+     */
+    private static function resolve_component_from_directory(string $dirpath): ?string {
+        $componentpathmap = self::get_component_path_map();
+        foreach ($componentpathmap as $component => $path) {
+            if ($path !== $dirpath) {
+                continue;
+            }
+
+            return $component;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get an associative array with keys of component and values of the component directory.
+     * Ordered from the longest directory to the shortest, this is so that sub-plugin types can be matched accurately.
+     * Results are cached.
+     * @return array<string, string>
+     */
+    private static function get_component_path_map() {
+        /** @var array<string, string>|null $result */
+        static $result = null;
+        if ($result !== null) {
+            return $result;
+        }
+
+        $result = plugins::get_component_path_map();
+        return $result;
+    }
+
+    /**
+     * Match any mustache comments and return them.
+     * @param string $content
+     * @return string[]
+     */
+    private static function extract_comments_from_template(string $content) {
+        preg_match_all('/^\{\{!$[\s\S]*?^\}\}$/m', $content, $matches);
+        $comments = $matches[0];
+
+        return array_filter(array_map(function (string $comment) {
+            $comment = preg_replace('/^\{\{!\R?/', '', $comment); // Remove opening line.
+            if ($comment) {
+                $comment = preg_replace('/^\}\}$/m', '', $comment);   // Remove closing line.
+            }
+            return $comment;
+        }, $comments));
+    }
+
+    /**
+     * Finds the GPL license comment and the documentation comment.
+     * @param string[] $comments
+     * @return array{string|null, string|null}
+     */
+    private static function get_license_documentation_comments(array $comments) {
+        $license = null;
+        $documentation = null;
+
+        foreach ($comments as $comment) {
+            if ($license !== null && $documentation !== null) {
+                break;
+            }
+
+            $trimmed = trim($comment);
+
+            // Find the comment that looks like a license.
+            if ($license === null) {
+                if (
+                    str_starts_with($trimmed, 'This file is part of Moodle')
+                    && str_contains($trimmed, 'GNU General Public License')
+                    && str_ends_with($trimmed, '//www.gnu.org/licenses/>.')
+                ) {
+                    $license = $comment;
+                    continue;
+                }
+            }
+
+            // Assumes the template that contains '@template' is the documentation comment.
+            if ($documentation === null) {
+                if (str_starts_with($trimmed, '@template')) {
+                    $documentation = $comment;
+                    continue;
+                }
+            }
+        }
+
+        return [$license, $documentation];
+    }
+
+    /**
      * Gets all issues related to the license comment.
      * @param string|null $license
      * @return issue[]
@@ -204,24 +339,6 @@ class mustachelint extends base {
     }
 
     /**
-     * Match any mustache comments and return them.
-     * @param string $content
-     * @return string[]
-     */
-    private static function extract_comments_from_template(string $content) {
-        preg_match_all('/^\{\{!$[\s\S]*?^\}\}$/m', $content, $matches);
-        $comments = $matches[0];
-
-        return array_filter(array_map(function (string $comment) {
-            $comment = preg_replace('/^\{\{!\R?/', '', $comment); // Remove opening line.
-            if ($comment) {
-                $comment = preg_replace('/^\}\}$/m', '', $comment);   // Remove closing line.
-            }
-            return $comment;
-        }, $comments));
-    }
-
-    /**
      * Get the declared template name (@template xxx) from the documentation comment.
      * @param string $comment
      */
@@ -243,122 +360,5 @@ class mustachelint extends base {
         }
 
         return $match[1];
-    }
-
-    /**
-     * Finds the GPL license comment and the documentation comment.
-     * @param string[] $comments
-     * @return array{string|null, string|null}
-     */
-    private static function get_license_documentation_comments(array $comments) {
-        $license = null;
-        $documentation = null;
-
-        foreach ($comments as $comment) {
-            if ($license !== null && $documentation !== null) {
-                break;
-            }
-
-            $trimmed = trim($comment);
-
-            // Find the comment that looks like a license.
-            if ($license === null) {
-                if (
-                    str_starts_with($trimmed, 'This file is part of Moodle')
-                    && str_contains($trimmed, 'GNU General Public License')
-                    && str_ends_with($trimmed, '//www.gnu.org/licenses/>.')
-                ) {
-                    $license = $comment;
-                    continue;
-                }
-            }
-
-            // Assumes the template that contains '@template' is the documentation comment.
-            if ($documentation === null) {
-                if (str_starts_with($trimmed, '@template')) {
-                    $documentation = $comment;
-                    continue;
-                }
-            }
-        }
-
-        return [$license, $documentation];
-    }
-
-    /**
-     * Returns the template name in the format of componentname/templatename.
-     * @return string
-     */
-    private static function resolve_template_name(string $filepath): ?string {
-        $directoriespath = self::get_directories_from_mustache_path($filepath);
-        if (!$directoriespath) {
-            return null;
-        }
-
-        [$pluginpath, $templatepath] = $directoriespath;
-
-        $component = self::resolve_component_from_directory($pluginpath);
-        if (!$component) {
-            return null;
-        }
-
-        return "$component/$templatepath";
-    }
-
-    /**
-     * Gets the plugin path and mustache path.
-     * @param string $filepath
-     * @return array{string, string}|null
-     */
-    private static function get_directories_from_mustache_path(string $filepath): ?array {
-        $filepath = utils::get_path_relative_to_moodle_root($filepath);
-        [$dirpath, $mustachepath] = explode('/templates/', $filepath);
-
-        if (!$mustachepath) {
-            return null;
-        }
-
-        $mustacheext = '.mustache';
-        if (!str_ends_with($mustachepath, $mustacheext)) {
-            return null;
-        }
-
-        $mustachepath = substr($mustachepath, 0, strlen($mustachepath) - strlen($mustacheext));
-        return [$dirpath, $mustachepath];
-    }
-
-    /**
-     * Given a component directory, find the component name associated with the directory.
-     * @param string $dirpath
-     * @return string|null
-     */
-    private static function resolve_component_from_directory(string $dirpath): ?string {
-        $componentpathmap = self::get_component_path_map();
-        foreach ($componentpathmap as $component => $path) {
-            if ($path !== $dirpath) {
-                continue;
-            }
-
-            return $component;
-        }
-
-        return null;
-    }
-
-    /**
-     * Get an associative array with keys of component and values of the component directory.
-     * Ordered from the longest directory to the shortest, this is so that sub-plugin types can be matched accurately.
-     * Results are cached.
-     * @return array<string, string>
-     */
-    private static function get_component_path_map() {
-        /** @var array<string, string>|null $result */
-        static $result = null;
-        if ($result !== null) {
-            return $result;
-        }
-
-        $result = plugins::get_component_path_map();
-        return $result;
     }
 }

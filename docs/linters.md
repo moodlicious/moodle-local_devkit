@@ -2,7 +2,7 @@
 
 Extensible lint system. Runs external tools and parses output.
 
-## 7 Linters
+## 8 Linters
 
 | Linter | Tool | Files |
 |--------|------|-------|
@@ -13,6 +13,7 @@ Extensible lint system. Runs external tools and parses output.
 | stylelint | `bunx stylelint --formatter json` | `*.css`, `*.scss` |
 | phpdoc | `local_moodlecheck` | `*.php` |
 | lang | Custom PHP logic | `**/lang/*/*.php` |
+| mustachelint | Custom PHP logic | `*.mustache` |
 
 ## Configuration
 
@@ -43,6 +44,19 @@ Validates language string consistency:
 - No orphaned strings in translations.
 - `{$a}` and `{$a->key}` placeholders match between `en` and translations.
 - Issues include line numbers pointing to the relevant string definition.
+
+## Mustachelint Linter
+
+Validates mustache templates against Moodle conventions:
+
+- **GPL license**: each template must include the standard GPL header as a mustache comment.
+- **Documentation comment**: requires a `@template component/templatename` doc comment.
+- **Template name validation**: declared `@template` must match the actual file path; names must be lowercase.
+- **Example context**: expects JSON example context and renders the template via `$OUTPUT->render_from_template()` to verify it produces non-empty output.
+
+Known limitations:
+- Core plugins (e.g. `public/lib/`) are not lintable since they lack a standard component directory structure.
+- Theme-overridden templates may produce false positives for `template-name-incorrect`.
 
 ## Issue Schema
 

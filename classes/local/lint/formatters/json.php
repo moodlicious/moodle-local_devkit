@@ -32,10 +32,9 @@ class json extends base {
     public function output(array $linters, array $results): int {
         $filedata = [];
         foreach ($results as $fileresult) {
-            $component = $this->displaycomponent ? $fileresult->get_component() : null;
             $entry = [];
-            if ($component !== null) {
-                $entry['component'] = $component;
+            if ($this->displaycomponent) {
+                $entry['component'] = $fileresult->get_component();
             }
             $entry['file'] = $this->relative
                 ? utils::get_path_relative_to_moodle_root($fileresult->file)

@@ -64,7 +64,10 @@ class component {
 
 
     /**
-     * Given a component directory, find the component name associated with the directory.
+     * Given a file path, find the component name associated with that path.
+     *
+     * Skips empty component paths and checks directory boundaries to avoid
+     * prefix collisions (e.g. mod/assign vs mod/assignment).
      * @param string $path
      * @return string|null
      */
@@ -72,7 +75,12 @@ class component {
         $componentpathmap = self::get_component_path_map_sorted_cached();
 
         foreach ($componentpathmap as $component => $componentpath) {
-            if (!str_starts_with($path, $componentpath)) {
+            if ($componentpath === '' || !str_starts_with($path, $componentpath)) {
+                continue;
+            }
+
+            $nextchar = $path[strlen($componentpath)] ?? '/';
+            if ($nextchar !== '/') {
                 continue;
             }
 

@@ -35,7 +35,7 @@ Each linter supports:
 
 All formats support `--relative` to output paths relative to the Moodle root directory.
 
-The `--displaycomponent` flag prepends `[componentname]` to text output lines and includes a `"component"` key in JSON/JSONL output. Component resolution uses prefix matching against known plugin directories, sorted longest-first. Paths that do not belong to any known plugin omit the component field.
+The `--displaycomponent` flag includes a `"component"` key in JSON/JSONL output (set to `null` when unresolved) and prepends `[componentname]` to text output lines (omitted when unresolved). Component resolution uses prefix matching against known plugin directories, sorted longest-first.
 
 ## Lang Linter
 

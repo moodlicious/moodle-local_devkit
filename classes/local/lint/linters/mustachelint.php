@@ -151,8 +151,13 @@ class mustachelint extends base {
     }
 
     /**
-     * Get an associative array with keys of component and values of the component directory.
-     * Ordered from the longest directory to the shortest, this is so that sub-plugin types can be matched accurately.
+     * Returns a component-to-directory map, sorted with the longest paths first.
+     *
+     * This ordering ensures that when iterating with strict equality in
+     * {@see self::resolve_component_from_directory()}, sub-plugin directories
+     * are checked before their parent plugin directory, avoiding false
+     * prefix-based matches.
+     *
      * Results are cached.
      * @return array<string, string>
      */
@@ -164,6 +169,7 @@ class mustachelint extends base {
         }
 
         $result = plugins::get_component_path_map();
+        uasort($result, fn(string $a, string $b) => strlen($b) <=> strlen($a));
         return $result;
     }
 

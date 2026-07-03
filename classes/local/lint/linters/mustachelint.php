@@ -309,12 +309,19 @@ class mustachelint extends base {
             );
         } else {
             $example = json_decode($examplejson);
-            if ($example === null) {
+            if (json_last_error() !== JSON_ERROR_NONE) {
                 $issues[] = issue::simple(
                     'Invalid example context, json decoding error',
                     'documentation-example-context-decode',
                     self::get_name(),
                     severity::error,
+                );
+            } else if ($example === null) {
+                $issues[] = issue::simple(
+                    'Invalid example context, expected a JSON object, got null',
+                    'documentation-example-context-null',
+                    self::get_name(),
+                    severity::warning,
                 );
             } else {
                 try {

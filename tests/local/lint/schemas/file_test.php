@@ -103,6 +103,7 @@ final class file_test extends advanced_testcase {
      */
     public function test_get_component_returns_null_for_unknown_path(): void {
         global $CFG;
+        $this->resetAfterTest();
 
         $root = make_temp_directory('devkit_test_file_component');
         $CFG->root = null;
@@ -126,6 +127,7 @@ final class file_test extends advanced_testcase {
      */
     public function test_get_component_caches_result(): void {
         global $CFG;
+        $this->resetAfterTest();
 
         $root = make_temp_directory('devkit_test_file_component_cache');
         $CFG->root = null;

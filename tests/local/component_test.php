@@ -75,11 +75,11 @@ final class component_test extends advanced_testcase {
     public function test_resolve_rejects_cross_directory_prefix_match(): void {
         $map = component::get_component_path_map();
 
-        // Find a short component path like 'mod/forum' to test against.
+        // Find any non-empty plugin path to test against for cross-directory matching.
         $shortpath = null;
         $shortcomponent = null;
         foreach ($map as $component => $path) {
-            if ($path !== '' && !str_contains($component, '_')) {
+            if ($path !== '') {
                 $shortpath = $path;
                 $shortcomponent = $component;
                 break;
@@ -88,7 +88,6 @@ final class component_test extends advanced_testcase {
 
         if ($shortpath === null) {
             $this->markTestSkipped('No suitable short plugin path found for cross-directory test');
-            return;
         }
 
         $trickyfile = $shortpath . 'extra/templates/file.mustache';

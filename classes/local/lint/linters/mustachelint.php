@@ -114,8 +114,11 @@ class mustachelint extends base {
      */
     private static function parse_template_path(string $filepath): ?array {
         $filepath = utils::get_path_relative_to_moodle_root($filepath);
-        [$dirpath, $mustachepath] = explode('/templates/', $filepath);
+        if (!str_contains($filepath, '/templates/')) {
+            return null;
+        }
 
+        [$dirpath, $mustachepath] = explode('/templates/', $filepath, 2);
         if (!$mustachepath) {
             return null;
         }

@@ -31,6 +31,9 @@ abstract class base {
     /** @var bool */
     public bool $relative = false;
 
+    /** @var bool Controls whether to display the component name */
+    public bool $displaycomponent = false;
+
     /**
      * Constructor.
      * @param SymfonyStyle $io

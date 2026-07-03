@@ -45,7 +45,8 @@ class text extends base {
                 $message = $issue->message;
                 $rule = "$issue->source/$issue->rule";
                 $filelink = $fileresult->format_path($issue->line, $issue->column, $decorateoutput, $this->relative);
-                $out = "$filelink: $severity: $message ($rule)";
+                $componentprefix = $this->displaycomponent ? "[{$fileresult->get_component()}] " : '';
+                $out = "{$componentprefix}{$filelink}: $severity: $message ($rule)";
                 $this->io->writeln($out);
             }
         }

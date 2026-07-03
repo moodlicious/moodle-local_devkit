@@ -16,8 +16,8 @@
 
 namespace local_devkit\local\lint\linters;
 
-use local_devkit\local\api\plugins;
 use local_devkit\local\attributes\linter;
+use local_devkit\local\component;
 use local_devkit\local\lint\schemas\file;
 use local_devkit\local\lint\schemas\issue;
 use local_devkit\local\lint\severity;
@@ -99,7 +99,7 @@ class mustachelint extends base {
 
         [$pluginpath, $templatepath] = $directoriespath;
 
-        $component = self::resolve_component_from_directory($pluginpath);
+        $component = component::resolve_component_from_path($pluginpath);
         if (!$component) {
             return null;
         }
@@ -130,47 +130,6 @@ class mustachelint extends base {
 
         $mustachepath = substr($mustachepath, 0, strlen($mustachepath) - strlen($mustacheext));
         return [$dirpath, $mustachepath];
-    }
-
-    /**
-     * Given a component directory, find the component name associated with the directory.
-     * @param string $dirpath
-     * @return string|null
-     */
-    private static function resolve_component_from_directory(string $dirpath): ?string {
-        $componentpathmap = self::get_component_path_map();
-        foreach ($componentpathmap as $component => $path) {
-            if ($path !== $dirpath) {
-                continue;
-            }
-
-            return $component;
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns a component-to-directory map, sorted with the longest paths first.
-     *
-     * This ordering ensures that when iterating with strict equality in
-     * {@see self::resolve_component_from_directory()}, sub-plugin directories
-     * are checked before their parent plugin directory, avoiding false
-     * prefix-based matches.
-     *
-     * Results are cached.
-     * @return array<string, string>
-     */
-    private static function get_component_path_map(): array {
-        /** @var array<string, string>|null $result */
-        static $result = null;
-        if ($result !== null) {
-            return $result;
-        }
-
-        $result = plugins::get_component_path_map();
-        uasort($result, fn(string $a, string $b) => strlen($b) <=> strlen($a));
-        return $result;
     }
 
     /**

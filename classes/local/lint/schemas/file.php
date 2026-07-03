@@ -17,6 +17,7 @@
 namespace local_devkit\local\lint\schemas;
 
 use JsonSerializable;
+use local_devkit\local\component;
 use local_devkit\local\lint\schemas\issue;
 use local_devkit\local\utils;
 
@@ -58,11 +59,21 @@ class file implements JsonSerializable {
     }
 
     /**
+     * Resolves the component name from this file's path.
+     * @return string|null
+     */
+    public function get_component(): ?string {
+        $relativepath = utils::get_path_relative_to_moodle_root($this->file);
+        return component::resolve_component_from_path($relativepath);
+    }
+
+    /**
      * Get data to be serialised.
      * @return file_data
      */
     public function jsonSerialize(): array {
         return [
+            'component' => $this->get_component(),
             'file' => $this->file,
             'issues' => $this->issues,
         ];

@@ -35,6 +35,8 @@ Each linter supports:
 
 All formats support `--relative` to output paths relative to the Moodle root directory.
 
+The `--displaycomponent` flag includes a `"component"` key in JSON/JSONL output (set to `null` when unresolved) and prepends `[componentname]` to text output lines (omitted when unresolved). Component resolution uses prefix matching against known plugin directories, sorted longest-first.
+
 ## Lang Linter
 
 Validates language string consistency:
@@ -68,6 +70,7 @@ Each issue: `line`, `column`, `message`, `rule`, `source`, `severity` (`info`|`w
 ./devkit lint path/to/code
 ./devkit lint:phpcs path/to/code --format=json
 ./devkit lint path/to/code --relative
+./devkit lint path/to/code --displaycomponent
 ```
 
 See [CLI docs](cli.md).

@@ -40,12 +40,15 @@ class text extends base {
             $issues = $fileresult->issues;
             $issuecount += count($issues);
 
+            $component = $this->displaycomponent ? $fileresult->get_component() : null;
+            $componentprefix = $component !== null ? "[{$component}] " : '';
+
             foreach ($issues as $issue) {
                 $severity = $issue->severity->value;
                 $message = $issue->message;
                 $rule = "$issue->source/$issue->rule";
                 $filelink = $fileresult->format_path($issue->line, $issue->column, $decorateoutput, $this->relative);
-                $out = "$filelink: $severity: $message ($rule)";
+                $out = "{$componentprefix}{$filelink}: $severity: $message ($rule)";
                 $this->io->writeln($out);
             }
         }

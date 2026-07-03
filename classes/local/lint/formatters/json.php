@@ -30,12 +30,18 @@ use local_devkit\local\utils;
 class json extends base {
     #[\Override]
     public function output(array $linters, array $results): int {
-        $filedata = array_map(fn(file $fileresult): array => [
-            'file' => $this->relative
+        $filedata = [];
+        foreach ($results as $fileresult) {
+            $entry = [];
+            if ($this->displaycomponent) {
+                $entry['component'] = $fileresult->get_component();
+            }
+            $entry['file'] = $this->relative
                 ? utils::get_path_relative_to_moodle_root($fileresult->file)
-                : $fileresult->file,
-            'issues' => $fileresult->issues,
-        ], $results);
+                : $fileresult->file;
+            $entry['issues'] = $fileresult->issues;
+            $filedata[] = $entry;
+        }
         $jsonstring = json_encode([
             'linters' => linter::get_linters_info($linters),
             'files' => $filedata,

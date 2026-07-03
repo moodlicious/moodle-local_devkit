@@ -99,6 +99,47 @@ final class file_test extends advanced_testcase {
     }
 
     /**
+     * Test that get_component returns null for an unresolvable path.
+     */
+    public function test_get_component_returns_null_for_unknown_path(): void {
+        global $CFG;
+        $this->resetAfterTest();
+
+        $root = make_temp_directory('devkit_test_file_component');
+        $CFG->root = null;
+        $CFG->dirroot = $root;
+
+        $file = new file($root . '/unknown/templates/file.mustache');
+        $this->assertNull($file->get_component());
+    }
+
+    /**
+     * Test that jsonSerialize includes the component key.
+     */
+    public function test_json_serialize_includes_component(): void {
+        $file = new file('/path/to/file.php');
+        $serialized = $file->jsonSerialize();
+        $this->assertArrayHasKey('component', $serialized);
+    }
+
+    /**
+     * Test that get_component caches result across calls.
+     */
+    public function test_get_component_caches_result(): void {
+        global $CFG;
+        $this->resetAfterTest();
+
+        $root = make_temp_directory('devkit_test_file_component_cache');
+        $CFG->root = null;
+        $CFG->dirroot = $root;
+
+        $file = new file($root . '/unknown/templates/file.mustache');
+        $first = $file->get_component();
+        $second = $file->get_component();
+        $this->assertSame($first, $second);
+    }
+
+    /**
      * Test that format_path returns file path only when no location given.
      */
     public function test_format_path_returns_path_only_when_no_location(): void {

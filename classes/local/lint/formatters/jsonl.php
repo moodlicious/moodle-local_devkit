@@ -37,6 +37,7 @@ class jsonl extends base {
 
             foreach ($issues as $issue) {
                 $jsonstring = json_encode([
+                    ...$this->displaycomponent ? ['component' => $fileresult->get_component()] : [],
                     'file' => $filepath,
                     ...$issue->jsonSerialize(),
                 ]);

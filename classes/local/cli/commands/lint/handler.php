@@ -70,6 +70,7 @@ class handler {
         #[Option('Add file:// links to output')] bool $decorate = true,
         #[Option('Enable/disable the progress bar')] bool $progress = true,
         #[Option('Output relative paths')] bool $relative = false,
+        #[Option('Output component names')] bool $displaycomponent = false,
         #[Option('Filter by rule name (case-insensitive substring, or /pattern/flags for regex)')] array $rules = [],
         #[Option('Linters to run')] array $linters = [],
     ): int {
@@ -91,6 +92,7 @@ class handler {
         $formatter = new $formatterclass($io);
 
         $formatter->relative = $relative;
+        $formatter->displaycomponent = $displaycomponent;
 
         if ($formatter instanceof \local_devkit\local\lint\formatters\text) {
             $formatter->decorate = $decorate;
@@ -224,6 +226,12 @@ class handler {
                 'relative',
                 mode: InputOption::VALUE_NEGATABLE,
                 description: 'Output paths relative to Moodle root directory',
+                default: false,
+            )
+            ->addOption(
+                'displaycomponent',
+                mode: InputOption::VALUE_NEGATABLE,
+                description: 'Output component names',
                 default: false,
             )
             ->addOption(

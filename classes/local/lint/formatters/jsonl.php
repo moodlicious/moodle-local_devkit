@@ -35,9 +35,11 @@ class jsonl extends base {
                 ? utils::get_path_relative_to_moodle_root($fileresult->file)
                 : $fileresult->file;
 
+            $component = $this->displaycomponent ? $fileresult->get_component() : null;
+
             foreach ($issues as $issue) {
                 $jsonstring = json_encode([
-                    ...$this->displaycomponent ? ['component' => $fileresult->get_component()] : [],
+                    ...($component !== null ? ['component' => $component] : []),
                     'file' => $filepath,
                     ...$issue->jsonSerialize(),
                 ]);

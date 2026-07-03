@@ -17,7 +17,6 @@
 namespace local_devkit\local\api;
 
 use core\plugin_manager;
-use local_devkit\local\utils;
 
 /**
  * Plugins API.

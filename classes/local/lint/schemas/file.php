@@ -37,6 +37,10 @@ class file implements JsonSerializable {
     public readonly string $file;
     /** @var issue[] */
     public array $issues;
+    /** @var string|null */
+    private ?string $component = null;
+    /** @var bool */
+    private bool $componentresolved = false;
 
     /**
      * Constructor.
@@ -63,8 +67,12 @@ class file implements JsonSerializable {
      * @return string|null
      */
     public function get_component(): ?string {
-        $relativepath = utils::get_path_relative_to_moodle_root($this->file);
-        return component::resolve_component_from_path($relativepath);
+        if (!$this->componentresolved) {
+            $relativepath = utils::get_path_relative_to_moodle_root($this->file);
+            $this->component = component::resolve_component_from_path($relativepath);
+            $this->componentresolved = true;
+        }
+        return $this->component;
     }
 
     /**

@@ -20,7 +20,7 @@ Each linter can be configured individually via Site administration > Development
 - **Exclude patterns**: glob patterns to skip (disabled by default — uses built-in defaults like `.git/`, `node_modules/`, `vendor/`).
 - **Per-linter extras**:
   - `phpcs`: excluded sniffs list.
-  - `phpstan`: rule level (0–10, default 8).
+  - `phpstan`: rule level (0–10, default 8), result cache mode (`per_component` default or `normal`).
 
 ## AJAX Support
 

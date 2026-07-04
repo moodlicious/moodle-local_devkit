@@ -17,6 +17,7 @@
 namespace local_devkit\local\lint\linters;
 
 use local_devkit\local\attributes\linter;
+use local_devkit\local\component;
 use local_devkit\local\lint\schemas\issue\phpstan as phpstan_issue;
 use local_devkit\local\lint\severity;
 use local_devkit\local\lint\schemas\file;
@@ -37,7 +38,14 @@ use Symfony\Component\Process\Process;
 )]
 class phpstan extends base {
     /** @var string */
+    public const RESULT_CACHE_NORMAL = 'normal';
+    /** @var string */
+    public const RESULT_CACHE_PER_COMPONENT = 'per_component';
+
+    /** @var string */
     public const CONFIG_KEY_RULE_LEVEL = 'rule_level';
+    /** @var string */
+    public const CONFIG_KEY_RESULT_CACHE_MODE = 'result_cache_mode';
 
     #[\Override]
     public static function get_include_patterns(): array {
@@ -63,6 +71,19 @@ class phpstan extends base {
         }
 
         return $level;
+    }
+
+    /**
+     * Get if per component result cache should be used.
+     * @return string
+     */
+    public static function get_result_cache_mode(): string {
+        $config = self::get_config_value(self::CONFIG_KEY_RESULT_CACHE_MODE);
+        if ($config === null) {
+            return self::RESULT_CACHE_PER_COMPONENT;
+        }
+
+        return $config;
     }
 
     #[\Override]
@@ -167,21 +188,22 @@ class phpstan extends base {
      * Generates a temporary config neon for linting.
      * @return string
      */
-    public function generate_temp_config_neon(): string {
+    public function generate_temp_config_neon(string $path): string {
         global $CFG;
-        static $neonpath = null;
-        if ($neonpath) {
-            return $neonpath;
-        }
 
-        $runnerid = time();
-        $neondirpath = $CFG->tempdir . '/local_devkit/phpstan';
-        @mkdir($neondirpath, recursive: true);
-        $neonpath = $neondirpath . "/$runnerid.neon";
+        $neondirpath = $this->generate_temp_dir($path);
+        $neonpath = "$neondirpath/phpstan.neon";
 
-        $moodleneonpath = realpath($CFG->dirroot . '/local/devkit/vendor/micaherne/phpstan-moodle/extension.neon');
-        $deprecationrules = realpath($CFG->dirroot . '/local/devkit/vendor/phpstan/phpstan-deprecation-rules/rules.neon');
-        $devkitbootstrap = realpath($CFG->dirroot . '/local/devkit/phpstan-bootstrap.php');
+        $devkitpath = "{$CFG->dirroot}/local/devkit";
+        $moodleneonpath = realpath("$devkitpath/vendor/micaherne/phpstan-moodle/extension.neon");
+        $deprecationrules = realpath("$devkitpath/vendor/phpstan/phpstan-deprecation-rules/rules.neon");
+        $devkitbootstrap = realpath("$devkitpath/phpstan-bootstrap.php");
+
+        $tempdirconfig = match (self::get_result_cache_mode()) {
+            self::RESULT_CACHE_PER_COMPONENT => 'tmpDir: tmp',
+            self::RESULT_CACHE_NORMAL => '',
+            default => '',
+        };
 
         $moodleroot = utils::get_moodle_root_dir();
         $rulelevel = self::get_rule_level();
@@ -193,17 +215,32 @@ class phpstan extends base {
             parameters:
                 level: $rulelevel
                 paths:
-                    - .
+                    - $moodleroot
                 excludePaths:
                     - */vendor/*
                 moodle:
                     rootDirectory: $moodleroot
                 bootstrapFiles:
-                - $devkitbootstrap
+                    - $devkitbootstrap
+                $tempdirconfig
             NEON;
 
         file_put_contents($neonpath, $phpstandotneon);
         return $neonpath;
+    }
+
+    /**
+     * Generate a temp directory for the current run.
+     * @param string $path
+     * @return string
+     */
+    public function generate_temp_dir(string $path): string {
+        global $CFG;
+        $component = component::resolve_component_from_path(utils::get_path_relative_to_moodle_root($path)) ?: '_';
+        $phpstantempdir = "$CFG->tempdir/local_devkit/phpstan";
+        $tmpdir = "$phpstantempdir/runs/$component";
+        @mkdir($tmpdir, recursive: true);
+        return $tmpdir;
     }
 
     /**
@@ -217,7 +254,7 @@ class phpstan extends base {
         $currentdir = realpath($path);
 
         if (!$currentdir) {
-            return $this->generate_temp_config_neon();
+            return $this->generate_temp_config_neon($path);
         }
 
         while (true) {
@@ -234,7 +271,7 @@ class phpstan extends base {
             $currentdir = $parentdir;
         }
 
-        return $this->generate_temp_config_neon();
+        return $this->generate_temp_config_neon($path);
     }
 
     /**
@@ -252,13 +289,6 @@ class phpstan extends base {
         return self::get_phpstan_binary_path() !== null;
     }
 
-    /**
-     * Removes the temporary config file on destruct.
-     */
-    public function __destruct() {
-        @unlink($this->generate_temp_config_neon());
-    }
-
     #[\Override]
     public static function define_config(MoodleQuickForm $form): void {
         parent::define_config($form);
@@ -270,5 +300,12 @@ class phpstan extends base {
 
         $form->addElement('select', self::CONFIG_KEY_RULE_LEVEL, 'Rule level', $levels);
         $form->setDefault(self::CONFIG_KEY_RULE_LEVEL, "8");
+
+        $modes = [
+            self::RESULT_CACHE_NORMAL => 'Normal (shared cache between runs)',
+            self::RESULT_CACHE_PER_COMPONENT => 'Each component gets its own cache',
+        ];
+        $form->addElement('select', self::CONFIG_KEY_RESULT_CACHE_MODE, 'Result cache mode', $modes);
+        $form->setDefault(self::CONFIG_KEY_RESULT_CACHE_MODE, self::RESULT_CACHE_PER_COMPONENT);
     }
 }

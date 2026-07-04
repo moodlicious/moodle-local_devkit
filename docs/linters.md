@@ -23,7 +23,7 @@ Each linter supports:
 - **Status**: enable/disable.
 - **Include patterns**: glob patterns to narrow which files to lint.
 - **Exclude patterns**: glob patterns to skip (defaults: `.git/`, `node_modules/`, `vendor/`).
-- **Per-linter options**: e.g. PHPStan rule level (0–10), PHPCS excluded sniffs.
+- **Per-linter options**: e.g. PHPStan rule level (0–10) and result cache mode (normal / per-component), PHPCS excluded sniffs.
 
 ## Output Formats
 

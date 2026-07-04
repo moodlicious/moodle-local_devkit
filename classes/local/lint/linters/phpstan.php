@@ -79,7 +79,8 @@ class phpstan extends base {
      */
     public static function get_result_cache_mode(): string {
         $config = self::get_config_value(self::CONFIG_KEY_RESULT_CACHE_MODE);
-        if ($config === null) {
+        $validmodes = [self::RESULT_CACHE_NORMAL, self::RESULT_CACHE_PER_COMPONENT];
+        if ($config === null || !in_array($config, $validmodes, true)) {
             return self::RESULT_CACHE_PER_COMPONENT;
         }
 

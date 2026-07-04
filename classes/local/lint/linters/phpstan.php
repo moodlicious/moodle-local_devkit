@@ -237,7 +237,15 @@ class phpstan extends base {
      */
     public function generate_temp_dir(string $path): string {
         global $CFG;
-        $component = component::resolve_component_from_path(utils::get_path_relative_to_moodle_root($path)) ?: '_';
+
+        // Component resolving might fail during CI so catch any errors and fallback to '_'.
+        $component = null;
+        try {
+            $component = component::resolve_component_from_path(utils::get_path_relative_to_moodle_root($path)) ?: '_';
+        } catch (\Exception $th) {
+            $component = '_';
+        }
+
         $phpstantempdir = "$CFG->tempdir/local_devkit/phpstan";
         $tmpdir = "$phpstantempdir/runs/$component";
         @mkdir($tmpdir, recursive: true);

@@ -107,6 +107,7 @@ final class mustachelint_test extends advanced_testcase {
      */
     public function test_mixed_case_name(): void {
         $class = get_class($this->linter);
+        $original = $class::$mocktemplatename;
         $class::$mocktemplatename = 'local_devkit/Test';
 
         $filepath = $this->fixturedir . '/templates/mixed-case-name.mustache';
@@ -114,6 +115,8 @@ final class mustachelint_test extends advanced_testcase {
         $this->assertCount(1, $results);
         $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
         $this->assertContains('template-name-casing', $rules);
+
+        $class::$mocktemplatename = $original;
     }
 
     /**

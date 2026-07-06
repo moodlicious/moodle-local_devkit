@@ -116,7 +116,7 @@ class jsdoc extends base {
         if (!str_starts_with($content, $boilerplatehttp) && !str_starts_with($content, $boilerplatehttps)) {
             return [
                 issue::simple(
-                    'File is missing the GPL boilerplate. See https://moodledev.io/docs/guides/templates',
+                    'File is missing the GPL boilerplate.',
                     'missing-boilerplate',
                     self::get_name(),
                     severity::warning,

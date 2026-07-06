@@ -38,7 +38,8 @@ final class jsdoc_test extends advanced_testcase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->fixturedir = realpath(__DIR__ . '/../../../fixtures');
+        $path = realpath(__DIR__ . '/../../../fixtures');
+        $this->fixturedir = $path !== false ? $path : __DIR__ . '/../../../fixtures';
         $this->linter = new #[linter(
             name: 'jsdoc',
             description: 'testable jsdoc linter for unit tests',

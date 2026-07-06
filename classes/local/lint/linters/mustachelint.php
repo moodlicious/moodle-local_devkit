@@ -18,6 +18,7 @@ namespace local_devkit\local\lint\linters;
 
 use local_devkit\local\attributes\linter;
 use local_devkit\local\component;
+use local_devkit\local\generators\boilerplate;
 use local_devkit\local\lint\schemas\file;
 use local_devkit\local\lint\schemas\issue;
 use local_devkit\local\lint\severity;
@@ -76,11 +77,15 @@ class mustachelint extends base {
             return [self::create_file_with_fatal_issue($filepath, "Unable to read template file.")];
         }
 
+        $issues = [
+            ...self::get_issues_for_boilerplate($content),
+        ];
+
         $comments = self::extract_comments_from_template($content);
-        [$license, $documentation] = self::get_license_and_documentation_comments($comments);
+        $documentation = self::get_documentation_comment($comments);
 
         $issues = [
-            ...self::get_issues_for_license_comment($license),
+            ...$issues,
             ...self::get_issues_for_documentation_comment($documentation, $templatename),
         ];
 
@@ -151,58 +156,19 @@ class mustachelint extends base {
     }
 
     /**
-     * Finds the GPL license comment and the documentation comment.
-     * @param string[] $comments
-     * @return array{string|null, string|null}
-     */
-    private static function get_license_and_documentation_comments(array $comments): array {
-        $license = null;
-        $documentation = null;
-
-        foreach ($comments as $comment) {
-            if ($license !== null && $documentation !== null) {
-                break;
-            }
-
-            $trimmed = trim($comment);
-
-            // Find the comment that looks like a license.
-            if ($license === null) {
-                if (
-                    str_starts_with($trimmed, 'This file is part of Moodle')
-                    && str_contains($trimmed, 'GNU General Public License')
-                    && str_ends_with($trimmed, '//www.gnu.org/licenses/>.')
-                ) {
-                    $license = $comment;
-                    continue;
-                }
-            }
-
-            // Assumes the template that contains '@template' is the documentation comment.
-            if ($documentation === null) {
-                if (str_starts_with($trimmed, '@template')) {
-                    $documentation = $comment;
-                    continue;
-                }
-            }
-        }
-
-        return [$license, $documentation];
-    }
-
-    /**
-     * Gets all issues related to the license comment.
-     * @param string|null $license
+     * Check for the presence of GPL boilerplate in the file.
+     * @param string $content
      * @return issue[]
      */
-    private static function get_issues_for_license_comment(?string $license): array {
-        // Templates must contain GPL License.
-        // See https://moodledev.io/docs/5.3/guides/templates#include-gpl-at-the-top-of-each-template.
-        if ($license === null) {
+    private static function get_issues_for_boilerplate(string $content): array {
+        $boilerplatehttp = boilerplate::generate_for_mustache(false);
+        $boilerplatehttps = boilerplate::generate_for_mustache(true);
+
+        if (!str_starts_with($content, $boilerplatehttp) && !str_starts_with($content, $boilerplatehttps)) {
             return [
                 issue::simple(
                     'Template must contain GPL License',
-                    'include-gpl-license',
+                    'missing-boilerplate',
                     self::get_name(),
                     severity::warning,
                 ),
@@ -210,6 +176,23 @@ class mustachelint extends base {
         }
 
         return [];
+    }
+
+    /**
+     * Finds the documentation comment.
+     * @param string[] $comments
+     * @return string|null
+     */
+    private static function get_documentation_comment(array $comments): ?string {
+        foreach ($comments as $comment) {
+            $trimmed = trim($comment);
+
+            if (str_starts_with($trimmed, '@template')) {
+                return $comment;
+            }
+        }
+
+        return null;
     }
 
     /**

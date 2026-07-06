@@ -61,4 +61,19 @@ class boilerplate {
 
         return implode("\n", $commented) . "\n";
     }
+
+    /**
+     * Get the canonical GPL boilerplate wrapped as a Mustache comment block.
+     * @param bool $usehttps
+     * @return string
+     */
+    public static function generate_for_mustache(bool $usehttps): string {
+        $raw = self::get_boilerplate($usehttps);
+
+        $lines = explode("\n", rtrim($raw));
+        $indented = array_map(fn(string $line): string => $line === '' ? '' : "    $line", $lines);
+        $inner = implode("\n", $indented);
+
+        return "{{!\n$inner\n}}\n";
+    }
 }

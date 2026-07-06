@@ -57,7 +57,7 @@ final class phplint_test extends advanced_testcase {
     public function test_passing_php_file(): void {
         $filepath = $this->fixturedir . '/php/passing.php';
         $results = $this->linter->lint_file($filepath);
-        // lint_file returns base result (file exists) + phplint result.
+        // Lint_file returns base result (file exists) + phplint result.
         $last = $results[count($results) - 1];
         $this->assertCount(0, $last->issues);
     }

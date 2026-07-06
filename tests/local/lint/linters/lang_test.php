@@ -57,7 +57,7 @@ final class lang_test extends advanced_testcase {
     public function test_passing_component(): void {
         $filepath = $this->fixturedir . '/lang/en/mod_assign.php';
         $results = $this->linter->lint_file($filepath);
-        // mod_assign has identical identifiers in en and fr, no issues expected.
+        // Mod_assign has identical identifiers in en and fr, no issues expected.
         $this->assertCount(0, $results);
     }
 
@@ -68,7 +68,7 @@ final class lang_test extends advanced_testcase {
         $filepath = $this->fixturedir . '/lang/en/missing_en.php';
         $results = $this->linter->lint_file($filepath);
         $this->assertCount(1, $results);
-        // array_filter preserves keys, use reset() to get first result.
+        // Array_filter preserves keys, use reset() to get first result.
         $result = reset($results);
         $rules = array_map(fn($i) => $i->rule, $result->issues);
         $this->assertContains('linting-requires-en-locale', $rules);
@@ -80,7 +80,7 @@ final class lang_test extends advanced_testcase {
     public function test_identifier_missing_in_locale(): void {
         $filepath = $this->fixturedir . '/lang/fr/local_devkit.php';
         $results = $this->linter->lint_file($filepath);
-        // validate_component creates separate file results per issue,
+        // Validate_component creates separate file results per issue,
         // and array_filter preserves keys — collect all issues across results.
         $allissues = array_merge(
             ...array_map(fn($r) => $r->issues, $results),

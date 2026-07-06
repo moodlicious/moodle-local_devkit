@@ -68,6 +68,14 @@ class lang extends base {
     }
 
     #[\Override]
+    public static function get_exclude_patterns(): array {
+        return [
+            ...parent::get_exclude_patterns(),
+            ...['**/tests/fixtures/*'],
+        ];
+    }
+
+    #[\Override]
     public function lint_file(string $filepath): array {
         $segments = self::split_lang_filepath($filepath);
         if (!$segments) {

@@ -46,7 +46,8 @@ final class mustachelint_test extends advanced_testcase {
             name: 'mustachelint',
             description: 'testable mustachelint linter for unit tests',
         )] class extends mustachelint {
-            public static string $mockTemplateName = 'local_devkit/test';
+            /** @var string */
+            public static string $mocktemplatename = 'local_devkit/test';
 
             #[\Override]
             public static function get_exclude_patterns(): array {
@@ -55,7 +56,7 @@ final class mustachelint_test extends advanced_testcase {
 
             #[\Override]
             protected static function resolve_template_name(string $filepath): ?string {
-                return self::$mockTemplateName;
+                return self::$mocktemplatename;
             }
 
             #[\Override]
@@ -168,7 +169,7 @@ final class mustachelint_test extends advanced_testcase {
      */
     public function test_mixed_case_name(): void {
         $class = get_class($this->linter);
-        $class::$mockTemplateName = 'local_devkit/Test';
+        $class::$mocktemplatename = 'local_devkit/Test';
 
         $filepath = $this->fixturedir . '/templates/mixed-case-name.mustache';
         $results = $this->linter->lint_file($filepath);

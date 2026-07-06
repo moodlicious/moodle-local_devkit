@@ -34,6 +34,9 @@ class component {
         $plugins = plugins::list(true);
         $map = [];
         foreach ($plugins as $plugin) {
+            if ($plugin['directory'] === null) {
+                continue;
+            }
             $map[$plugin['component']] = utils::get_path_relative_to_moodle_root($plugin['directory']);
         }
         return $map;

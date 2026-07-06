@@ -20,8 +20,6 @@ namespace local_devkit\local\lint\linters;
 
 use advanced_testcase;
 use local_devkit\local\attributes\linter;
-use local_devkit\local\lint\schemas\issue;
-use local_devkit\local\lint\severity;
 
 /**
  * Unit tests for the mustachelint linter.
@@ -57,66 +55,6 @@ final class mustachelint_test extends advanced_testcase {
             #[\Override]
             protected static function resolve_template_name(string $filepath): ?string {
                 return self::$mocktemplatename;
-            }
-
-            #[\Override]
-            protected static function get_issues_for_documentation_comment(
-                ?string $documentation,
-                string $templatename,
-            ): array {
-                if ($documentation === null) {
-                    return [
-                        issue::simple(
-                            'Template should contain a documentation comment',
-                            'documentation-required',
-                            mustachelint::get_name(),
-                            severity::warning,
-                        ),
-                    ];
-                }
-
-                $issues = [];
-
-                $declaredtemplatename = mustachelint::get_template_from_comment($documentation);
-                if ($declaredtemplatename !== $templatename) {
-                    $issues[] = issue::simple(
-                        "Incorrect @template, expected $templatename",
-                        'template-name-incorrect',
-                        mustachelint::get_name(),
-                        severity::error,
-                    );
-                }
-
-                if (strtolower($templatename) !== $templatename) {
-                    $issues[] = issue::simple(
-                        'Template name should be in all lowercase',
-                        'template-name-casing',
-                        mustachelint::get_name(),
-                        severity::warning,
-                    );
-                }
-
-                $examplejson = mustachelint::get_example_from_comment($documentation);
-                if ($examplejson === null) {
-                    $issues[] = issue::simple(
-                        'Template documentation missing example context',
-                        'documentation-example-context-required',
-                        mustachelint::get_name(),
-                        severity::warning,
-                    );
-                } else {
-                    $example = json_decode($examplejson);
-                    if (json_last_error() !== JSON_ERROR_NONE) {
-                        $issues[] = issue::simple(
-                            'Invalid example context, json decoding error',
-                            'documentation-example-context-decode',
-                            mustachelint::get_name(),
-                            severity::error,
-                        );
-                    }
-                }
-
-                return $issues;
             }
         };
     }

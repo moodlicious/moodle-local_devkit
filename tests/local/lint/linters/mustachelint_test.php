@@ -154,6 +154,6 @@ final class mustachelint_test extends advanced_testcase {
      */
     public function test_get_exclude_patterns(): void {
         $patterns = mustachelint::get_exclude_patterns();
-        $this->assertContains('*/tests/*', $patterns);
+        $this->assertContains('**/tests/fixtures/*', $patterns);
     }
 }

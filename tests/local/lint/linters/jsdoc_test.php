@@ -132,6 +132,6 @@ final class jsdoc_test extends advanced_testcase {
      */
     public function test_get_exclude_patterns(): void {
         $patterns = jsdoc::get_exclude_patterns();
-        $this->assertContains('**/tests/*', $patterns);
+        $this->assertContains('**/tests/fixtures/*', $patterns);
     }
 }

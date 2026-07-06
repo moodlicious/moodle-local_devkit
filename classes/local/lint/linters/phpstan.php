@@ -219,6 +219,7 @@ class phpstan extends base {
                     - $moodleroot
                 excludePaths:
                     - */vendor/*
+                    - */tests/fixtures/*
                 moodle:
                     rootDirectory: $moodleroot
                 bootstrapFiles:

@@ -175,6 +175,7 @@ abstract class base {
             '**/.git/**',
             '**/node_modules/**',
             '**/vendor/**',
+            '**/tests/fixtures/*',
         ];
     }
 

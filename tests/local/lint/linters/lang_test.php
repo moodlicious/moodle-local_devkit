@@ -70,6 +70,7 @@ final class lang_test extends advanced_testcase {
         $this->assertCount(1, $results);
         // Array_filter preserves keys, use reset() to get first result.
         $result = reset($results);
+        $this->assertNotFalse($result);
         $rules = array_map(fn($i) => $i->rule, $result->issues);
         $this->assertContains('linting-requires-en-locale', $rules);
     }

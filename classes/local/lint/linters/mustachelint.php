@@ -252,6 +252,9 @@ class mustachelint extends base {
                     self::get_name(),
                     severity::warning,
                 );
+                // Phpstan can not resolve the dynamic PHPUNIT_TEST constant.
+                // phpcs:ignore moodle.Commenting.InlineComment
+                // @phpstan-ignore booleanNot.alwaysTrue, booleanOr.alwaysTrue
             } else if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
                 try {
                     global $OUTPUT;

@@ -53,7 +53,7 @@ final class mustachelint_test extends advanced_testcase {
             }
 
             #[\Override]
-            protected static function resolve_template_name(string $filepath): ?string {
+            protected static function resolve_template_name(string $filepath): string {
                 return self::$mocktemplatename;
             }
         };

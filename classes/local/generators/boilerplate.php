@@ -28,9 +28,15 @@ use Exception;
 class boilerplate {
     /**
      * Get the canonical GPL boilerplate.
+     * @param bool $usehttps
      * @return string
      */
     public static function get_boilerplate(bool $usehttps): string {
+        static $cache = [];
+        if (isset($cache[$usehttps])) {
+            return $cache[$usehttps];
+        }
+
         $path = __DIR__ . '/../../../content/gpl-boilerplate.txt';
         $raw = file_get_contents($path);
         if ($raw === false) {
@@ -45,6 +51,7 @@ class boilerplate {
             );
         }
 
+        $cache[$usehttps] = $raw;
         return $raw;
     }
 
@@ -75,5 +82,22 @@ class boilerplate {
         $inner = implode("\n", $indented);
 
         return "{{!\n$inner\n}}\n";
+    }
+
+    /**
+     * Check whether content starts with the GPL boilerplate (http or https variant).
+     * @param string $content
+     * @param string $format 'js' or 'mustache'
+     * @return bool
+     */
+    public static function check_has_boilerplate(string $content, string $format): bool {
+        $generator = match ($format) {
+            'js' => [self::class, 'generate_for_javascript'],
+            'mustache' => [self::class, 'generate_for_mustache'],
+            default => throw new \InvalidArgumentException("Unknown format: $format"),
+        };
+
+        return str_starts_with($content, $generator(false))
+            || str_starts_with($content, $generator(true));
     }
 }

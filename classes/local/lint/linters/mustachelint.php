@@ -51,6 +51,16 @@ class mustachelint extends base {
     }
 
     #[\Override]
+    public static function get_exclude_patterns(): array {
+        return [
+            ...parent::get_exclude_patterns(),
+            // Exclude files like
+            // ./public/mod/bigbluebuttonbn/tests/fixtures/extension/complex/templates/view_page_addons.mustache.
+            ...['*/tests/*'],
+        ];
+    }
+
+    #[\Override]
     public function lint_file(string $filepath): array {
         $results = parent::lint_file($filepath);
         if (!$this->can_lint_file($filepath)) {

@@ -78,6 +78,7 @@ final class base_test extends advanced_testcase {
             '**/.git/**',
             '**/node_modules/**',
             '**/vendor/**',
+            '**/tests/fixtures/*',
         ], $patterns);
     }
 

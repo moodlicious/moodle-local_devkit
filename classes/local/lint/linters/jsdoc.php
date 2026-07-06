@@ -18,6 +18,7 @@ namespace local_devkit\local\lint\linters;
 
 use local_devkit\local\attributes\linter;
 use local_devkit\local\component;
+use local_devkit\local\generators\boilerplate;
 use local_devkit\local\lint\schemas\file;
 use local_devkit\local\lint\schemas\issue;
 use local_devkit\local\lint\severity;
@@ -104,38 +105,13 @@ class jsdoc extends base {
     }
 
     /**
-     * Get the canonical GPL boilerplate with JS line comments.
-     * @param bool $usehttps
-     * @return string
-     */
-    private static function get_boilerplate(bool $usehttps): string {
-        $path = __DIR__ . '/../../../../content/mdl-boilerplate.txt';
-        $raw = file_get_contents($path);
-        if ($raw === false) {
-            return '';
-        }
-        $lines = explode("\n", rtrim($raw));
-        $commented = array_map(fn(string $line): string => $line === '' ? '//' : "// $line", $lines);
-
-        if ($usehttps) {
-            $commented = str_replace(
-                ['http://moodle.org', 'http://www.gnu.org'],
-                ['https://moodle.org', 'https://www.gnu.org'],
-                $commented,
-            );
-        }
-
-        return implode("\n", $commented) . "\n";
-    }
-
-    /**
      * Check for the presence of GPL boilerplate in the file.
      * @param string $content
      * @return issue[]
      */
     private static function get_issues_for_boilerplate(string $content): array {
-        $boilerplatehttp = self::get_boilerplate(false);
-        $boilerplatehttps = self::get_boilerplate(true);
+        $boilerplatehttp = boilerplate::generate_for_javascript(false);
+        $boilerplatehttps = boilerplate::generate_for_javascript(true);
 
         if (!str_starts_with($content, $boilerplatehttp) && !str_starts_with($content, $boilerplatehttps)) {
             return [

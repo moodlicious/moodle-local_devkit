@@ -262,9 +262,7 @@ class mustachelint extends base {
                     self::get_name(),
                     severity::warning,
                 );
-            } else if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
-                // Rendering not available during PHPUnit tests.
-            } else {
+            } else if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
                 try {
                     global $OUTPUT;
                     // Append '!' to end of template name to disable theme override.

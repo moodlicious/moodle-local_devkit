@@ -19,6 +19,7 @@ declare(strict_types=1);
 namespace local_devkit\local\lint\linters;
 
 use advanced_testcase;
+use local_devkit\local\attributes\linter;
 
 /**
  * Unit tests for the jsdoc linter.
@@ -29,21 +30,32 @@ use advanced_testcase;
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class jsdoc_test extends advanced_testcase {
-    /** @var string Path to the devtools_linttest fixture plugin */
+    /** @var string Path to the test fixtures directory */
     private string $fixturedir;
+
+    /** @var jsdoc Linter instance with relaxed exclude patterns for testing */
+    private jsdoc $linter;
 
     protected function setUp(): void {
         parent::setUp();
-        $this->fixturedir = realpath(__DIR__ . '/../../../../../') . '/public/local/devtools_linttest';
+        $this->fixturedir = realpath(__DIR__ . '/../../../fixtures');
+        $this->linter = new #[linter(
+            name: 'jsdoc',
+            description: 'testable jsdoc linter for unit tests',
+        )] class extends jsdoc {
+            #[\Override]
+            public static function get_exclude_patterns(): array {
+                return [];
+            }
+        };
     }
 
     /**
      * Test that a valid AMD file with boilerplate and docblock passes.
      */
     public function test_passing_amd_file(): void {
-        $linter = new jsdoc();
         $filepath = $this->fixturedir . '/amd/src/passing.js';
-        $results = $linter->lint_file($filepath);
+        $results = $this->linter->lint_file($filepath);
         $this->assertCount(1, $results);
         $this->assertCount(0, $results[0]->issues);
     }
@@ -52,9 +64,8 @@ final class jsdoc_test extends advanced_testcase {
      * Test that a valid ESM file with boilerplate and docblock passes.
      */
     public function test_passing_esm_file(): void {
-        $linter = new jsdoc();
         $filepath = $this->fixturedir . '/js/esm/src/passing.tsx';
-        $results = $linter->lint_file($filepath);
+        $results = $this->linter->lint_file($filepath);
         $this->assertCount(1, $results);
         $this->assertCount(0, $results[0]->issues);
     }
@@ -63,9 +74,8 @@ final class jsdoc_test extends advanced_testcase {
      * Test that a file missing the GPL boilerplate reports missing-boilerplate.
      */
     public function test_missing_boilerplate(): void {
-        $linter = new jsdoc();
         $filepath = $this->fixturedir . '/amd/src/missing-boilerplate.js';
-        $results = $linter->lint_file($filepath);
+        $results = $this->linter->lint_file($filepath);
         $this->assertCount(1, $results);
         $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
         $this->assertContains('missing-boilerplate', $rules);
@@ -75,9 +85,8 @@ final class jsdoc_test extends advanced_testcase {
      * Test that a file missing the docblock reports missing-docblock.
      */
     public function test_missing_docblock(): void {
-        $linter = new jsdoc();
         $filepath = $this->fixturedir . '/amd/src/missing-docblock.js';
-        $results = $linter->lint_file($filepath);
+        $results = $this->linter->lint_file($filepath);
         $this->assertCount(1, $results);
         $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
         $this->assertContains('missing-docblock', $rules);
@@ -87,9 +96,8 @@ final class jsdoc_test extends advanced_testcase {
      * Test that a file with incomplete docblock (missing @copyright and @license) reports the missing tags.
      */
     public function test_incomplete_docblock(): void {
-        $linter = new jsdoc();
         $filepath = $this->fixturedir . '/amd/src/incomplete-docblock.js';
-        $results = $linter->lint_file($filepath);
+        $results = $this->linter->lint_file($filepath);
         $this->assertCount(1, $results);
         $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
         $this->assertContains('missing-copyright', $rules);
@@ -100,9 +108,8 @@ final class jsdoc_test extends advanced_testcase {
      * Test that a file with wrong @module name reports module-name-incorrect.
      */
     public function test_wrong_module_name(): void {
-        $linter = new jsdoc();
         $filepath = $this->fixturedir . '/amd/src/wrong-module-name.js';
-        $results = $linter->lint_file($filepath);
+        $results = $this->linter->lint_file($filepath);
         $this->assertCount(1, $results);
         $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
         $this->assertContains('module-name-incorrect', $rules);

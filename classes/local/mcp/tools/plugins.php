@@ -30,7 +30,7 @@ class plugins {
      * @return object{
      *   'plugins': array{
      *     component: string,
-     *     directory: string,
+     *     directory: string|null,
      *     enabled: bool|null,
      *     name: string,
      *     release: mixed,

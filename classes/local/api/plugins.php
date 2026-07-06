@@ -24,7 +24,7 @@ use core\plugin_manager;
  * // phpcs:ignore moodle.Commenting.ValidTags.Invalid
  * @phpstan-type plugin array{
  *   component: string,
- *   directory: string,
+ *   directory: string|null,
  *   enabled: bool|null,
  *   name: string,
  *   release: mixed,

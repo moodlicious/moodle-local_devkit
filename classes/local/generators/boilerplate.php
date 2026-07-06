@@ -31,7 +31,7 @@ class boilerplate {
      * @return string
      */
     public static function get_boilerplate(bool $usehttps): string {
-        $path = __DIR__ . '/../../../content/mdl-boilerplate.txt';
+        $path = __DIR__ . '/../../../content/gpl-boilerplate.txt';
         $raw = file_get_contents($path);
         if ($raw === false) {
             throw new Exception('Unable to load boilerplate');

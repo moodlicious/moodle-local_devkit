@@ -161,21 +161,18 @@ class mustachelint extends base {
      * @return issue[]
      */
     private static function get_issues_for_boilerplate(string $content): array {
-        $boilerplatehttp = boilerplate::generate_for_mustache(false);
-        $boilerplatehttps = boilerplate::generate_for_mustache(true);
-
-        if (!str_starts_with($content, $boilerplatehttp) && !str_starts_with($content, $boilerplatehttps)) {
-            return [
-                issue::simple(
-                    'Template must contain GPL License',
-                    'missing-boilerplate',
-                    self::get_name(),
-                    severity::warning,
-                ),
-            ];
+        if (boilerplate::check_has_boilerplate($content, 'mustache')) {
+            return [];
         }
 
-        return [];
+        return [
+            issue::simple(
+                'Template must contain GPL License',
+                'missing-boilerplate',
+                self::get_name(),
+                severity::warning,
+            ),
+        ];
     }
 
     /**

@@ -110,21 +110,18 @@ class jsdoc extends base {
      * @return issue[]
      */
     private static function get_issues_for_boilerplate(string $content): array {
-        $boilerplatehttp = boilerplate::generate_for_javascript(false);
-        $boilerplatehttps = boilerplate::generate_for_javascript(true);
-
-        if (!str_starts_with($content, $boilerplatehttp) && !str_starts_with($content, $boilerplatehttps)) {
-            return [
-                issue::simple(
-                    'File is missing the GPL boilerplate.',
-                    'missing-boilerplate',
-                    self::get_name(),
-                    severity::warning,
-                ),
-            ];
+        if (boilerplate::check_has_boilerplate($content, 'js')) {
+            return [];
         }
 
-        return [];
+        return [
+            issue::simple(
+                'File is missing the GPL boilerplate.',
+                'missing-boilerplate',
+                self::get_name(),
+                severity::warning,
+            ),
+        ];
     }
 
     /**

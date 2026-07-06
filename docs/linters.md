@@ -2,7 +2,7 @@
 
 Extensible lint system. Runs external tools and parses output.
 
-## 8 Linters
+## 9 Linters
 
 | Linter | Tool | Files |
 |--------|------|-------|
@@ -14,6 +14,7 @@ Extensible lint system. Runs external tools and parses output.
 | phpdoc | `local_moodlecheck` | `*.php` |
 | lang | Custom PHP logic | `**/lang/*/*.php` |
 | mustachelint | Custom PHP logic | `*.mustache` |
+| jsdoc | Custom PHP logic | `**/amd/src/*.js`, `**/js/esm/src/*.ts`, `**/js/esm/src/*.tsx` |
 
 ## Configuration
 
@@ -59,6 +60,15 @@ Validates mustache templates against Moodle conventions:
 Known limitations:
 - Core plugins (e.g. `public/lib/`) are not lintable since they lack a standard component directory structure.
 - Theme-overridden templates may produce false positives for `template-name-incorrect`.
+
+## Jsdoc Linter
+
+Validates JS/TS files in `amd/src/` and `js/esm/src/` for required boilerplate:
+
+- **missing-boilerplate**: each file must include the standard GPL license header as `//` comments.
+- **missing-docblock**: each file must have a JSDoc docblock with `@module`, `@copyright`, and `@license` tags.
+- **module-name-incorrect**: the `@module` value must match the component and path (e.g. `local_devkit/linter_config`).
+- **missing-copyright** / **missing-license**: the docblock must include these tags.
 
 ## Issue Schema
 

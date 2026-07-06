@@ -67,7 +67,7 @@ class mustachelint extends base {
             return $results;
         }
 
-        $templatename = self::resolve_template_name($filepath);
+        $templatename = static::resolve_template_name($filepath);
         if (!$templatename) {
             return [self::create_file_with_fatal_issue($filepath, "Unable to resolve template name.")];
         }
@@ -86,7 +86,7 @@ class mustachelint extends base {
 
         $issues = [
             ...$issues,
-            ...self::get_issues_for_documentation_comment($documentation, $templatename),
+            ...static::get_issues_for_documentation_comment($documentation, $templatename),
         ];
 
         return [new file($filepath, $issues)];
@@ -96,7 +96,7 @@ class mustachelint extends base {
      * Returns the template name in the format of componentname/templatename.
      * @return string|null
      */
-    private static function resolve_template_name(string $filepath): ?string {
+    protected static function resolve_template_name(string $filepath): ?string {
         $directoriespath = self::parse_template_path($filepath);
         if (!$directoriespath) {
             return null;
@@ -200,7 +200,7 @@ class mustachelint extends base {
      * @param string $templatename
      * @return issue[]
      */
-    private static function get_issues_for_documentation_comment(
+    protected static function get_issues_for_documentation_comment(
         ?string $documentation,
         string $templatename,
     ): array {
@@ -293,7 +293,7 @@ class mustachelint extends base {
      * Get the declared template name (@template xxx) from the documentation comment.
      * @param string $comment
      */
-    private static function get_template_from_comment(string $comment): ?string {
+    protected static function get_template_from_comment(string $comment): ?string {
         if (!preg_match('/@template ([A-Za-z0-9_\/-]+)/', $comment, $match)) {
             return null;
         }
@@ -305,7 +305,7 @@ class mustachelint extends base {
      * Get the example json from the documentation comment.
      * @param string $comment
      */
-    private static function get_example_from_comment(string $comment): ?string {
+    protected static function get_example_from_comment(string $comment): ?string {
         if (!preg_match('/Example context \(json\):\R\s*([\s\S]*})/', $comment, $match)) {
             return null;
         }

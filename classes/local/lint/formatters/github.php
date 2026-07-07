@@ -29,6 +29,10 @@ use function count;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class github extends base {
+    /**
+     * The plugin root directory for computing repo-relative annotation paths.
+     * @var string|null
+     */
     private ?string $pluginroot = null;
 
     #[\Override]
@@ -113,6 +117,10 @@ class github extends base {
         );
     }
 
+    /**
+     * Set the plugin root path for annotation path computation.
+     * @param string $path Absolute path to the plugin root.
+     */
     public function set_plugin_root(string $path): void {
         $this->pluginroot = rtrim($path, '/');
     }

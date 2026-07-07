@@ -31,6 +31,31 @@ use Mcp\Schema\ToolAnnotations;
  */
 class lint {
     /**
+     * Lists available linters with their names and descriptions.
+     * @return object{
+     *     linters: array{name: string, description: string|null}[],
+     * }
+     */
+    #[McpTool(
+        name: 'list_linters',
+        description: 'Lists available linters with their names and descriptions',
+        annotations: new ToolAnnotations(readOnlyHint: true, destructiveHint: false, idempotentHint: true),
+    )]
+    public static function list_linters(): object {
+        $linterclasses = linter::get_linters_classnames();
+        $info = array_map(
+            function (/** @var class-string<\local_devkit\local\lint\linters\base> $linter */ $linter) {
+                return [
+                    'name' => $linter::get_name(),
+                    'description' => $linter::get_description(),
+                ];
+            },
+            $linterclasses,
+        );
+        return (object) ['linters' => array_values($info)];
+    }
+
+    /**
      * Runs project coding standard linters against files or directories.
      * @param string[] $paths absolute paths to files or directories that needs linting
      * @param string[]|null $linters list of linter names to run (e.g. phpcs, phpstan), or null to run all

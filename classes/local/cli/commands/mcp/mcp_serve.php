@@ -41,6 +41,7 @@ class mcp_serve extends Command {
             ->addTool([\local_devkit\local\mcp\tools\plugins::class, 'list_plugins'])
             ->addTool([\local_devkit\local\mcp\tools\database::class, 'db_show_tables'])
             ->addTool([\local_devkit\local\mcp\tools\database::class, 'db_get_table'])
+            ->addTool([\local_devkit\local\mcp\tools\lint::class, 'list_linters'])
             ->addTool([\local_devkit\local\mcp\tools\lint::class, 'lint_files'])
             ->addTool([\local_devkit\local\mcp\tools\env::class, 'env_overview'])
             ->build();

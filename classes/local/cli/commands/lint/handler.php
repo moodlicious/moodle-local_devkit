@@ -114,7 +114,7 @@ class handler {
             return Command::FAILURE;
         }
 
-        if (count($realpaths) === 1 && method_exists($formatter, 'set_plugin_root')) {
+        if (count($realpaths) === 1 && $formatter instanceof \local_devkit\local\lint\formatters\github) {
             $formatter->set_plugin_root($realpaths[0]);
         }
 

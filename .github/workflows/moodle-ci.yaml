@@ -99,7 +99,7 @@ jobs:
               env:
                   MDL_LOCAL_DEVKIT_DISABLE: 1
 
-            - name: PHPStan
+            - name: DevKit Lint
               if: ${{ !cancelled() }}
               run: |
                   DEVKIT=./moodle/local/devkit/bin/devkit
@@ -110,7 +110,7 @@ jobs:
                       PLUGINPATH=./moodle/public/local/devkit/
                   fi
                   [ ! -f "$DEVKIT" ] && { echo "devkit binary not found"; exit 1; }
-                  $DEVKIT lint:phpstan --format=github -vvv "$PWD/$PLUGINPATH"
+                  $DEVKIT lint --format=github --linters=phpcs --linters=phpstan -vvv "$PWD/$PLUGINPATH"
               env:
                   MDL_LOCAL_DEVKIT_DISABLE: 1
 

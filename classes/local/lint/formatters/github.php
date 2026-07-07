@@ -122,7 +122,7 @@ class github extends base {
      * @param file $file
      * @return string
      */
-    protected function get_annotation_path($file): string {
+    protected function get_annotation_path(file $file): string {
         if ($this->pluginroot !== null) {
             $prefix = $this->pluginroot . '/';
             if (str_starts_with($file->file, $prefix)) {

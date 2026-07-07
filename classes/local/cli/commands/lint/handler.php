@@ -114,6 +114,10 @@ class handler {
             return Command::FAILURE;
         }
 
+        if (count($realpaths) === 1 && method_exists($formatter, 'set_plugin_root')) {
+            $formatter->set_plugin_root($realpaths[0]);
+        }
+
         $progressindicator = $progress && $output instanceof ConsoleOutputInterface
             ? new ProgressIndicator($output->getErrorOutput())
             : null;

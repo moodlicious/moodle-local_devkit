@@ -29,6 +29,8 @@ use function count;
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class github extends base {
+    private ?string $pluginroot = null;
+
     #[\Override]
     public function output(array $linters, array $results): int {
         $filecount = count($results);
@@ -111,29 +113,22 @@ class github extends base {
         );
     }
 
+    public function set_plugin_root(string $path): void {
+        $this->pluginroot = rtrim($path, '/');
+    }
+
     /**
      * Gets path to file, a repo-relative path.
      * @param file $file
      * @return string
      */
     protected function get_annotation_path($file): string {
-        // For now lets just hard code this bit to test github actions.
-        // Will need to find a way to propertly get this value from actions.
-        static $pluginpath = 'local/devkit/';
-        $path = utils::get_path_relative_to_moodle_root($file->file);
-        if (str_contains($path, $pluginpath)) {
-            $splits = explode($pluginpath, $path);
-            [, $relative] = $splits;
-            return $relative ?: $path;
+        if ($this->pluginroot !== null) {
+            $prefix = $this->pluginroot . '/';
+            if (str_starts_with($file->file, $prefix)) {
+                return substr($file->file, strlen($prefix));
+            }
         }
-
-        // Also include a PHPStan issue here to test the matcher.
-        // To be removed before merging PR.
-        if (false) {
-            explode([], []);
-            die;
-        }
-
-        return $path;
+        return ltrim(utils::get_path_relative_to_moodle_root($file->file), './');
     }
 }

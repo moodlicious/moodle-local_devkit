@@ -80,6 +80,7 @@ class handler {
             'json' => \local_devkit\local\lint\formatters\json::class,
             'jsonl' => \local_devkit\local\lint\formatters\jsonl::class,
             'text' => \local_devkit\local\lint\formatters\text::class,
+            'github' => \local_devkit\local\lint\formatters\github::class,
         ];
         if (!array_key_exists($format, $formatterclasses)) {
             $io->writeln('Available format options are:');

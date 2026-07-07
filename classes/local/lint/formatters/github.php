@@ -129,6 +129,7 @@ class github extends base {
                 return substr($file->file, strlen($prefix));
             }
         }
-        return ltrim(utils::get_path_relative_to_moodle_root($file->file), './');
+        $path = utils::get_path_relative_to_moodle_root($file->file);
+        return str_starts_with($path, './') ? substr($path, 2) : $path;
     }
 }

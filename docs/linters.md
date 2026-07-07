@@ -33,6 +33,7 @@ Each linter supports:
 | `text` | Human-readable: `file:line:col: severity: message (source/rule)` |
 | `json` | All results as one JSON object `{linters, files}` |
 | `jsonl` | One JSON line per issue |
+| `github` | GitHub Actions workflow commands (`::error`, `::warning`, `::notice`) with file, line, column, and title — for inline PR annotations |
 
 All formats support `--relative` to output paths relative to the Moodle root directory.
 
@@ -81,6 +82,7 @@ Each issue: `line`, `column`, `message`, `rule`, `source`, `severity` (`info`|`w
 ./devkit lint:phpcs path/to/code --format=json
 ./devkit lint path/to/code --relative
 ./devkit lint path/to/code --displaycomponent
+./devkit lint path/to/code --format=github
 ```
 
 See [CLI docs](cli.md).

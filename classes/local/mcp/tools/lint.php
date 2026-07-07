@@ -31,9 +31,10 @@ use Mcp\Schema\ToolAnnotations;
  */
 class lint {
     /**
-     * Lists available linters with their names and descriptions.
+     * Lists available linters with their names, descriptions, and enabled status.
+     * Only disabled linters include a "disabled" field.
      * @return object{
-     *     linters: array{name: string, description: string|null}[],
+     *     linters: array{name: string, description: string|null, disabled?: true}[],
      * }
      */
     #[McpTool(
@@ -45,10 +46,14 @@ class lint {
         $linterclasses = linter::get_linters_classnames();
         $info = array_map(
             function (/** @var class-string<\local_devkit\local\lint\linters\base> $linter */ $linter) {
-                return [
+                $entry = [
                     'name' => $linter::get_name(),
                     'description' => $linter::get_description(),
                 ];
+                if (!$linter::is_enabled()) {
+                    $entry['disabled'] = true;
+                }
+                return $entry;
             },
             $linterclasses,
         );

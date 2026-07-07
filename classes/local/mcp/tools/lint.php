@@ -31,8 +31,9 @@ use Mcp\Schema\ToolAnnotations;
  */
 class lint {
     /**
-     * Runs moodle coding standard linters against files or directories.
+     * Runs project coding standard linters against files or directories.
      * @param string[] $paths absolute paths to files or directories that needs linting
+     * @param string[]|null $linters list of linter names to run (e.g. phpcs, phpstan), or null to run all
      * @return object{
      *     linters: string[], // list of linters that have run
      *     files: \local_devkit\local\lint\schemas\file[], // list of files and their issues
@@ -43,7 +44,7 @@ class lint {
         description: 'Runs project coding standard linters against files or directories',
         annotations: new ToolAnnotations(readOnlyHint: true, destructiveHint: false, idempotentHint: true),
     )]
-    public static function lint_files(array $paths): object {
+    public static function lint_files(array $paths, ?array $linters = null): object {
         global $CFG;
         $cwd = getcwd();
         if ($cwd === false) {
@@ -51,7 +52,7 @@ class lint {
         }
 
         chdir(utils::get_moodle_root_dir());
-        $linters = linter::get_linters_classnames();
+        $linters = linter::get_linters_classnames($linters);
         $results = linter::run($paths, $linters);
         chdir($cwd);
 

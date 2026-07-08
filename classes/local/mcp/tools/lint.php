@@ -81,6 +81,21 @@ class lint {
             throw new Exception('Unknown current working directory.');
         }
 
+        if ($linters !== null) {
+            $allclassnames = linter::get_linters_classnames();
+            $allnames = array_map(
+                fn(string $class): string => $class::get_name(),
+                $allclassnames,
+            );
+            $unknown = array_diff($linters, $allnames);
+            if ($unknown !== []) {
+                throw new Exception(
+                    'Unknown linter(s): ' . implode(', ', $unknown)
+                    . '. Available linters: ' . implode(', ', $allnames)
+                );
+            }
+        }
+
         chdir(utils::get_moodle_root_dir());
         $linters = linter::get_linters_classnames($linters);
         $results = linter::run($paths, $linters);

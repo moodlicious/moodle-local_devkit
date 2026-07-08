@@ -31,8 +31,39 @@ use Mcp\Schema\ToolAnnotations;
  */
 class lint {
     /**
-     * Runs moodle coding standard linters against files or directories.
+     * Lists available linters with their names, descriptions, and enabled status.
+     * Only disabled linters include a "disabled" field.
+     * @return object{
+     *     linters: array{name: string, description: string|null, disabled?: true}[],
+     * }
+     */
+    #[McpTool(
+        name: 'list_linters',
+        description: 'Lists available linters with their names and descriptions',
+        annotations: new ToolAnnotations(readOnlyHint: true, destructiveHint: false, idempotentHint: true),
+    )]
+    public static function list_linters(): object {
+        $linterclasses = linter::get_linters_classnames();
+        $info = array_map(
+            function (/** @var class-string<\local_devkit\local\lint\linters\base> $linter */ $linter) {
+                $entry = [
+                    'name' => $linter::get_name(),
+                    'description' => $linter::get_description(),
+                ];
+                if (!$linter::is_enabled()) {
+                    $entry['disabled'] = true;
+                }
+                return $entry;
+            },
+            $linterclasses,
+        );
+        return (object) ['linters' => array_values($info)];
+    }
+
+    /**
+     * Runs project coding standard linters against files or directories.
      * @param string[] $paths absolute paths to files or directories that needs linting
+     * @param string[]|null $linters list of linter names to run (e.g. phpcs, phpstan), or null to run all
      * @return object{
      *     linters: string[], // list of linters that have run
      *     files: \local_devkit\local\lint\schemas\file[], // list of files and their issues
@@ -43,15 +74,30 @@ class lint {
         description: 'Runs project coding standard linters against files or directories',
         annotations: new ToolAnnotations(readOnlyHint: true, destructiveHint: false, idempotentHint: true),
     )]
-    public static function lint_files(array $paths): object {
+    public static function lint_files(array $paths, ?array $linters = null): object {
         global $CFG;
         $cwd = getcwd();
         if ($cwd === false) {
             throw new Exception('Unknown current working directory.');
         }
 
+        if ($linters !== null) {
+            $allclassnames = linter::get_linters_classnames();
+            $allnames = array_map(
+                fn(string $class): string => $class::get_name(),
+                $allclassnames,
+            );
+            $unknown = array_diff($linters, $allnames);
+            if ($unknown !== []) {
+                throw new Exception(
+                    'Unknown linter(s): ' . implode(', ', $unknown)
+                    . '. Available linters: ' . implode(', ', $allnames)
+                );
+            }
+        }
+
         chdir(utils::get_moodle_root_dir());
-        $linters = linter::get_linters_classnames();
+        $linters = linter::get_linters_classnames($linters);
         $results = linter::run($paths, $linters);
         chdir($cwd);
 

@@ -1,0 +1,24 @@
+{
+    "preset": "psr12",
+    "rules": {
+        "braces_position": {
+            "classes_opening_brace": "same_line",
+            "functions_opening_brace": "same_line",
+            "control_structures_opening_brace": "same_line",
+            "anonymous_classes_opening_brace": "same_line",
+            "anonymous_functions_opening_brace": "same_line"
+        },
+        "blank_line_after_opening_tag": false,
+        "elseif": false,
+        "no_superfluous_elseif": true,
+        "blank_line_between_import_groups": false,
+        "function_declaration": {
+            "closure_fn_spacing": "none"
+        },
+        "no_unused_imports": false,
+        "class_definition": {
+            "inline_constructor_arguments": false,
+            "space_before_parenthesis": true
+        }
+    }
+}

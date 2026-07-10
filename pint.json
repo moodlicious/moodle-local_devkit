@@ -1,23 +1,39 @@
 {
     "preset": "psr12",
+    "exclude": [
+        "tests/fixtures"
+    ],
     "rules": {
-        "braces_position": {
-            "classes_opening_brace": "same_line",
-            "functions_opening_brace": "same_line",
-            "control_structures_opening_brace": "same_line",
-            "anonymous_classes_opening_brace": "same_line",
-            "anonymous_functions_opening_brace": "same_line"
+        "array_syntax": {
+            "syntax": "short"
         },
         "blank_line_after_opening_tag": false,
-        "elseif": false,
-        "no_superfluous_elseif": true,
-        "function_declaration": {
-            "closure_fn_spacing": "none"
+        "braces_position": {
+            "anonymous_classes_opening_brace": "same_line",
+            "anonymous_functions_opening_brace": "same_line",
+            "classes_opening_brace": "same_line",
+            "control_structures_opening_brace": "same_line",
+            "functions_opening_brace": "same_line"
         },
         "class_definition": {
             "inline_constructor_arguments": false,
             "space_before_parenthesis": true
         },
+        "concat_space": {
+            "spacing": "one"
+        },
+        "elseif": false,
+        "function_declaration": {
+            "closure_fn_spacing": "none"
+        },
+        "list_syntax": {
+            "syntax": "short"
+        },
+        "logical_operators": true,
+        "method_chaining_indentation": true,
+        "no_extra_blank_lines": true,
+        "no_superfluous_elseif": true,
+        "no_trailing_whitespace": true,
         "ordered_imports": {
             "case_sensitive": false,
             "imports_order": [
@@ -26,19 +42,6 @@
                 "function"
             ]
         },
-        "array_syntax": {
-            "syntax": "short"
-        },
-        "logical_operators": true,
-        "list_syntax": {
-            "syntax": "short"
-        },
-        "trailing_comma_in_multiline": true,
-        "concat_space": {
-            "spacing": "one"
-        },
-        "method_chaining_indentation": true,
-        "no_extra_blank_lines": true,
-        "no_trailing_whitespace": true
+        "trailing_comma_in_multiline": true
     }
 }

@@ -157,7 +157,6 @@ class debugbar extends BaseDebugBar {
         return $this->get_collector('exceptions', ExceptionsCollector::class);
     }
 
-
     /**
      * Get the exceptions collector instance, or null if it is not available or of the wrong type.
      * @return config_collector|null

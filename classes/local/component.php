@@ -65,7 +65,6 @@ class component {
         return $result;
     }
 
-
     /**
      * Given a file path, find the component name associated with that path.
      *

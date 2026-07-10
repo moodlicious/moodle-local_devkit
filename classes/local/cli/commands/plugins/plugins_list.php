@@ -38,7 +38,7 @@ class plugins_list extends Command {
     public function __invoke(
         SymfonyStyle $io,
         #[Option("Outputs json")] bool $json = false,
-            // phpcs:ignore moodle.NamingConventions.ValidVariableName.VariableNameLowerCase
+        // phpcs:ignore moodle.NamingConventions.ValidVariableName.VariableNameLowerCase
         #[Option("Include Moodle standard plugins")] bool $includeStandard = false,
     ): int {
         // phpcs:ignore moodle.NamingConventions.ValidVariableName.VariableNameLowerCase

@@ -42,6 +42,9 @@
                 "function"
             ]
         },
+        "ordered_interfaces": {
+            "case_sensitive": false
+        },
         "trailing_comma_in_multiline": true
     }
 }

@@ -22,6 +22,7 @@ use local_devkit\local\databases\mysqli_native_devkit_database;
 use mariadb_native_moodle_database;
 use moodle_database;
 use mysqli_native_moodle_database;
+
 use function in_array;
 
 /**

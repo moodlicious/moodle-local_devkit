@@ -11,14 +11,20 @@
         "blank_line_after_opening_tag": false,
         "elseif": false,
         "no_superfluous_elseif": true,
-        "blank_line_between_import_groups": false,
         "function_declaration": {
             "closure_fn_spacing": "none"
         },
-        "no_unused_imports": false,
         "class_definition": {
             "inline_constructor_arguments": false,
             "space_before_parenthesis": true
+        },
+        "ordered_imports": {
+            "case_sensitive": false,
+            "imports_order": [
+                "class",
+                "const",
+                "function"
+            ]
         }
     }
 }

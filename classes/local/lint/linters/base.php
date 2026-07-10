@@ -20,18 +20,17 @@ use core\exception\coding_exception;
 use dml_exception;
 use Exception;
 use local_devkit\local\attributes\linter;
+use local_devkit\local\lint\schemas\file;
 use local_devkit\local\lint\schemas\issue;
 use local_devkit\local\lint\severity;
-use local_devkit\local\lint\schemas\file;
 use MoodleQuickForm;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionAttribute;
 use ReflectionClass;
 use Symfony\Component\Console\Helper\ProgressIndicator;
+
 use function array_key_exists;
-use function get_called_class;
-use function is_array;
 
 /**
  * The abstract base linter.

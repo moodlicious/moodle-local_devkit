@@ -33,6 +33,7 @@ use local_devkit\local\debugbar\collectors\moodle_collector;
 use local_devkit\local\debugbar\collectors\string_manager_collector;
 use local_devkit\local\debugbar\log_level;
 use Throwable;
+
 use function array_key_exists;
 
 defined('MOODLE_INTERNAL') || die;

@@ -22,6 +22,7 @@ use local_devkit\local\debugbar\pdo\traced_statement;
 use moodle_database;
 use mysqli_result;
 use ReflectionClass;
+
 use function in_array;
 use function is_array;
 

@@ -17,7 +17,6 @@
 namespace local_devkit\local\lint\formatters;
 
 use local_devkit\local\api\linter;
-use local_devkit\local\lint\schemas\file;
 use local_devkit\local\utils;
 
 /**

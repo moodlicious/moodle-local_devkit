@@ -18,6 +18,7 @@ namespace local_devkit\local\cli\commands\lint;
 
 use local_devkit\local\api\linter;
 use local_devkit\local\lint\linters\base;
+use local_devkit\local\lint\schemas\file;
 use local_devkit\local\utils;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Attribute\Argument;
@@ -30,7 +31,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use local_devkit\local\lint\schemas\file;
+
 use function array_key_exists;
 
 /**

@@ -17,12 +17,13 @@
 namespace local_devkit\local\lint\linters;
 
 use local_devkit\local\attributes\linter;
+use local_devkit\local\lint\schemas\file;
 use local_devkit\local\lint\schemas\issue;
 use local_devkit\local\lint\severity;
-use local_devkit\local\lint\schemas\file;
 use local_devkit\local\utils;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+
 use function array_key_exists;
 use function array_merge;
 use function in_array;

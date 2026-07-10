@@ -33,6 +33,7 @@ use local_devkit\local\debugbar\collectors\moodle_collector;
 use local_devkit\local\debugbar\collectors\string_manager_collector;
 use local_devkit\local\debugbar\log_level;
 use Throwable;
+
 use function array_key_exists;
 
 defined('MOODLE_INTERNAL') || die;
@@ -155,7 +156,6 @@ class debugbar extends BaseDebugBar {
     public function get_exceptions_collector(): ?ExceptionsCollector {
         return $this->get_collector('exceptions', ExceptionsCollector::class);
     }
-
 
     /**
      * Get the exceptions collector instance, or null if it is not available or of the wrong type.

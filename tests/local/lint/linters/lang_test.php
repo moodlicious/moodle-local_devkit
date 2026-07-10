@@ -40,10 +40,7 @@ final class lang_test extends advanced_testcase {
         parent::setUp();
         $path = realpath(__DIR__ . '/../../../fixtures');
         $this->fixturedir = $path !== false ? $path : __DIR__ . '/../../../fixtures';
-        $this->linter = new #[linter(
-            name: 'lang',
-            description: 'testable lang linter for unit tests',
-        )] class extends lang {
+        $this->linter = new #[linter(name: 'lang', description: 'testable lang linter for unit tests')] class extends lang {
             #[\Override]
             public static function get_exclude_patterns(): array {
                 return [];

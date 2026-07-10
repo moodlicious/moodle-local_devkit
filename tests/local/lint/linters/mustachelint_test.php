@@ -40,10 +40,8 @@ final class mustachelint_test extends advanced_testcase {
         parent::setUp();
         $path = realpath(__DIR__ . '/../../../fixtures');
         $this->fixturedir = $path !== false ? $path : __DIR__ . '/../../../fixtures';
-        $this->linter = new #[linter(
-            name: 'mustachelint',
-            description: 'testable mustachelint linter for unit tests',
-        )] class extends mustachelint {
+        // phpcs:ignore moodle.Files.LineLength.TooLong
+        $this->linter = new #[linter(name: 'mustachelint', description: 'testable mustachelint linter for unit tests')] class extends mustachelint {
             /** @var string */
             public static string $mocktemplatename = 'local_devkit/test';
 

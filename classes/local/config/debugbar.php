@@ -16,8 +16,6 @@
 
 namespace local_devkit\local\config;
 
-use local_devkit\local\devkit;
-
 /**
  * Utility class to get plugin config.
  * @package   local_devkit

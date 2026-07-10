@@ -40,10 +40,7 @@ final class jsdoc_test extends advanced_testcase {
         parent::setUp();
         $path = realpath(__DIR__ . '/../../../fixtures');
         $this->fixturedir = $path !== false ? $path : __DIR__ . '/../../../fixtures';
-        $this->linter = new #[linter(
-            name: 'jsdoc',
-            description: 'testable jsdoc linter for unit tests',
-        )] class extends jsdoc {
+        $this->linter = new #[linter(name: 'jsdoc', description: 'testable jsdoc linter for unit tests')] class extends jsdoc {
             #[\Override]
             public static function get_exclude_patterns(): array {
                 return [];

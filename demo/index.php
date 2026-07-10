@@ -78,7 +78,6 @@ try {
     VarDumper::dump($th);
 }
 
-
 echo html_writer::tag(
     'div',
     join(array_map(fn($line) => html_writer::tag('code', $line . '<br>'), [

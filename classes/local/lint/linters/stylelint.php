@@ -17,8 +17,8 @@
 namespace local_devkit\local\lint\linters;
 
 use local_devkit\local\attributes\linter;
-use local_devkit\local\lint\schemas\issue\stylelint as stylelint_issue;
 use local_devkit\local\lint\schemas\file;
+use local_devkit\local\lint\schemas\issue\stylelint as stylelint_issue;
 use Symfony\Component\Process\Process;
 
 /**

@@ -18,7 +18,6 @@ namespace local_devkit\local\lint\schemas;
 
 use JsonSerializable;
 use local_devkit\local\component;
-use local_devkit\local\lint\schemas\issue;
 use local_devkit\local\utils;
 
 /**

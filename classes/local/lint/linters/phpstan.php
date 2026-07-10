@@ -18,9 +18,9 @@ namespace local_devkit\local\lint\linters;
 
 use local_devkit\local\attributes\linter;
 use local_devkit\local\component;
+use local_devkit\local\lint\schemas\file;
 use local_devkit\local\lint\schemas\issue\phpstan as phpstan_issue;
 use local_devkit\local\lint\severity;
-use local_devkit\local\lint\schemas\file;
 use local_devkit\local\utils;
 use MoodleQuickForm;
 use Symfony\Component\Process\Process;

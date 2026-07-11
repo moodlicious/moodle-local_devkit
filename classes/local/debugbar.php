@@ -251,7 +251,7 @@ class debugbar extends BaseDebugBar {
         string $name,
         callable $callback,
         bool $logreturn = false,
-        ?float &$duration = null
+        ?float &$duration = null,
     ) {
         $start = microtime(true);
         $result = $callback();
@@ -323,7 +323,7 @@ class debugbar extends BaseDebugBar {
     public function sendDataInHeaders(
         ?bool $useOpenHandler = null,
         string $headerName = 'phpdebugbar',
-        int $maxHeaderLength = 4096
+        int $maxHeaderLength = 4096,
     ): static {
         if (!devkit::is_enabled()) {
             return $this;

@@ -91,7 +91,7 @@ class lint {
             if ($unknown !== []) {
                 throw new Exception(
                     'Unknown linter(s): ' . implode(', ', $unknown)
-                    . '. Available linters: ' . implode(', ', $allnames)
+                    . '. Available linters: ' . implode(', ', $allnames),
                 );
             }
         }

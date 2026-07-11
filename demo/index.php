@@ -47,8 +47,8 @@ $PAGE->set_url($url);
 $PAGE->add_header_action(
     $OUTPUT->single_button(
         new url($url, ['redirect' => 5]),
-        "Redirect 5 times"
-    )
+        "Redirect 5 times",
+    ),
 );
 
 if ($shouldredirect) {
@@ -64,7 +64,7 @@ echo html_writer::tag(
         '$transaction = $DB->start_delegated_transaction();',
         '$data = $DB->get_records("user", ["id" => $USER->id]);',
         '$transaction->allow_commit();',
-    ]))
+    ])),
 );
 
 try {
@@ -84,7 +84,7 @@ echo html_writer::tag(
         '$transaction = $DB->start_delegated_transaction();',
         '$data = $DB->get_records("user", ["id" => $USER->id]);',
         '$transaction->rollback(new \Exception("Rolling back transaction for demonstration purposes."));',
-    ]))
+    ])),
 );
 
 try {
@@ -100,7 +100,7 @@ try {
 
 echo html_writer::tag(
     'div',
-    html_writer::tag('code', 'Dumping the $DB global variable to show the wrapped PDO connection.')
+    html_writer::tag('code', 'Dumping the $DB global variable to show the wrapped PDO connection.'),
 );
 VarDumper::dump($DB);
 

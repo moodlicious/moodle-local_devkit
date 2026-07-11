@@ -70,9 +70,9 @@ class plugins_list extends Command {
                         $result['release'],
                         $result['directory'],
                     ],
-                    $results
-                )
-            )
+                    $results,
+                ),
+            ),
         );
 
         return 0;

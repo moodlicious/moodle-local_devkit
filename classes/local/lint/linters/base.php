@@ -199,7 +199,7 @@ abstract class base {
                 "File not found",
                 "file-must-exist",
                 "base",
-                severity::error
+                severity::error,
             ));
         }
 
@@ -215,7 +215,7 @@ abstract class base {
         $this->set_progress_file($directorypath);
         $results = [];
         $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($directorypath, RecursiveDirectoryIterator::SKIP_DOTS)
+            new RecursiveDirectoryIterator($directorypath, RecursiveDirectoryIterator::SKIP_DOTS),
         );
 
         foreach ($iterator as $path) {
@@ -239,7 +239,7 @@ abstract class base {
                 'Linter disabled by user',
                 'linter-disabled',
                 static::get_name(),
-                severity::info
+                severity::info,
             );
             $file = new file($path, [$issue]);
             return [$file];
@@ -250,7 +250,7 @@ abstract class base {
                 'Linter not available or is not installed',
                 'linter-installed',
                 static::get_name(),
-                severity::warning
+                severity::warning,
             );
             $file = new file($path, [$issue]);
             return [$file];
@@ -270,7 +270,7 @@ abstract class base {
             "Path not found",
             "path-must-exist",
             "base",
-            severity::error
+            severity::error,
         );
         return [
             new file($path, [$issue]),

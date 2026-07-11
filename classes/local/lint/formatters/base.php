@@ -40,7 +40,7 @@ abstract class base {
      */
     public function __construct(
         /** @var SymfonyStyle $io */
-        protected readonly SymfonyStyle $io
+        protected readonly SymfonyStyle $io,
     ) {
     }
 

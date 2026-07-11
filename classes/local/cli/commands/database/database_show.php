@@ -106,7 +106,7 @@ class database_show extends Command {
                 array_map(
                     fn(/** @var DatabaseTable $table */ $table) => "{$table['name']}: {$table['comment']}",
                     $database['tables'],
-                )
+                ),
             );
         }
     }

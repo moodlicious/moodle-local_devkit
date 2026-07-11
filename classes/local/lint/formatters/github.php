@@ -67,7 +67,7 @@ class github extends base {
                     $line,
                     $column,
                     $this->escape_property($rule),
-                    $this->escape_message($message)
+                    $this->escape_message($message),
                 ));
             }
         }
@@ -101,7 +101,7 @@ class github extends base {
         return str_replace(
             ['%', "\r", "\n", ':', ','],
             ['%25', '%0D', '%0A', '%3A', '%2C'],
-            $value
+            $value,
         );
     }
 
@@ -114,7 +114,7 @@ class github extends base {
         return str_replace(
             ['%', "\r", "\n"],
             ['%25', '%0D', '%0A'],
-            $value
+            $value,
         );
     }
 

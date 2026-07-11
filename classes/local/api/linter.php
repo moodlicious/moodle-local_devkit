@@ -72,7 +72,7 @@ class linter {
                 $description = $linter::get_description();
                 return $description ? "$name: $description" : $name;
             },
-            $linters
+            $linters,
         ));
         return $info;
     }
@@ -94,9 +94,9 @@ class linter {
         $resultsitems = array_map(
             fn(string $path) => array_map(
                 fn(base $linter) => $linter->lint($path),
-                $linters
+                $linters,
             ),
-            $paths
+            $paths,
         );
         $results = array_merge(...$resultsitems);
         $progress?->finish('Done.');

@@ -80,7 +80,7 @@ class lang extends base {
         $results = $this->lint_directory($langdir);
         $results = array_filter(
             $results,
-            fn(file $result) => $result->file === $filepath
+            fn(file $result) => $result->file === $filepath,
         );
         return $results;
     }
@@ -94,7 +94,7 @@ class lang extends base {
         $results = $this->validate($stringdata);
         $results = array_filter(
             $results,
-            fn(file $result) => str_starts_with($result->file, $directorypath)
+            fn(file $result) => str_starts_with($result->file, $directorypath),
         );
         return $results;
     }
@@ -151,7 +151,7 @@ class lang extends base {
      */
     private function load_strings(string $directorypath, bool $usestringmanager = false): array {
         $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($directorypath, RecursiveDirectoryIterator::SKIP_DOTS)
+            new RecursiveDirectoryIterator($directorypath, RecursiveDirectoryIterator::SKIP_DOTS),
         );
 
         $locales = [];
@@ -191,7 +191,7 @@ class lang extends base {
                     $langdirdata[$langdir][$component][$locale] = $manager
                         ? $manager->load_component_strings($component, $locale)
                         : self::load_component_strings(
-                            $this->compose_lang_filepath($langdir, $component, $locale)
+                            $this->compose_lang_filepath($langdir, $component, $locale),
                         );
                 }
             }
@@ -302,7 +302,7 @@ class lang extends base {
             $results[] = self::single_file_issue(
                 $englishlangfilepath,
                 "Missing required '$englishlocaleid' locale",
-                "linting-requires-$englishlocaleid-locale"
+                "linting-requires-$englishlocaleid-locale",
             );
             return $results;
         }
@@ -316,7 +316,7 @@ class lang extends base {
                     $englishlangfilepath,
                     "Identifier '$identifier' is not present in the '$englishlocaleid' locale",
                     'identifier-safely-missing',
-                    severity: severity::warning
+                    severity: severity::warning,
                 );
                 continue;
             }
@@ -435,7 +435,7 @@ class lang extends base {
     ): file {
         return new file(
             $path,
-            [new issue($line, $column, $message, $rule, $source, $severity)]
+            [new issue($line, $column, $message, $rule, $source, $severity)],
         );
     }
 

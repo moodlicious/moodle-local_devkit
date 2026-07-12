@@ -191,7 +191,7 @@ abstract class base {
      */
     public static function get_third_party_exclude_patterns(): array {
         static $paths = null;
-        if ($paths) {
+        if ($paths !== null) {
             return $paths;
         }
 

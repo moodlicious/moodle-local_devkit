@@ -139,6 +139,6 @@ final class lang_test extends advanced_testcase {
      */
     public function test_get_exclude_patterns(): void {
         $patterns = lang::get_exclude_patterns();
-        $this->assertContains('**/vendor/**', $patterns);
+        $this->assertContains('*/vendor/*', $patterns);
     }
 }

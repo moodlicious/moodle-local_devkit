@@ -17,6 +17,7 @@
 namespace local_devkit\local\api;
 
 use core_component;
+use Exception;
 use local_devkit\local\schema\thirdpartylib;
 
 /**
@@ -79,7 +80,11 @@ class thirdpartylibs {
             }
 
             foreach ($xml as $library) {
-                $libraries[] = thirdpartylib::from_xml_element($file, $library);
+                try {
+                    $libraries[] = thirdpartylib::from_xml_element($file, $library);
+                } catch (Exception $e) {
+                    continue;
+                }
             }
         }
 

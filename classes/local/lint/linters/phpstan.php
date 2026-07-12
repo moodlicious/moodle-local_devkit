@@ -206,6 +206,10 @@ class phpstan extends base {
             default => '',
         };
 
+        $excludes = self::get_exclude_patterns();
+        $excludes = array_map(fn($e) => "        - $e", $excludes);
+        $excludelist = implode("\n", $excludes);
+
         $moodleroot = utils::get_moodle_root_dir();
         $rulelevel = self::get_rule_level();
         $phpstandotneon = <<<NEON
@@ -218,8 +222,7 @@ class phpstan extends base {
                 paths:
                     - $moodleroot
                 excludePaths:
-                    - */vendor/*
-                    - */tests/fixtures/*
+            $excludelist
                 moodle:
                     rootDirectory: $moodleroot
                 bootstrapFiles:

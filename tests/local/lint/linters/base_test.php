@@ -73,12 +73,10 @@ final class base_test extends advanced_testcase {
      */
     public function test_get_exclude_patterns_returns_default_patterns(): void {
         $patterns = $this->create_simple_base_class()::get_exclude_patterns();
-        $this->assertSame([
-            '**/.git/**',
-            '**/node_modules/**',
-            '**/vendor/**',
-            '**/tests/fixtures/*',
-        ], $patterns);
+        $this->assertContains('*/.git/*', $patterns);
+        $this->assertContains('*/node_modules/*', $patterns);
+        $this->assertContains('*/vendor/*', $patterns);
+        $this->assertContains('*/tests/fixtures/*', $patterns);
     }
 
     /**

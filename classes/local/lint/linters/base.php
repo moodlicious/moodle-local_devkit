@@ -19,6 +19,7 @@ namespace local_devkit\local\lint\linters;
 use core\exception\coding_exception;
 use dml_exception;
 use Exception;
+use local_devkit\local\api\thirdpartylibs;
 use local_devkit\local\attributes\linter;
 use local_devkit\local\lint\schemas\file;
 use local_devkit\local\lint\schemas\issue;
@@ -165,17 +166,45 @@ abstract class base {
      * @return string[]
      */
     public static function get_exclude_patterns(): array {
+        $thirdpartypatterns = self::get_third_party_exclude_patterns();
         $excludepatterns = static::get_config_value(self::CONFIG_KEY_EXCLUDE_PATTERNS, self::CONFIG_KEY_EXCLUDE_PATTERNS_ENABLED);
+
         if ($excludepatterns !== null) {
-            return self::parse_multiline_string_as_array($excludepatterns);
+            return [
+                ...self::parse_multiline_string_as_array($excludepatterns),
+                ...$thirdpartypatterns,
+            ];
         }
 
         return [
-            '**/.git/**',
-            '**/node_modules/**',
-            '**/vendor/**',
-            '**/tests/fixtures/*',
+            '*/.git/*',
+            '*/node_modules/*',
+            '*/vendor/*',
+            '*/tests/fixtures/*',
+            ...$thirdpartypatterns,
         ];
+    }
+
+    /**
+     * Gets exclude patterns matching third party libs.
+     * @return string[]
+     */
+    public static function get_third_party_exclude_patterns(): array {
+        static $paths = null;
+        if ($paths) {
+            return $paths;
+        }
+
+        $paths = array_column(thirdpartylibs::list(), 'location');
+
+        $paths = array_map(function (string $path) {
+            if (!is_dir($path)) {
+                return $path;
+            }
+            return $path . DIRECTORY_SEPARATOR . '*';
+        }, $paths);
+
+        return $paths;
     }
 
     /**

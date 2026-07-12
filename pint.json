@@ -4,8 +4,12 @@
         "tests/fixtures"
     ],
     "rules": {
+        "array_indentation": true,
         "array_syntax": {
             "syntax": "short"
+        },
+        "binary_operator_spaces": {
+            "default": "single_space"
         },
         "blank_line_after_opening_tag": false,
         "braces_position": {
@@ -14,6 +18,9 @@
             "classes_opening_brace": "same_line",
             "control_structures_opening_brace": "same_line",
             "functions_opening_brace": "same_line"
+        },
+        "cast_spaces": {
+            "space": "single"
         },
         "class_definition": {
             "inline_constructor_arguments": false,
@@ -26,13 +33,33 @@
         "function_declaration": {
             "closure_fn_spacing": "none"
         },
+        "indentation_type": true,
         "list_syntax": {
             "syntax": "short"
         },
         "logical_operators": true,
         "method_chaining_indentation": true,
-        "no_extra_blank_lines": true,
+        "no_extra_blank_lines": {
+            "tokens": [
+                "attribute",
+                "break",
+                "case",
+                "comma",
+                "continue",
+                "curly_brace_block",
+                "default",
+                "extra",
+                "parenthesis_brace_block",
+                "return",
+                "square_brace_block",
+                "switch",
+                "throw",
+                "use",
+                "use_trait"
+            ]
+        },
         "no_superfluous_elseif": true,
+        "no_trailing_comma_in_singleline_array": true,
         "no_trailing_whitespace": true,
         "ordered_imports": {
             "case_sensitive": false,
@@ -45,6 +72,7 @@
         "ordered_interfaces": {
             "case_sensitive": false
         },
+        "switch_case_space": true,
         "trailing_comma_in_multiline": {
             "elements": [
                 "arguments",
@@ -53,6 +81,17 @@
                 "match",
                 "parameters"
             ]
+        },
+        "trim_array_spaces": true,
+        "type_declaration_spaces": {
+            "elements": [
+                "constant",
+                "function",
+                "property"
+            ]
+        },
+        "whitespace_after_comma_in_array": {
+            "ensure_single_space": true
         }
     }
 }

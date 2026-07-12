@@ -44,12 +44,12 @@ class traced_statement extends TracedStatement {
     public function checkBacktrace(int $limit = 15): void {
         // Internal calls, so we skip them.
         static $blacklistedclasses = [
-        moodle_database::class,
-        mysqli_native_devkit_database::class,
-        mysqli_native_moodle_database::class,
-        mariadb_native_devkit_database::class,
-        mariadb_native_moodle_database::class,
-        self::class,
+            moodle_database::class,
+            mysqli_native_devkit_database::class,
+            mysqli_native_moodle_database::class,
+            mariadb_native_devkit_database::class,
+            mariadb_native_moodle_database::class,
+            self::class,
         ];
 
         /** @var Backtrace $backtrace */

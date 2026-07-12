@@ -66,6 +66,7 @@ class eslint extends base {
         $output = $process->getOutput();
         $jsonoutput = json_decode($output);
         if ($jsonoutput === null) {
+            $output = $output ?: $process->getErrorOutput();
             $results[] = self::create_file_with_fatal_issue($filepath, "Unable to parse eslint output '$output'");
             return $results;
         }

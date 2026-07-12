@@ -50,6 +50,8 @@ class issue implements JsonSerializable {
     public string $source;
     /** @var severity The severity of the issue */
     public severity $severity;
+    /** @var string[] Suggestions on how to resolve the issue */
+    public array $suggestions;
 
     /**
      * Constructor.
@@ -59,6 +61,7 @@ class issue implements JsonSerializable {
      * @param string|null $rule
      * @param string $source
      * @param severity $severity
+     * @param string[] $suggestions
      */
     public function __construct(
         int $line,
@@ -67,6 +70,7 @@ class issue implements JsonSerializable {
         ?string $rule,
         string $source,
         severity $severity,
+        array $suggestions = [],
     ) {
         $this->line = $line;
         $this->column = $column;
@@ -74,6 +78,7 @@ class issue implements JsonSerializable {
         $this->rule = $rule;
         $this->source = $source;
         $this->severity = $severity;
+        $this->suggestions = $suggestions;
     }
 
     /**
@@ -137,6 +142,7 @@ class issue implements JsonSerializable {
             'rule' => $this->rule,
             'source' => $this->source,
             'severity' => $this->severity,
+            'suggestions' => $this->suggestions,
         ];
     }
 }

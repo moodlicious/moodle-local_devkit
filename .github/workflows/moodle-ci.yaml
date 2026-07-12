@@ -46,6 +46,9 @@ jobs:
               with:
                   path: plugin
 
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
+
             - name: Setup PHP ${{ matrix.php }}
               uses: shivammathur/setup-php@v2
               with:
@@ -110,7 +113,13 @@ jobs:
                       PLUGINPATH=./moodle/public/local/devkit/
                   fi
                   [ ! -f "$DEVKIT" ] && { echo "devkit binary not found"; exit 1; }
-                  $DEVKIT lint --format=github --linters=phpcs --linters=phpstan -vvv "$PWD/$PLUGINPATH"
+                  $DEVKIT lint \
+                      --format=github \
+                      --linters=eslint \
+                      --linters=phpcs \
+                      --linters=phpstan \
+                      -vvv \
+                      "$PWD/$PLUGINPATH"
               env:
                   MDL_LOCAL_DEVKIT_DISABLE: 1
 

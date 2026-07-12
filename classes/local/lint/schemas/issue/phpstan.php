@@ -36,6 +36,7 @@ class phpstan extends issue {
      */
     public static function from_object(object $object): ?self {
         $message = self::object_property($object, 'message');
+        $tip = self::object_property($object, 'tip');
         $line = self::object_property($object, 'line');
         $ignorable = self::object_property($object, 'ignorable');
         $identifier = self::object_property($object, 'identifier');
@@ -51,6 +52,7 @@ class phpstan extends issue {
             $identifier,
             'phpstan',
             $ignorable ? severity::info : severity::warning,
+            $tip ? [$tip] : [],
         );
     }
 }

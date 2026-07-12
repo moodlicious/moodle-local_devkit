@@ -18,6 +18,7 @@ namespace local_devkit\local\lint\schemas\issue;
 
 use local_devkit\local\lint\schemas\issue;
 use local_devkit\local\lint\severity;
+use stdClass;
 
 use function in_array;
 
@@ -40,6 +41,8 @@ class eslint extends issue {
         $message = self::object_property($object, 'message');
         $line = self::object_property($object, 'line');
         $column = self::object_property($object, 'column');
+        $suggestions = self::object_property($object, 'suggestions', []);
+        $suggestions = array_map(fn(stdClass $suggestion) => $suggestion->desc, $suggestions);
         // The message also includes nodeType, messageId, endLine, endColumn, but we won't use it.
 
         // Some messages return empty ruleId, ignore those for now.
@@ -58,6 +61,7 @@ class eslint extends issue {
             $ruleid,
             'eslint',
             severity::from_eslint($severity),
+            $suggestions,
         );
     }
 }

@@ -61,7 +61,7 @@ class github extends base {
                 }
 
                 if ($issue->suggestions) {
-                    $message = "$message\nSuggestions:\n" . implode($issue->suggestions);
+                    $message = "$message\nSuggestions:\n" . implode("\n", $issue->suggestions);
                 }
 
                 $this->io->writeln(sprintf(

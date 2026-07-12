@@ -110,7 +110,13 @@ jobs:
                       PLUGINPATH=./moodle/public/local/devkit/
                   fi
                   [ ! -f "$DEVKIT" ] && { echo "devkit binary not found"; exit 1; }
-                  $DEVKIT lint --format=github --linters=phpcs --linters=phpstan -vvv "$PWD/$PLUGINPATH"
+                  $DEVKIT lint \
+                      --format=github \
+                      --linters=eslint \
+                      --linters=phpcs \
+                      --linters=phpstan \
+                      -vvv \
+                      "$PWD/$PLUGINPATH"
               env:
                   MDL_LOCAL_DEVKIT_DISABLE: 1
 

@@ -60,6 +60,10 @@ class github extends base {
                     $message = "[{$component}] {$message}";
                 }
 
+                if ($issue->suggestions) {
+                    $message = "$message\nSuggestions:\n" . implode($issue->suggestions);
+                }
+
                 $this->io->writeln(sprintf(
                     '::%s file=%s,line=%d,col=%d,title=%s::%s',
                     $severity,

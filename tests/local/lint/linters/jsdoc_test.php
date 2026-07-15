@@ -42,7 +42,7 @@ final class jsdoc_test extends advanced_testcase {
         $this->fixturedir = $path !== false ? $path : __DIR__ . '/../../../fixtures';
         $this->linter = new #[linter(name: 'jsdoc', description: 'testable jsdoc linter for unit tests')] class extends jsdoc {
             #[\Override]
-            public static function get_exclude_patterns(): array {
+            public static function get_exclude_patterns(bool $includethirdparty = true): array {
                 return [];
             }
         };

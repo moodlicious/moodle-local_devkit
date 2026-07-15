@@ -206,7 +206,7 @@ class phpstan extends base {
             default => '',
         };
 
-        $excludes = self::get_exclude_patterns();
+        $excludes = self::get_exclude_patterns(includethirdparty: true);
         $excludes = array_map(fn($e) => "        - $e", $excludes);
         $excludelist = implode("\n", $excludes);
 

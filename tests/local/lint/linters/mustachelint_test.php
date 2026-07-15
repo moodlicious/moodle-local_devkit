@@ -46,7 +46,7 @@ final class mustachelint_test extends advanced_testcase {
             public static string $mocktemplatename = 'local_devkit/test';
 
             #[\Override]
-            public static function get_exclude_patterns(): array {
+            public static function get_exclude_patterns(bool $includethirdparty = true): array {
                 return [];
             }
 

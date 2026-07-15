@@ -43,7 +43,7 @@ final class phplint_test extends advanced_testcase {
         // phpcs:ignore moodle.Files.LineLength.TooLong
         $this->linter = new #[linter(name: 'phplint', description: 'testable phplint linter for unit tests')] class extends phplint {
             #[\Override]
-            public static function get_exclude_patterns(): array {
+            public static function get_exclude_patterns(bool $includethirdparty = true): array {
                 return [];
             }
         };

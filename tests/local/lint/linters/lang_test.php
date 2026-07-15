@@ -42,7 +42,7 @@ final class lang_test extends advanced_testcase {
         $this->fixturedir = $path !== false ? $path : __DIR__ . '/../../../fixtures';
         $this->linter = new #[linter(name: 'lang', description: 'testable lang linter for unit tests')] class extends lang {
             #[\Override]
-            public static function get_exclude_patterns(): array {
+            public static function get_exclude_patterns(bool $includethirdparty = true): array {
                 return [];
             }
         };

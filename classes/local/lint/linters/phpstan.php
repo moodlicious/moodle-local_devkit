@@ -24,6 +24,7 @@ use local_devkit\local\lint\severity;
 use local_devkit\local\utils;
 use MoodleQuickForm;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * The 'phpstan' linter.
@@ -200,35 +201,40 @@ class phpstan extends base {
         $deprecationrules = realpath("$devkitpath/vendor/phpstan/phpstan-deprecation-rules/rules.neon");
         $devkitbootstrap = realpath("$devkitpath/phpstan-bootstrap.php");
 
-        $tempdirconfig = match (self::get_result_cache_mode()) {
-            self::RESULT_CACHE_PER_COMPONENT => 'tmpDir: tmp',
-            self::RESULT_CACHE_NORMAL => '',
-            default => '',
+        $usetempdir = match (self::get_result_cache_mode()) {
+            self::RESULT_CACHE_PER_COMPONENT => true,
+            self::RESULT_CACHE_NORMAL => false,
+            default => null,
         };
 
         $excludes = self::get_exclude_patterns(includethirdparty: true);
-        $excludes = array_map(fn($e) => "        - $e", $excludes);
-        $excludelist = implode("\n", $excludes);
 
         $moodleroot = utils::get_moodle_root_dir();
         $rulelevel = self::get_rule_level();
-        $phpstandotneon = <<<NEON
-            includes:
-            - $moodleneonpath
-            - $deprecationrules
 
-            parameters:
-                level: $rulelevel
-                paths:
-                    - $moodleroot
-                excludePaths:
-            $excludelist
-                moodle:
-                    rootDirectory: $moodleroot
-                bootstrapFiles:
-                    - $devkitbootstrap
-                $tempdirconfig
-            NEON;
+        $config = [
+            'includes' => [
+                $moodleneonpath,
+                $deprecationrules,
+            ],
+            'parameters' => [
+                'level' => $rulelevel,
+                'paths' => [$moodleroot],
+                'excludePaths' => $excludes,
+                'moodle' => [
+                    'rootDirectory' => $moodleroot,
+                ],
+                'bootstrapFiles' => [
+                    $devkitbootstrap,
+                ],
+            ],
+        ];
+
+        if ($usetempdir) {
+            $config['parameters']['tmpDir'] = 'tmp';
+        }
+
+        $phpstandotneon = Yaml::dump($config, 10);
 
         file_put_contents($neonpath, $phpstandotneon);
         return $neonpath;

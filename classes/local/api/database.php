@@ -17,22 +17,12 @@
 namespace local_devkit\local\api;
 
 use Exception;
+use local_devkit\local\schema\database as database_schema;
 use xmldb_file;
 use xmldb_structure;
 
 /**
  * Plugins API.
- *
- * // phpcs:disable moodle.Files.LineLength.TooLong
- * // phpcs:disable moodle.Commenting.ValidTags.Invalid
- * @phpstan-type DatabaseField array{name:string, comment:string, type:string}
- * @phpstan-type DatabaseKeyReferences array{table:string, fields:string[]}
- * @phpstan-type DatabaseKey array{name:string, comment:string, type: string, fields: string[], references: DatabaseKeyReferences}
- * @phpstan-type DatabaseIndex array{name:string, comment:string, unique: bool, fields: string[]}
- * @phpstan-type DatabaseTable array{name:string, comment:string, fields: DatabaseField[], keys: DatabaseKey[], indexes: DatabaseIndex[]}
- * @phpstan-type PluginDatabase array{name:string, comment:string, tables: DatabaseTable[]}
- * // phpcs:enable moodle.Commenting.ValidTags.Invalid
- * // phpcs:disable moodle.Files.LineLength.TooLong
  *
  * @package   local_devkit
  * @copyright 2026 Felix Yeung
@@ -42,9 +32,9 @@ class database {
     /**
      * List database tables for a given plugin.
      * @param string $component
-     * @return PluginDatabase|null
+     * @return database_schema|null
      */
-    public static function list_plugin_tables(string $component): ?array {
+    public static function list_plugin_tables(string $component): ?database_schema {
         $targetplugin = plugins::get_by_component($component);
 
         if ($targetplugin === null) {
@@ -62,7 +52,7 @@ class database {
     /**
      * Gets database tables from a specific db/install.xml file.
      * @param string $xmlpath
-     * @return PluginDatabase|null
+     * @return database_schema|null
      */
     public static function list_tables_from_xml(string $xmlpath) {
         $structure = self::get_xmldb_structure($xmlpath);
@@ -82,56 +72,56 @@ class database {
             $indexesresults = [];
 
             foreach ($fields as $field) {
-                $fieldsresults[] = [
-                    'name' => $field->getName(),
-                    'comment' => $field->getComment(),
-                    'type' => self::field_type_to_string($field->getType()),
-                ];
+                $fieldsresults[] = new database_schema\field(
+                    name: $field->getName(),
+                    comment: $field->getComment(),
+                    type: self::field_type_to_string($field->getType()),
+                );
             }
 
             foreach ($keys as $key) {
-                $keysresults[] = [
-                    'name' => $key->getName(),
-                    'comment' => $key->getComment(),
-                    'type' => self::key_type_to_string($key->getType()),
-                    'fields' => $key->getFields(),
-                    'references' => [
-                        'table' => $key->getRefTable(),
-                        'fields' => $key->getRefFields(),
-                    ],
-                ];
+                $keysresults[] = new database_schema\key(
+                    name: $key->getName(),
+                    comment: $key->getComment(),
+                    type: self::key_type_to_string($key->getType()),
+                    fields: $key->getFields(),
+                    references: new database_schema\reference(
+                        table: $key->getRefTable(),
+                        fields: $key->getRefFields(),
+                    ),
+                );
             }
 
             foreach ($indexes as $index) {
-                $indexesresults[] = [
-                    'name' => $index->getName(),
-                    'comment' => $index->getComment(),
-                    'unique' => $index->getUnique(),
-                    'fields' => $index->getFields(),
-                ];
+                $indexesresults[] = new database_schema\index(
+                    name: $index->getName(),
+                    comment: $index->getComment(),
+                    unique: $index->getUnique(),
+                    fields: $index->getFields(),
+                );
             }
 
-            $tableresults[] = [
-                'name' => $table->getName(),
-                'comment' => $table->getComment(),
-                'fields' => $fieldsresults,
-                'keys' => $keysresults,
-                'indexes' => $indexesresults,
-            ];
+            $tableresults[] = new database_schema\table(
+                name: $table->getName(),
+                comment: $table->getComment(),
+                fields: $fieldsresults,
+                keys: $keysresults,
+                indexes: $indexesresults,
+            );
         }
 
-        $result = [
-            'name' => $structure->getName(),
-            'comment' => $structure->getComment(),
-            'tables' => $tableresults,
-        ];
+        $result = new database_schema(
+            name: $structure->getName(),
+            comment: $structure->getComment(),
+            tables: $tableresults,
+        );
 
         return $result;
     }
 
     /**
      * Returns every single plugin tables.
-     * @return PluginDatabase[]
+     * @return database_schema[]
      */
     public static function list_tables(): array {
         global $CFG;
@@ -159,15 +149,15 @@ class database {
     /**
      * Find a specific table.
      * @param string $tablename
-     * @return DatabaseTable|null
+     * @return database_schema\table|null
      */
-    public static function find_table(string $tablename): ?array {
+    public static function find_table(string $tablename): ?database_schema\table {
         $result = self::list_tables();
 
         $foundtable = null;
         foreach ($result as $plugintables) {
-            foreach ($plugintables['tables'] as $table) {
-                if ($table['name'] !== $tablename) {
+            foreach ($plugintables->tables as $table) {
+                if ($table->name !== $tablename) {
                     continue;
                 }
                 $foundtable = $table;
@@ -185,15 +175,15 @@ class database {
      */
     public static function field_type_to_string(int $type) {
         return match ($type) {
-            0 => 'incorrect',
-            1 => 'integer',
-            2 => 'number',
-            3 => 'float',
-            4 => 'char',
-            5 => 'text',
-            6 => 'binary',
-            7 => 'datetime',
-            8 => 'timestamp',
+            XMLDB_TYPE_INCORRECT => 'incorrect',
+            XMLDB_TYPE_INTEGER => 'integer',
+            XMLDB_TYPE_NUMBER => 'number',
+            XMLDB_TYPE_FLOAT => 'float',
+            XMLDB_TYPE_CHAR => 'char',
+            XMLDB_TYPE_TEXT => 'text',
+            XMLDB_TYPE_BINARY => 'binary',
+            XMLDB_TYPE_DATETIME => 'datetime',
+            XMLDB_TYPE_TIMESTAMP => 'timestamp',
             default => 'unknown',
         };
     }
@@ -205,12 +195,12 @@ class database {
      */
     public static function key_type_to_string(int $type) {
         return match ($type) {
-            0 => 'incorrect',
-            1 => 'primary',
-            2 => 'unique',
-            3 => 'foreign',
-            4 => 'check',
-            5 => 'foreign_and_unique',
+            XMLDB_KEY_INCORRECT => 'incorrect',
+            XMLDB_KEY_PRIMARY => 'primary',
+            XMLDB_KEY_UNIQUE => 'unique',
+            XMLDB_KEY_FOREIGN => 'foreign',
+            XMLDB_KEY_CHECK => 'check',
+            XMLDB_KEY_FOREIGN_UNIQUE => 'foreign_and_unique',
             default => 'unknown',
         };
     }
@@ -228,8 +218,8 @@ class database {
         }
 
         $xml = new xmldb_file($xmlpath);
-        $xml->setDTD($CFG->dirroot . '/lib/xmldb/xmldb.dtd');
-        $xml->setSchema($CFG->dirroot . '/lib/xmldb/xmldb.xsd');
+        $xml->setDTD("$CFG->libdir/xmldb/xmldb.dtd");
+        $xml->setSchema("$CFG->libdir/xmldb/xmldb.xsd");
 
         if (!$xml->loadXMLStructure()) {
             throw new Exception("Failed to load XMLDB structure from: $xmlpath");

@@ -204,11 +204,11 @@ abstract class base {
             return $path . DIRECTORY_SEPARATOR . '*';
         }, $paths);
 
-        // Remove duplicates.
-        $paths = array_unique($paths);
-
         // Change all \ to / to avoid issues with Windows paths.
         $paths = array_map(fn(string $path) => str_replace('\\', '/', $path), $paths);
+
+        // Remove duplicates.
+        $paths = array_unique($paths);
 
         return $paths;
     }

@@ -172,9 +172,15 @@ class phpstan extends base {
         foreach ($jsonoutput->files as $path => $lintedfile) {
             $issues = [];
             $messages = $lintedfile->messages;
+
+            [$path, $context] = self::strip_context_suffix($path);
+
             foreach ($messages as $message) {
                 $issue = phpstan_issue::from_object($message);
                 if ($issue) {
+                    if ($context !== null) {
+                        array_unshift($issue->suggestions, $context);
+                    }
                     $issues[] = $issue;
                 }
             }
@@ -183,6 +189,19 @@ class phpstan extends base {
         }
 
         return $results;
+    }
+
+    /**
+     * Strip the "(in context of class ...)" suffix that PHPStan appends to trait file paths.
+     *
+     * @param string $path The raw path from PHPStan's JSON output.
+     * @return array{0: string, 1: string|null} The clean path and the context string, or null if no suffix.
+     */
+    private static function strip_context_suffix(string $path): array {
+        if (preg_match('/^(.+)\s+\(in context of class (.+)\)$/', $path, $matches)) {
+            return [$matches[1], "In context of class {$matches[2]}"];
+        }
+        return [$path, null];
     }
 
     /**

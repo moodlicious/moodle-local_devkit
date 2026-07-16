@@ -12,7 +12,8 @@
         "phpstan/phpstan": "^2.1",
         "micaherne/phpstan-moodle": "^1.0",
         "phpstan/phpstan-deprecation-rules": "^2.0",
-        "laravel/pint": "^1.29"
+        "laravel/pint": "^1.29",
+        "phpstan/phpstan-strict-rules": "^2.0"
     },
     "authors": [
         {

@@ -198,6 +198,7 @@ class phpstan extends base {
         $devkitpath = "{$CFG->dirroot}/local/devkit";
         $moodleneonpath = realpath("$devkitpath/vendor/micaherne/phpstan-moodle/extension.neon");
         $deprecationrules = realpath("$devkitpath/vendor/phpstan/phpstan-deprecation-rules/rules.neon");
+        $strictrules = realpath("$devkitpath/vendor/phpstan/phpstan-strict-rules/rules.neon");
         $devkitbootstrap = realpath("$devkitpath/phpstan-bootstrap.php");
 
         $tempdirconfig = match (self::get_result_cache_mode()) {
@@ -216,6 +217,7 @@ class phpstan extends base {
             includes:
             - $moodleneonpath
             - $deprecationrules
+            - $strictrules
 
             parameters:
                 level: $rulelevel

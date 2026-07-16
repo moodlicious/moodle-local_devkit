@@ -57,7 +57,7 @@ final class phplint_test extends advanced_testcase {
         $results = $this->linter->lint_file($filepath);
         // Lint_file returns base result (file exists) + phplint result.
         $last = $results[count($results) - 1];
-        $this->assertCount(0, $last->issues);
+        self::assertCount(0, $last->issues);
     }
 
     /**
@@ -68,7 +68,7 @@ final class phplint_test extends advanced_testcase {
         $results = $this->linter->lint_file($filepath);
         $last = $results[count($results) - 1];
         $rules = array_map(fn($i) => $i->rule, $last->issues);
-        $this->assertContains('php-file-must-parse-successfully', $rules);
+        self::assertContains('php-file-must-parse-successfully', $rules);
     }
 
     /**
@@ -76,6 +76,6 @@ final class phplint_test extends advanced_testcase {
      */
     public function test_get_include_patterns(): void {
         $patterns = phplint::get_include_patterns();
-        $this->assertContains('*.php', $patterns);
+        self::assertContains('*.php', $patterns);
     }
 }

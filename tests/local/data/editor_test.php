@@ -34,7 +34,7 @@ final class editor_test extends advanced_testcase {
      */
     public function test_get_returns_non_empty_array(): void {
         $editors = editor::get();
-        $this->assertNotEmpty($editors);
+        self::assertNotEmpty($editors);
     }
 
     /**
@@ -44,9 +44,9 @@ final class editor_test extends advanced_testcase {
         $editors = editor::get();
         $first = reset($editors);
 
-        $this->assertIsArray($first);
-        $this->assertArrayHasKey('id', $first);
-        $this->assertArrayHasKey('name', $first);
+        self::assertIsArray($first);
+        self::assertArrayHasKey('id', $first);
+        self::assertArrayHasKey('name', $first);
     }
 
     /**
@@ -56,9 +56,9 @@ final class editor_test extends advanced_testcase {
         $editors = editor::get();
         $editorids = array_column($editors, 'id');
 
-        $this->assertContains('vscode', $editorids);
-        $this->assertContains('phpstorm', $editorids);
-        $this->assertContains('sublime', $editorids);
+        self::assertContains('vscode', $editorids);
+        self::assertContains('phpstorm', $editorids);
+        self::assertContains('sublime', $editorids);
     }
 
     /**
@@ -68,7 +68,7 @@ final class editor_test extends advanced_testcase {
         $this->resetAfterTest(true);
 
         $menu = editor::get_menu();
-        $this->assertNotEmpty($menu);
+        self::assertNotEmpty($menu);
     }
 
     /**
@@ -78,7 +78,7 @@ final class editor_test extends advanced_testcase {
         $this->resetAfterTest(true);
 
         $menu = editor::get_menu();
-        $this->assertArrayHasKey('', $menu);
+        self::assertArrayHasKey('', $menu);
     }
 
     /**
@@ -89,9 +89,9 @@ final class editor_test extends advanced_testcase {
 
         $menu = editor::get_menu();
 
-        $this->assertArrayHasKey('vscode', $menu);
-        $this->assertArrayHasKey('phpstorm', $menu);
-        $this->assertArrayHasKey('sublime', $menu);
+        self::assertArrayHasKey('vscode', $menu);
+        self::assertArrayHasKey('phpstorm', $menu);
+        self::assertArrayHasKey('sublime', $menu);
     }
 
     /**
@@ -102,7 +102,7 @@ final class editor_test extends advanced_testcase {
 
         $menu = editor::get_menu();
         foreach ($menu as $value) {
-            $this->assertIsString($value);
+            self::assertIsString($value);
         }
     }
 }

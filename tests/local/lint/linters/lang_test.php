@@ -55,7 +55,7 @@ final class lang_test extends advanced_testcase {
         $filepath = $this->fixturedir . '/lang/en/mod_assign.php';
         $results = $this->linter->lint_file($filepath);
         // Mod_assign has identical identifiers in en and fr, no issues expected.
-        $this->assertCount(0, $results);
+        self::assertCount(0, $results);
     }
 
     /**
@@ -64,12 +64,12 @@ final class lang_test extends advanced_testcase {
     public function test_missing_en_locale(): void {
         $filepath = $this->fixturedir . '/lang/en/missing_en.php';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
+        self::assertCount(1, $results);
         // Array_filter preserves keys, use reset() to get first result.
         $result = reset($results);
-        $this->assertNotFalse($result);
+        self::assertNotFalse($result);
         $rules = array_map(fn($i) => $i->rule, $result->issues);
-        $this->assertContains('linting-requires-en-locale', $rules);
+        self::assertContains('linting-requires-en-locale', $rules);
     }
 
     /**
@@ -84,7 +84,7 @@ final class lang_test extends advanced_testcase {
             ...array_map(fn($r) => $r->issues, $results),
         );
         $rules = array_map(fn($i) => $i->rule, $allissues);
-        $this->assertContains('identifier-missing', $rules);
+        self::assertContains('identifier-missing', $rules);
     }
 
     /**
@@ -97,7 +97,7 @@ final class lang_test extends advanced_testcase {
             ...array_map(fn($r) => $r->issues, $results),
         );
         $rules = array_map(fn($i) => $i->rule, $allissues);
-        $this->assertContains('identifier-safely-missing', $rules);
+        self::assertContains('identifier-safely-missing', $rules);
     }
 
     /**
@@ -110,7 +110,7 @@ final class lang_test extends advanced_testcase {
             ...array_map(fn($r) => $r->issues, $results),
         );
         $rules = array_map(fn($i) => $i->rule, $allissues);
-        $this->assertContains('identifier-placeholders-missing', $rules);
+        self::assertContains('identifier-placeholders-missing', $rules);
     }
 
     /**
@@ -123,7 +123,7 @@ final class lang_test extends advanced_testcase {
             ...array_map(fn($r) => $r->issues, $results),
         );
         $rules = array_map(fn($i) => $i->rule, $allissues);
-        $this->assertContains('identifier-placeholders-extra', $rules);
+        self::assertContains('identifier-placeholders-extra', $rules);
     }
 
     /**
@@ -131,7 +131,7 @@ final class lang_test extends advanced_testcase {
      */
     public function test_get_include_patterns(): void {
         $patterns = lang::get_include_patterns();
-        $this->assertContains('**/lang/*/*.php', $patterns);
+        self::assertContains('**/lang/*/*.php', $patterns);
     }
 
     /**
@@ -139,6 +139,6 @@ final class lang_test extends advanced_testcase {
      */
     public function test_get_exclude_patterns(): void {
         $patterns = lang::get_exclude_patterns();
-        $this->assertContains('*/vendor/*', $patterns);
+        self::assertContains('*/vendor/*', $patterns);
     }
 }

@@ -34,7 +34,7 @@ final class component_test extends advanced_testcase {
      */
     public function test_get_component_path_map_contains_devkit(): void {
         $map = component::get_component_path_map();
-        $this->assertArrayHasKey('local_devkit', $map);
+        self::assertArrayHasKey('local_devkit', $map);
     }
 
     /**
@@ -44,7 +44,7 @@ final class component_test extends advanced_testcase {
         $map = component::get_component_path_map_sorted_cached();
         $lengths = array_map('strlen', array_values($map));
         for ($i = 1; $i < count($lengths); $i++) {
-            $this->assertGreaterThanOrEqual($lengths[$i], $lengths[$i - 1]);
+            self::assertGreaterThanOrEqual($lengths[$i], $lengths[$i - 1]);
         }
     }
 
@@ -53,7 +53,7 @@ final class component_test extends advanced_testcase {
      */
     public function test_resolve_unknown_path_returns_null(): void {
         $result = component::resolve_component_from_path('/nonexistent/plugin/templates/file.mustache');
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     /**
@@ -61,12 +61,12 @@ final class component_test extends advanced_testcase {
      */
     public function test_resolve_devkit_path(): void {
         $map = component::get_component_path_map();
-        $this->assertArrayHasKey('local_devkit', $map);
+        self::assertArrayHasKey('local_devkit', $map);
 
         $devkitpath = $map['local_devkit'];
         $filepath = $devkitpath . '/templates/sometemplate.mustache';
         $result = component::resolve_component_from_path($filepath);
-        $this->assertSame('local_devkit', $result);
+        self::assertSame('local_devkit', $result);
     }
 
     /**
@@ -92,6 +92,6 @@ final class component_test extends advanced_testcase {
 
         $trickyfile = $shortpath . 'extra/templates/file.mustache';
         $result = component::resolve_component_from_path($trickyfile);
-        $this->assertNull($result, "Path '$trickyfile' should not match '$shortcomponent' via cross-directory prefix");
+        self::assertNull($result, "Path '$trickyfile' should not match '$shortcomponent' via cross-directory prefix");
     }
 }

@@ -212,11 +212,18 @@ class phpstan extends base {
         $moodleroot = utils::get_moodle_root_dir();
         $rulelevel = self::get_rule_level();
 
+        $missingfiles = array_filter(
+            [$moodleneonpath, $deprecationrules, $devkitbootstrap],
+            fn($file) => $file === false,
+        );
+        if ($missingfiles) {
+            throw new \RuntimeException(
+                'PHPStan rule files not found. Please run \'composer install\' in the devkit directory.',
+            );
+        }
+
         $config = [
-            'includes' => [
-                $moodleneonpath,
-                $deprecationrules,
-            ],
+            'includes' => [$moodleneonpath, $deprecationrules],
             'parameters' => [
                 'level' => $rulelevel,
                 'paths' => [$moodleroot],
@@ -224,9 +231,7 @@ class phpstan extends base {
                 'moodle' => [
                     'rootDirectory' => $moodleroot,
                 ],
-                'bootstrapFiles' => [
-                    $devkitbootstrap,
-                ],
+                'bootstrapFiles' => [$devkitbootstrap],
             ],
         ];
 

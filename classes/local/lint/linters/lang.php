@@ -27,6 +27,7 @@ use RecursiveIteratorIterator;
 use function array_key_exists;
 use function array_merge;
 use function in_array;
+use function is_array;
 use function strlen;
 
 /**
@@ -298,7 +299,7 @@ class lang extends base {
         $englishlocaleid = 'en';
         $englishlangfilepath = self::compose_lang_filepath($langdir, $component, $englishlocaleid);
 
-        if (!in_array($englishlocaleid, $locales)) {
+        if (!in_array($englishlocaleid, $locales, true)) {
             $results[] = self::single_file_issue(
                 $englishlangfilepath,
                 "Missing required '$englishlocaleid' locale",
@@ -311,7 +312,7 @@ class lang extends base {
             $identifierlocales = array_keys($localesdata);
 
             // Validate that all strings have the 'en' locale.
-            if (!in_array($englishlocaleid, $identifierlocales)) {
+            if (!in_array($englishlocaleid, $identifierlocales, true)) {
                 $results[] = self::single_file_issue(
                     $englishlangfilepath,
                     "Identifier '$identifier' is not present in the '$englishlocaleid' locale",
@@ -502,7 +503,7 @@ class lang extends base {
             }
 
             $j = $i + 1;
-            while ($j < $count && is_array($tokens[$j]) && in_array($tokens[$j][0], $skiptokens)) {
+            while ($j < $count && is_array($tokens[$j]) && in_array($tokens[$j][0], $skiptokens, true)) {
                 $j++;
             }
             if ($j >= $count || $tokens[$j] !== '[') {
@@ -510,7 +511,7 @@ class lang extends base {
             }
 
             $k = $j + 1;
-            while ($k < $count && is_array($tokens[$k]) && in_array($tokens[$k][0], $skiptokens)) {
+            while ($k < $count && is_array($tokens[$k]) && in_array($tokens[$k][0], $skiptokens, true)) {
                 $k++;
             }
             if (
@@ -523,7 +524,7 @@ class lang extends base {
             }
 
             $l = $k + 1;
-            while ($l < $count && is_array($tokens[$l]) && in_array($tokens[$l][0], $skiptokens)) {
+            while ($l < $count && is_array($tokens[$l]) && in_array($tokens[$l][0], $skiptokens, true)) {
                 $l++;
             }
             if ($l >= $count || $tokens[$l] !== ']') {
@@ -531,7 +532,7 @@ class lang extends base {
             }
 
             $m = $l + 1;
-            while ($m < $count && is_array($tokens[$m]) && in_array($tokens[$m][0], $skiptokens)) {
+            while ($m < $count && is_array($tokens[$m]) && in_array($tokens[$m][0], $skiptokens, true)) {
                 $m++;
             }
             if ($m < $count && $tokens[$m] === '=') {

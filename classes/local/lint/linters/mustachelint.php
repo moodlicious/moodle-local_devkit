@@ -136,13 +136,16 @@ class mustachelint extends base {
         preg_match_all('/^\{\{!$[\s\S]*?^\}\}$/m', $content, $matches);
         $comments = $matches[0];
 
-        return array_filter(array_map(function (string $comment) {
-            $comment = preg_replace('/^\{\{!\R?/', '', $comment); // Remove opening line.
-            if ($comment !== null && $comment !== '') {
-                $comment = preg_replace('/^\}\}$/m', '', $comment);   // Remove closing line.
-            }
-            return $comment;
-        }, $comments));
+        return array_filter(
+            array_map(function (string $comment) {
+                $comment = preg_replace('/^\{\{!\R?/', '', $comment); // Remove opening line.
+                if ($comment !== null && $comment !== '') {
+                    $comment = preg_replace('/^\}\}$/m', '', $comment);   // Remove closing line.
+                }
+                return $comment;
+            }, $comments),
+            fn($comment) => $comment !== null && $comment !== '',
+        );
     }
 
     /**

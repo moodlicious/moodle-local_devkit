@@ -499,7 +499,7 @@ abstract class base {
      * @return string[]
      */
     protected static function parse_multiline_string_as_array(string $string): array {
-        $excludes = explode("\n", $string);
-        return array_filter(array_map(trim(...), $excludes));
+        $lines = explode("\n", $string);
+        return array_filter(array_map(trim(...), $lines), fn($line) => $line !== '');
     }
 }

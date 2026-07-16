@@ -80,7 +80,7 @@ class thirdpartylib {
         $instance->version = $element->version ?? null;
         $instance->license = (string) $element->license;
         $instance->licenseversion = null;
-        if (isset($element->licenseversion) && !empty((string) $element->licenseversion)) {
+        if (isset($element->licenseversion) && ((string) $element->licenseversion) !== '') {
             $instance->licenseversion = (string) $element->licenseversion;
         }
         $instance->repository = $element->repository ?? null;

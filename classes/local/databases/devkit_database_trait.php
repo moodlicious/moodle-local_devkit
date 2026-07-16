@@ -107,6 +107,8 @@ trait devkit_database_trait {
      * End query wrapper.
      * @param mysqli_result|null $result
      * @return void
+     * phpcs:ignore moodle.Commenting.ValidTags
+     * @phpstan-ignore-next-line method.childParameterType
      */
     protected function query_end($result) {
         parent::query_end($result);

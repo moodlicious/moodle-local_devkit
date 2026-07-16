@@ -77,7 +77,8 @@ class database_show extends Command {
      * @return PluginDatabase[]
      */
     public static function get_data(?string $component) {
-        if ($component === null) {
+        $plugintables = [];
+        if ($component !== null) {
             $plugintable = database::list_plugin_tables($component);
             if ($plugintable === null) {
                 throw new Exception("Component '$component' does not define db/install.xml.");

@@ -414,6 +414,8 @@ abstract class base {
             return null;
         }
 
+        // phpcs:ignore moodle.Commenting.InlineComment
+        // @phpstan-ignore-next-line phpstan/property.dynamicName (Checked above, probably fine)
         return $config->$key;
     }
 

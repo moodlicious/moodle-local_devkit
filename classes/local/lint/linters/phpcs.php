@@ -120,7 +120,7 @@ class phpcs extends base {
             return $results;
         }
 
-        foreach ($jsonoutput->files as $path => $lintedfile) {
+        foreach ($jsonoutput->files as $filepath => $lintedfile) {
             $issues = [];
             $messages = $lintedfile->messages;
             foreach ($messages as $message) {
@@ -131,7 +131,7 @@ class phpcs extends base {
                 $issues[] = $issue;
             }
 
-            $results[] = new file($path, $issues);
+            $results[] = new file($filepath, $issues);
         }
 
         return $results;

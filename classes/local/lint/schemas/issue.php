@@ -103,6 +103,8 @@ class issue implements JsonSerializable {
             return $default;
         }
 
+        // phpcs:ignore moodle.Commenting.InlineComment
+        // @phpstan-ignore-next-line phpstan/property.dynamicName (Checked above, probably fine)
         return $object->{$property};
     }
 

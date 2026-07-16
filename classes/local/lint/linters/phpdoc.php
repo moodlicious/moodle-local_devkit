@@ -86,9 +86,7 @@ class phpdoc extends base {
         global $CFG;
         $path = $CFG->dirroot . '/local/moodlecheck/cli/moodlecheck.php';
         $realpath = realpath($path);
-        if ($realpath === false) {
-            $cache = null;
-        }
+        $cache = $realpath !== false ? $realpath : null;
 
         if ($cache !== null) {
             require_once($CFG->dirroot . '/local/moodlecheck/locallib.php');

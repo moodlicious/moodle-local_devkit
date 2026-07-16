@@ -133,8 +133,7 @@ class phpstan extends base {
         if ($output === '') {
             $error = $process->getErrorOutput();
             $issue = phpstan_issue::simple($error);
-            $results[] = new file($path, [$issue]);
-            return $results;
+            return [new file($path, [$issue])];
         }
 
         return $this->parse_json($output, $path);
@@ -169,7 +168,7 @@ class phpstan extends base {
             $results[] = self::create_file_with_fatal_issue($path, $error);
         }
 
-        foreach ($jsonoutput->files as $path => $lintedfile) {
+        foreach ($jsonoutput->files as $filepath => $lintedfile) {
             $issues = [];
             $messages = $lintedfile->messages;
             foreach ($messages as $message) {
@@ -180,7 +179,7 @@ class phpstan extends base {
                 $issues[] = $issue;
             }
 
-            $results[] = new file($path, $issues);
+            $results[] = new file($filepath, $issues);
         }
 
         return $results;

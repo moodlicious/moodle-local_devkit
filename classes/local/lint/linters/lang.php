@@ -155,9 +155,6 @@ class lang extends base {
             new RecursiveDirectoryIterator($directorypath, RecursiveDirectoryIterator::SKIP_DOTS),
         );
 
-        $locales = [];
-        $components = [];
-
         $langdirdata = [];
 
         foreach ($iterator as $path) {

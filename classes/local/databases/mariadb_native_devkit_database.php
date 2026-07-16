@@ -34,6 +34,7 @@ class mariadb_native_devkit_database extends mariadb_native_moodle_database impl
      * @param mariadb_native_moodle_database $db
      */
     protected function __construct(mariadb_native_moodle_database $db) {
+        parent::__construct();
         $this->pdo = new TraceablePDO(
             new PDO("mysql:host={$db->dbhost};dbname={$db->dbname}", $db->dbuser, $db->dbpass),
         );

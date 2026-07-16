@@ -248,7 +248,7 @@ class phpstan extends base {
         // Component resolving might fail during CI so catch any errors and fallback to '_'.
         $component = null;
         try {
-            $component = component::resolve_component_from_path(utils::get_path_relative_to_moodle_root($path)) ?: '_';
+            $component = component::resolve_component_from_path(utils::get_path_relative_to_moodle_root($path)) ?? '_';
         } catch (\Exception $th) {
             $component = '_';
         }
@@ -297,7 +297,11 @@ class phpstan extends base {
     public static function get_phpstan_binary_path(): ?string {
         global $CFG;
         $path = $CFG->dirroot . '/local/devkit/vendor/bin/phpstan';
-        return realpath($path) ?: null;
+        $path = realpath($path);
+        if ($path === false) {
+            return null;
+        }
+        return $path;
     }
 
     #[\Override]

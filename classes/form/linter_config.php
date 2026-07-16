@@ -97,7 +97,7 @@ class linter_config extends dynamic_form {
 
         $config = $linter::get_config();
         $data = (object) [
-            ...(array) ($config ?: new \stdClass()),
+            ...(array) ($config ?? new \stdClass()),
             'classname' => $linter,
         ];
         $this->set_data($data);

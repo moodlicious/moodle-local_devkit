@@ -163,10 +163,11 @@ abstract class base {
 
     /**
      * Declares file patterns to exclude.
+     * @param bool $includethirdparty True if third party exclude patterns should be included.
      * @return string[]
      */
-    public static function get_exclude_patterns(): array {
-        $thirdpartypatterns = self::get_third_party_exclude_patterns();
+    public static function get_exclude_patterns(bool $includethirdparty = false): array {
+        $thirdpartypatterns = $includethirdparty ? self::get_third_party_exclude_patterns() : [];
         $excludepatterns = static::get_config_value(self::CONFIG_KEY_EXCLUDE_PATTERNS, self::CONFIG_KEY_EXCLUDE_PATTERNS_ENABLED);
 
         if ($excludepatterns !== null) {

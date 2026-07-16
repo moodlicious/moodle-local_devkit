@@ -41,9 +41,9 @@ class eslint extends base {
     }
 
     #[\Override]
-    public static function get_exclude_patterns(): array {
+    public static function get_exclude_patterns(bool $includethirdparty = true): array {
         return [
-            ...parent::get_exclude_patterns(),
+            ...parent::get_exclude_patterns($includethirdparty),
             ...['**/amd/build/**', '**/yui/build/**'],
         ];
     }

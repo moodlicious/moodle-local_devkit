@@ -27,7 +27,7 @@ class table {
     /**
      * Constructor.
      * @param string $name
-     * @param string $comment
+     * @param string|null $comment
      * @param field[] $fields
      * @param key[] $keys
      * @param index[] $indexes
@@ -35,8 +35,8 @@ class table {
     public function __construct(
         /** @var string $name */
         public readonly string $name,
-        /** @var string $comment */
-        public readonly string $comment,
+        /** @var string|null $comment */
+        public readonly ?string $comment,
         /** @var field[] $fields */
         public readonly array $fields,
         /** @var key[] $keys */

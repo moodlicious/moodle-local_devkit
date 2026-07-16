@@ -27,14 +27,14 @@ class field {
     /**
      * Constructor.
      * @param string $name
-     * @param string $comment
+     * @param string|null $comment
      * @param string $type
      */
     public function __construct(
         /** @var string $name */
         public readonly string $name,
-        /** @var string $comment */
-        public readonly string $comment,
+        /** @var string|null $comment */
+        public readonly ?string $comment,
         /** @var string $type */
         public readonly string $type,
     ) {

@@ -27,15 +27,15 @@ class index {
     /**
      * Constructor.
      * @param string $name
-     * @param string $comment
+     * @param string|null $comment
      * @param bool $unique
      * @param string[] $fields
      */
     public function __construct(
         /** @var string $name */
         public readonly string $name,
-        /** @var string $comment */
-        public readonly string $comment,
+        /** @var string|null $comment */
+        public readonly ?string $comment,
         /** @var bool $unique */
         public readonly bool $unique,
         /** @var string[] $fields */

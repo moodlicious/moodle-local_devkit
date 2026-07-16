@@ -26,12 +26,12 @@ namespace local_devkit\local\schema\database;
 class reference {
     /**
      * Constructor.
-     * @param string $table
+     * @param string|null $table
      * @param string[] $fields
      */
     public function __construct(
-        /** @var string $table */
-        public readonly string $table,
+        /** @var string|null $table */
+        public readonly ?string $table,
         /** @var string[] $fields */
         public readonly array $fields,
     ) {

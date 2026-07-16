@@ -27,14 +27,14 @@ class database {
     /**
      * Constructor.
      * @param string $name
-     * @param string $comment
+     * @param string|null $comment
      * @param database\table[] $tables
      */
     public function __construct(
         /** @var string $name */
         public readonly string $name,
-        /** @var string $comment */
-        public readonly string $comment,
+        /** @var string|null $comment */
+        public readonly ?string $comment,
         /** @var database\table[] $tables */
         public readonly array $tables,
     ) {

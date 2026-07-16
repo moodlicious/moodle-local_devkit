@@ -22,6 +22,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+use function count;
+
 /**
  * Command to purge Moodle caches.
  * Same as admin/cli/purge_cache.php.
@@ -76,7 +78,7 @@ class handler {
         }
 
         $command = new Command($name);
-        if ($cachekey) {
+        if ($cachekey !== null) {
             $description = $caches[$cachekey];
             $command->setDescription($description);
         } else {
@@ -86,7 +88,7 @@ class handler {
             ->addOption(
                 'caches',
                 mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                default: $cachekey ? [$cachekey] : array_keys($caches),
+                default: $cachekey !== null ? [$cachekey] : array_keys($caches),
             )
             ->setCode(self::invoke(...));
         return $command;

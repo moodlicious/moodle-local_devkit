@@ -60,7 +60,7 @@ class github extends base {
                     $message = "[{$component}] {$message}";
                 }
 
-                if ($issue->suggestions) {
+                if (count($issue->suggestions) > 0) {
                     $message = "$message\nSuggestions:\n" . implode("\n", $issue->suggestions);
                 }
 

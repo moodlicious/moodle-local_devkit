@@ -64,7 +64,7 @@ class traced_statement extends TracedStatement {
         });
 
         // Add last frame back.
-        if ($lastframe) {
+        if ($lastframe !== null) {
             $backtrace[] = $lastframe;
         }
 

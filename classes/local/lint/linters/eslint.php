@@ -76,9 +76,10 @@ class eslint extends base {
             $messages = $lintedfile->messages;
             foreach ($messages as $message) {
                 $issue = eslint_issue::from_object($message);
-                if ($issue) {
-                    $issues[] = $issue;
+                if ($issue === null) {
+                    continue;
                 }
+                $issues[] = $issue;
             }
 
             $results[] = new file($lintedfile->filePath, $issues);

@@ -42,12 +42,12 @@ class string_manager extends core_string_manager_standard {
 
         // Do nothing if the collector is not enabled.
         $collector = debugbar::instance()->get_string_manager_collector();
-        if (!$collector) {
+        if ($collector === null) {
             return $result;
         }
 
         // Log it.
-        $label = $component
+        $label = $component !== ''
             ? "get_string('$identifier', '$component')"
             : "get_string('$identifier')";
         $params = [

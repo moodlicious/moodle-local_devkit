@@ -32,6 +32,7 @@ use ReflectionClass;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 
 use function array_key_exists;
+use function count;
 
 /**
  * The abstract base linter.
@@ -83,7 +84,7 @@ abstract class base {
      * @return void
      */
     public function set_progress_file(string $path): void {
-        if (!$this->progress) {
+        if ($this->progress === null) {
             return;
         }
 
@@ -107,7 +108,7 @@ abstract class base {
         $attributes = $class->getAttributes(linter::class);
         [$attribute] = $attributes ?: [null];
 
-        if (!$attribute) {
+        if ($attribute === null) {
             throw new coding_exception('linter classes must have the linter attribute set');
         }
 
@@ -250,7 +251,7 @@ abstract class base {
 
         foreach ($iterator as $path) {
             $lintresults = $this->lint_file($path);
-            if ($lintresults) {
+            if (count($lintresults) > 0) {
                 $results = [...$results, ...$lintresults];
             }
         }
@@ -397,7 +398,7 @@ abstract class base {
      */
     protected static function get_config_value(string $key, ?string $togglekey = null): mixed {
         if ($togglekey !== null) {
-            $enabled = self::get_config_value($togglekey);
+            $enabled = (bool) self::get_config_value($togglekey);
             if (!$enabled) {
                 return null;
             }
@@ -472,7 +473,7 @@ abstract class base {
         } catch (dml_exception) {
             return null;
         }
-        if (!$configstring) {
+        if ($configstring === '' || $configstring === false) {
             return null;
         }
         return json_decode($configstring, false);

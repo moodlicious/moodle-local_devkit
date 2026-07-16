@@ -51,7 +51,7 @@ $PAGE->add_header_action(
     ),
 );
 
-if ($shouldredirect) {
+if ((bool) $shouldredirect) {
     $DB->get_records('user', ['id' => -$shouldredirect]);
     redirect(new url($url, ['redirect' => $shouldredirect - 1]));
 }

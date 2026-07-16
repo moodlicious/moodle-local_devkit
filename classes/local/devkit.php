@@ -34,7 +34,7 @@ class devkit {
             return false;
         }
 
-        if (getenv('MDL_LOCAL_DEVKIT_DISABLE')) {
+        if ((bool) getenv('MDL_LOCAL_DEVKIT_DISABLE')) {
             return false;
         }
 

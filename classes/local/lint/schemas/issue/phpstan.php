@@ -51,8 +51,8 @@ class phpstan extends issue {
             $message,
             $identifier,
             'phpstan',
-            $ignorable ? severity::info : severity::warning,
-            $tip ? [$tip] : [],
+            (bool) $ignorable ? severity::info : severity::warning,
+            (bool) $tip ? [$tip] : [],
         );
     }
 }

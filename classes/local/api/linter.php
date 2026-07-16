@@ -70,7 +70,7 @@ class linter {
             function (/** @var class-string<base> $linter */ $linter) {
                 $name = $linter::get_name();
                 $description = $linter::get_description();
-                return $description ? "$name: $description" : $name;
+                return $description !== null ? "$name: $description" : $name;
             },
             $linters,
         ));

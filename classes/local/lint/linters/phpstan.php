@@ -130,7 +130,7 @@ class phpstan extends base {
         $process->run();
 
         $output = $process->getOutput();
-        if (!$output) {
+        if ($output === '') {
             $error = $process->getErrorOutput();
             $issue = phpstan_issue::simple($error);
             $results[] = new file($path, [$issue]);
@@ -174,9 +174,10 @@ class phpstan extends base {
             $messages = $lintedfile->messages;
             foreach ($messages as $message) {
                 $issue = phpstan_issue::from_object($message);
-                if ($issue) {
-                    $issues[] = $issue;
+                if ($issue === null) {
+                    continue;
                 }
+                $issues[] = $issue;
             }
 
             $results[] = new file($path, $issues);
@@ -268,7 +269,7 @@ class phpstan extends base {
         $path = is_file($path) ? dirname($path) : $path;
         $currentdir = realpath($path);
 
-        if (!$currentdir) {
+        if ($currentdir === false) {
             return $this->generate_temp_config_neon($path);
         }
 

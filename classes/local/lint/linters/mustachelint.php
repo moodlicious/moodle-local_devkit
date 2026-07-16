@@ -58,7 +58,7 @@ class mustachelint extends base {
         }
 
         $templatename = static::resolve_template_name($filepath);
-        if (!$templatename) {
+        if ($templatename === null) {
             return [self::create_file_with_fatal_issue($filepath, "Unable to resolve template name.")];
         }
 
@@ -88,14 +88,14 @@ class mustachelint extends base {
      */
     protected static function resolve_template_name(string $filepath): ?string {
         $directoriespath = self::parse_template_path($filepath);
-        if (!$directoriespath) {
+        if ($directoriespath === null) {
             return null;
         }
 
         [$pluginpath, $templatepath] = $directoriespath;
 
         $component = component::resolve_component_from_path($pluginpath);
-        if (!$component) {
+        if ($component === null) {
             return null;
         }
 
@@ -114,7 +114,7 @@ class mustachelint extends base {
         }
 
         [$dirpath, $mustachepath] = explode('/templates/', $filepath, 2);
-        if (!$mustachepath) {
+        if ($mustachepath === '') {
             return null;
         }
 
@@ -138,7 +138,7 @@ class mustachelint extends base {
 
         return array_filter(array_map(function (string $comment) {
             $comment = preg_replace('/^\{\{!\R?/', '', $comment); // Remove opening line.
-            if ($comment) {
+            if ($comment !== null && $comment !== '') {
                 $comment = preg_replace('/^\}\}$/m', '', $comment);   // Remove closing line.
             }
             return $comment;
@@ -287,7 +287,8 @@ class mustachelint extends base {
      * @param string $comment
      */
     protected static function get_template_from_comment(string $comment): ?string {
-        if (!preg_match('/@template ([A-Za-z0-9_\/-]+)/', $comment, $match)) {
+        $result = preg_match('/@template ([A-Za-z0-9_\/-]+)/', $comment, $match);
+        if ($result === 0 || $result === false) {
             return null;
         }
 
@@ -299,7 +300,8 @@ class mustachelint extends base {
      * @param string $comment
      */
     protected static function get_example_from_comment(string $comment): ?string {
-        if (!preg_match('/Example context \(json\):\R\s*([\s\S]*})/', $comment, $match)) {
+        $result = preg_match('/Example context \(json\):\R\s*([\s\S]*})/', $comment, $match);
+        if ($result === 0 || $result === false) {
             return null;
         }
 

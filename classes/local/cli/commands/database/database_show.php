@@ -77,9 +77,9 @@ class database_show extends Command {
      * @return PluginDatabase[]
      */
     public static function get_data(?string $component) {
-        if ($component) {
+        if ($component === null) {
             $plugintable = database::list_plugin_tables($component);
-            if (!$plugintable) {
+            if ($plugintable === null) {
                 throw new Exception("Component '$component' does not define db/install.xml.");
             }
             $plugintables[] = $plugintable;
@@ -149,7 +149,7 @@ class database_show extends Command {
                 $key['name'],
                 $key['type'],
                 implode(',', $key['fields']),
-                $key['references']['table']
+                $key['references']['table'] !== null
                 ? $key['references']['table'] . '.' . implode(',', $key['references']['fields'])
                 : '',
                 $key['comment'],

@@ -57,7 +57,7 @@ class jsdoc extends base {
         }
 
         $modulename = self::resolve_module_name($filepath);
-        if (!$modulename) {
+        if ($modulename === null) {
             return [self::create_file_with_fatal_issue($filepath, "Unable to resolve module name from file path.")];
         }
 
@@ -77,18 +77,18 @@ class jsdoc extends base {
     private static function resolve_module_name(string $filepath): ?string {
         $relative = utils::get_path_relative_to_moodle_root($filepath);
         $component = component::resolve_component_from_path($relative);
-        if (!$component) {
+        if ($component === null) {
             return null;
         }
 
         $modulepath = null;
-        if (preg_match('#amd/src/(.+)$#', $relative, $match)) {
+        if (preg_match('#amd/src/(.+)$#', $relative, $match) === 1) {
             $modulepath = $match[1];
-        } else if (preg_match('#js/esm/src/(.+)$#', $relative, $match)) {
+        } else if (preg_match('#js/esm/src/(.+)$#', $relative, $match) === 1) {
             $modulepath = $match[1];
         }
 
-        if (!$modulepath) {
+        if ($modulepath === null) {
             return null;
         }
 
@@ -156,7 +156,7 @@ class jsdoc extends base {
             );
         }
 
-        if (!preg_match('/@license\s+\S+/', $docblock)) {
+        if (preg_match('/@license\s+\S+/', $docblock) === 0) {
             $issues[] = issue::simple(
                 'Docblock is missing @license tag',
                 'missing-license',
@@ -165,7 +165,7 @@ class jsdoc extends base {
             );
         }
 
-        if (preg_match('/@module\s+(\S+)/', $docblock, $match)) {
+        if (preg_match('/@module\s+(\S+)/', $docblock, $match) === 1) {
             $declaredmodule = $match[1];
             if ($declaredmodule !== $expectedmodule) {
                 $issues[] = issue::simple(

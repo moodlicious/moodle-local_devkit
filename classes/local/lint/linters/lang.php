@@ -71,7 +71,7 @@ class lang extends base {
     #[\Override]
     public function lint_file(string $filepath): array {
         $segments = self::split_lang_filepath($filepath);
-        if (!$segments) {
+        if ($segments === null) {
             return [];
         }
 
@@ -130,7 +130,7 @@ class lang extends base {
             break;
         }
 
-        if (!$segments) {
+        if (count($segments) === 0) {
             return $directorypath;
         }
 
@@ -165,7 +165,7 @@ class lang extends base {
             }
 
             $segments = self::split_lang_filepath($path);
-            if (!$segments) {
+            if ($segments === null) {
                 continue;
             }
 
@@ -188,7 +188,7 @@ class lang extends base {
         foreach ($langdirdata as $langdir => $components) {
             foreach ($components as $component => $locales) {
                 foreach ($locales as $locale => $strings) {
-                    $langdirdata[$langdir][$component][$locale] = $manager
+                    $langdirdata[$langdir][$component][$locale] = $manager !== null
                         ? $manager->load_component_strings($component, $locale)
                         : self::load_component_strings(
                             $this->compose_lang_filepath($langdir, $component, $locale),
@@ -351,7 +351,7 @@ class lang extends base {
                 $localelangfile = self::compose_lang_filepath($langdir, $component, $locale);
                 $placeholders = self::extract_placeholders($string);
                 $missingplaceholders = array_diff($requiredplaceholders, $placeholders);
-                if ($missingplaceholders) {
+                if (count($missingplaceholders) > 0) {
                     $placeholdersmsg = self::placeholders_to_string($missingplaceholders);
                     $results[] = self::single_file_issue(
                         $localelangfile,
@@ -362,7 +362,7 @@ class lang extends base {
                 }
 
                 $extraplaceholders = array_diff($placeholders, $requiredplaceholders);
-                if ($extraplaceholders) {
+                if (count($extraplaceholders) > 0) {
                     $placeholdersmsg = self::placeholders_to_string($extraplaceholders);
                     $results[] = self::single_file_issue(
                         $localelangfile,
@@ -394,7 +394,7 @@ class lang extends base {
         $locale = array_pop($segments);
         $langdir = implode(DIRECTORY_SEPARATOR, $segments);
 
-        if (!$langdir || !$locale || !$component) {
+        if (count($segments) === 0 || $locale === null || $component === '') {
             return null;
         }
 

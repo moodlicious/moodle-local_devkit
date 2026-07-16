@@ -91,7 +91,9 @@ class database_show extends Command {
     public static function display_table(SymfonyStyle $io, array $data): void {
         foreach ($data as $database) {
             $io->title($database->name);
-            $io->comment($database->comment);
+            if ($database->comment) {
+                $io->comment($database->comment);
+            }
 
             $io->text('Tables');
             $io->listing(
@@ -111,7 +113,9 @@ class database_show extends Command {
      */
     public static function display_table_table(SymfonyStyle $io, database_schema\table $table): void {
         $io->section("Table: {$table->name}");
-        $io->comment($table->comment);
+        if ($table->comment) {
+            $io->comment($table->comment);
+        }
 
         $io->text('Fields');
         $io->table(
@@ -162,7 +166,7 @@ class database_show extends Command {
     /**
      * Process json for display.
      * @param database_schema[] $data
-     * @return array{name: string, tables: array{name: string, comment: string}[]}[]
+     * @return array{name: string, tables: array{name: string, comment: string|null}[]}[]
      */
     public static function process_json(array $data): array {
         $json = [];

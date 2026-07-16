@@ -192,7 +192,7 @@ class lang extends base {
                     $langdirdata[$langdir][$component][$locale] = $manager !== null
                         ? $manager->load_component_strings($component, $locale)
                         : self::load_component_strings(
-                            $this->compose_lang_filepath($langdir, $component, $locale),
+                            self::compose_lang_filepath($langdir, $component, $locale),
                         );
                 }
             }

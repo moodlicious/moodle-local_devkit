@@ -87,7 +87,7 @@ final class component_test extends advanced_testcase {
         }
 
         if ($shortpath === null) {
-            $this->markTestSkipped('No suitable short plugin path found for cross-directory test');
+            self::markTestSkipped('No suitable short plugin path found for cross-directory test');
         }
 
         $trickyfile = $shortpath . 'extra/templates/file.mustache';

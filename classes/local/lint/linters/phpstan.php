@@ -114,7 +114,7 @@ class phpstan extends base {
      * @return file[]
      */
     private function execute($path): array {
-        $binary = $this->get_phpstan_binary_path();
+        $binary = self::get_phpstan_binary_path();
         $config = $this->get_config_neon($path);
         $process = new Process([
             'php',
@@ -155,7 +155,7 @@ class phpstan extends base {
                 0,
                 "'phpstan' returned non-JSON output",
                 'phpstan-json-parse-error',
-                $this->get_name(),
+                self::get_name(),
                 severity::error,
             );
             $results[] = new file($path, [$issue]);

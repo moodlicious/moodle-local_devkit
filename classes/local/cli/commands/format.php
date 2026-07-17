@@ -112,8 +112,9 @@ class format extends Command {
                     if ($realpath === false) {
                         return false;
                     }
+                    $normalisedpath = str_replace('\\', '/', $realpath);
                     foreach (self::IGNORE_PATTERNS as $pattern) {
-                        if (fnmatch($pattern, $realpath)) {
+                        if (fnmatch($pattern, $normalisedpath)) {
                             return false;
                         }
                     }
@@ -172,7 +173,7 @@ class format extends Command {
             return $formatters;
         }
 
-        if ($ext === 'xml' && str_ends_with($path, '/db/install.xml')) {
+        if ($ext === 'xml' && str_ends_with(str_replace('\\', '/', $path), '/db/install.xml')) {
             return [\core\di::get(xmldb::class)];
         }
 

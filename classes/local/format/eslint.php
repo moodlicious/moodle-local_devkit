@@ -33,7 +33,6 @@ class eslint extends base {
 
     #[\Override]
     public static function format(string $path): ?int {
-        global $CFG;
         $process = new Process(['bunx', 'eslint', '--fix', $path]);
         $process->run();
 

@@ -91,7 +91,7 @@ class format extends Command {
     }
 
     /**
-     * Summary of format
+     * Format files in the given paths.
      * @param string[] $paths
      */
     private static function format_run(array $paths, ?ProgressIndicator $progress): void {
@@ -108,9 +108,12 @@ class format extends Command {
                     ->ignoreVCSIgnored(true);
 
                 $finder->filter(function (\SplFileInfo $file) {
-                    $path = $file->getRealPath();
+                    $realpath = $file->getRealPath();
+                    if ($realpath === false) {
+                        return false;
+                    }
                     foreach (self::IGNORE_PATTERNS as $pattern) {
-                        if (fnmatch($pattern, $path)) {
+                        if (fnmatch($pattern, $realpath)) {
                             return false;
                         }
                     }
@@ -118,7 +121,10 @@ class format extends Command {
                 });
 
                 foreach ($finder as $file) {
-                    self::format_file($file->getRealPath(), $progress);
+                    $realpath = $file->getRealPath();
+                    if ($realpath !== false) {
+                        self::format_file($realpath, $progress);
+                    }
                 }
             } else {
                 self::format_file($path, $progress);
@@ -127,7 +133,7 @@ class format extends Command {
     }
 
     /**
-     * Run formatter.
+     * Run formatters on a single file.
      */
     private static function format_file(string $path, ?ProgressIndicator $progress): void {
         $progress?->setMessage("Formatting $path...");
@@ -137,7 +143,6 @@ class format extends Command {
             $progress?->setMessage("Formatting $path with $name");
             $formatter::format($path);
         }
-        return;
     }
 
     /**

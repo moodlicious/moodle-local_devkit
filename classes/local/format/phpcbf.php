@@ -19,7 +19,7 @@ namespace local_devkit\local\format;
 use Symfony\Component\Process\Process;
 
 /**
- * Class phpcs
+ * Class phpcbf
  *
  * @package    local_devkit
  * @copyright  2026 Felix
@@ -33,7 +33,6 @@ class phpcbf extends base {
 
     #[\Override]
     public static function format(string $path): ?int {
-        global $CFG;
         $process = new Process([
             'phpcbf',
             '-q',

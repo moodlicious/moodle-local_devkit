@@ -16,6 +16,8 @@
 
 namespace local_devkit\local\cli\commands;
 
+use local_devkit\local\format\phpcbf;
+use local_devkit\local\format\pint;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -23,7 +25,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Process\Process;
 
 /**
  * Format command.
@@ -98,10 +99,11 @@ class format extends Command {
     private static function format_file(string $path): void {
         echo "$path... ";
         $formatters = self::pick_formatters($path);
-        foreach ($formatters as $name => $formatter) {
+        foreach ($formatters as $formatter) {
             echo PHP_EOL;
+            $name = $formatter::get_name();
             echo "  $name: ";
-            $error = $formatter($path);
+            $error = $formatter::format($path);
             echo $error ? 'error' : 'success';
         }
         echo PHP_EOL;
@@ -110,53 +112,18 @@ class format extends Command {
 
     /**
      * Picks formatters.
-     * @return callable[]
+     * @return \local_devkit\local\format\base[]
      */
     private static function pick_formatters(string $path): array {
         $ext = pathinfo($path, PATHINFO_EXTENSION);
+
         if ($ext === 'php') {
             return [
-                'pint' => self::formatter_pint(...),
-                'phpcbf' => self::formatter_phpcbf(...),
+                \core\di::get(pint::class),
+                \core\di::get(phpcbf::class),
             ];
         }
 
         return [];
-    }
-
-    /**
-     * Format pint.
-     */
-    private static function formatter_pint(string $path): ?int {
-        global $CFG;
-        $bin = realpath("$CFG->dirroot/local/devkit/vendor/bin/pint");
-        $config = realpath("$CFG->dirroot/local/devkit/pint.json");
-        $process = new Process([
-            'php',
-            $bin,
-            '--no-interaction',
-            '--quiet',
-            '--config',
-            $config,
-            $path,
-        ], timeout: MINSECS);
-        $process->run();
-
-        return $process->getExitCode();
-    }
-
-    /**
-     * Format pint.
-     */
-    private static function formatter_phpcbf(string $path): ?int {
-        global $CFG;
-        $process = new Process([
-            'phpcbf',
-            '-q',
-            $path,
-        ], timeout: MINSECS);
-        $process->run();
-
-        return $process->getExitCode();
     }
 }

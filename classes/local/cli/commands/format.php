@@ -21,6 +21,7 @@ use local_devkit\local\format\eslint;
 use local_devkit\local\format\phpcbf;
 use local_devkit\local\format\pint;
 use local_devkit\local\format\stylelint;
+use local_devkit\local\format\xmldb;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -173,6 +174,10 @@ class format extends Command {
 
         if ($formatters !== null) {
             return $formatters;
+        }
+
+        if ($ext === 'xml' && str_ends_with($path, '/db/install.xml')) {
+            return [\core\di::get(xmldb::class)];
         }
 
         return [];

@@ -22,8 +22,6 @@ use local_devkit\local\format\phpcbf;
 use local_devkit\local\format\pint;
 use local_devkit\local\format\stylelint;
 use local_devkit\local\format\xmldb;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressIndicator;
@@ -32,6 +30,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Format command.
@@ -97,41 +96,33 @@ class format extends Command {
      */
     private static function format_run(array $paths, ProgressIndicator $progress): void {
         foreach ($paths as $path) {
-            $fullpath = realpath($path);
-            if ($fullpath === false) {
+            if (!file_exists($path)) {
                 continue;
             }
 
-            $ignored = false;
-            foreach (self::IGNORE_PATTERNS as $pattern) {
-                if (fnmatch($pattern, $fullpath)) {
-                    $ignored = true;
-                    break;
+            if (is_dir($path)) {
+                $finder = new Finder();
+                $finder
+                    ->files()
+                    ->in($path)
+                    ->ignoreVCSIgnored(true);
+
+                $finder->filter(function (\SplFileInfo $file) {
+                    $path = $file->getRealPath();
+                    foreach (self::IGNORE_PATTERNS as $pattern) {
+                        if (fnmatch($pattern, $path)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+
+                foreach ($finder as $file) {
+                    self::format_file($file->getRealPath(), $progress);
                 }
+            } else {
+                self::format_file($path, $progress);
             }
-
-            if ($ignored) {
-                continue;
-            }
-
-            match (true) {
-                is_dir($path) => self::format_directory($path, $progress),
-                is_file($path) => self::format_file($path, $progress),
-                default => null,
-            };
-        }
-    }
-
-    /**
-     * Run formatter.
-     */
-    private static function format_directory(string $directory, ProgressIndicator $progress): void {
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS),
-        );
-
-        foreach ($iterator as $path) {
-            self::format_run([$path], $progress);
         }
     }
 

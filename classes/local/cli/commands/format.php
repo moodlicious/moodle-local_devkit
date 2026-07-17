@@ -55,11 +55,12 @@ class format extends Command {
      * @var array
      */
     public const IGNORE_PATTERNS = [
-        '*/vendor/*',
         '*/.git/*',
         '*/amd/build/*',
         '*/js/esm/build/*',
+        '*/node_modules/*',
         '*/tests/fixtures/*',
+        '*/vendor/*',
     ];
     /**
      * Configure arguments.

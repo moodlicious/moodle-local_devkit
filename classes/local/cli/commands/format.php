@@ -16,6 +16,7 @@
 
 namespace local_devkit\local\cli\commands;
 
+use local_devkit\local\format\biome;
 use local_devkit\local\format\eslint;
 use local_devkit\local\format\phpcbf;
 use local_devkit\local\format\pint;
@@ -159,9 +160,11 @@ class format extends Command {
                 \core\di::get(phpcbf::class),
             ],
             'css', 'scss' => [
+                \core\di::get(biome::class),
                 \core\di::get(stylelint::class),
             ],
             'js', 'jsx', 'ts', 'tsx' => [
+                \core\di::get(biome::class),
                 \core\di::get(eslint::class),
             ],
             default => null,

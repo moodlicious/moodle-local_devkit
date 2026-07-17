@@ -16,8 +16,10 @@
 
 namespace local_devkit\local\cli\commands;
 
+use local_devkit\local\format\eslint;
 use local_devkit\local\format\phpcbf;
 use local_devkit\local\format\pint;
+use local_devkit\local\format\stylelint;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -117,11 +119,22 @@ class format extends Command {
     private static function pick_formatters(string $path): array {
         $ext = pathinfo($path, PATHINFO_EXTENSION);
 
-        if ($ext === 'php') {
-            return [
+        $formatters = match ($ext) {
+            'php' => [
                 \core\di::get(pint::class),
                 \core\di::get(phpcbf::class),
-            ];
+            ],
+            'css', 'scss' => [
+                \core\di::get(stylelint::class),
+            ],
+            'js', 'jsx', 'ts', 'tsx' => [
+                \core\di::get(eslint::class),
+            ],
+            default => null,
+        };
+
+        if ($formatters !== null) {
+            return $formatters;
         }
 
         return [];

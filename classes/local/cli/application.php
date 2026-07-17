@@ -20,6 +20,7 @@ use local_devkit\local\cli\commands\database\database_format;
 use local_devkit\local\cli\commands\database\database_show;
 use local_devkit\local\cli\commands\database\database_table;
 use local_devkit\local\cli\commands\env\env_show;
+use local_devkit\local\cli\commands\format;
 use local_devkit\local\cli\commands\lint\handler as lint_handler;
 use local_devkit\local\cli\commands\mcp\mcp_serve;
 use local_devkit\local\cli\commands\plugins\plugins_list;
@@ -44,6 +45,7 @@ class application extends BaseApplication {
         $this->addCommand(new database_show());
         $this->addCommand(new database_table());
         $this->addCommand(new env_show());
+        $this->addCommand(new format());
         $this->addCommand(new mcp_serve());
         lint_handler::register($this);
         purge_handler::register($this);

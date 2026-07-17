@@ -24,8 +24,11 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressIndicator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
@@ -71,10 +74,16 @@ class format extends Command {
     public function __invoke(
         SymfonyStyle $io,
         InputInterface $input,
+        OutputInterface $output,
     ): int {
         $paths = $input->getArgument('paths');
+        $progress = $output instanceof ConsoleOutputInterface
+            ? new ProgressIndicator($output->getErrorOutput())
+            : null;
 
-        self::format_run($paths);
+        $progress->start('Starting...');
+        self::format_run($paths, $progress);
+        $progress->finish('All done.');
 
         return Command::SUCCESS;
     }
@@ -83,7 +92,7 @@ class format extends Command {
      * Summary of format
      * @param string[] $paths
      */
-    private static function format_run(array $paths): void {
+    private static function format_run(array $paths, ProgressIndicator $progress): void {
         foreach ($paths as $path) {
             $fullpath = realpath($path);
             if ($fullpath === false) {
@@ -103,8 +112,8 @@ class format extends Command {
             }
 
             match (true) {
-                is_dir($path) => self::format_directory($path),
-                is_file($path) => self::format_file($path),
+                is_dir($path) => self::format_directory($path, $progress),
+                is_file($path) => self::format_file($path, $progress),
                 default => null,
             };
         }
@@ -113,30 +122,27 @@ class format extends Command {
     /**
      * Run formatter.
      */
-    private static function format_directory(string $directory): void {
+    private static function format_directory(string $directory, ProgressIndicator $progress): void {
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS),
         );
 
         foreach ($iterator as $path) {
-            self::format_run([$path]);
+            self::format_run([$path], $progress);
         }
     }
 
     /**
      * Run formatter.
      */
-    private static function format_file(string $path): void {
-        echo "$path... ";
+    private static function format_file(string $path, ProgressIndicator $progress): void {
+        $progress->setMessage("Formatting $path...");
         $formatters = self::pick_formatters($path);
         foreach ($formatters as $formatter) {
-            echo PHP_EOL;
             $name = $formatter::get_name();
-            echo "  $name: ";
-            $error = $formatter::format($path);
-            echo $error ? 'error' : 'success';
+            $progress->setMessage("Formatting $path with $name");
+            $formatter::format($path);
         }
-        echo PHP_EOL;
         return;
     }
 

@@ -36,6 +36,11 @@ class pint extends base {
         global $CFG;
         $bin = realpath("$CFG->dirroot/local/devkit/vendor/bin/pint");
         $config = realpath("$CFG->dirroot/local/devkit/pint.json");
+
+        if ($bin === false || $config === false) {
+            return null;
+        }
+
         $process = new Process([
             'php',
             $bin,

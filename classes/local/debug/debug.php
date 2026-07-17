@@ -41,24 +41,24 @@ class debug {
     /**
      * Dump payload.
      */
-    public function dump(): void {
+    public function dump(): self {
         foreach ($this->payload as $item) {
             var_dump($item);
         }
+        return $this;
     }
 
     /**
      * Dump payload and die.
      */
     public function dd(): never {
-        $this->dump();
-        die;
+        $this->dump()->die();
     }
 
     /**
      * Dump payload as json.
      */
-    public function json(bool $pretty = true): void {
+    public function json(bool $pretty = true): self {
         $flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
         if ($pretty) {
             $flags |= JSON_PRETTY_PRINT;
@@ -66,31 +66,38 @@ class debug {
         foreach ($this->payload as $item) {
             echo json_encode($item, $flags), PHP_EOL;
         }
+        return $this;
     }
 
     /**
      * Dump payload as json and die.
      */
     public function jsond(bool $pretty = true): never {
-        $this->json($pretty);
-        die;
+        $this->json($pretty)->die();
     }
 
     /**
      * Export payload.
      */
-    public function export(): void {
+    public function export(): self {
         foreach ($this->payload as $item) {
             var_export($item);
             echo PHP_EOL;
         }
+        return $this;
     }
 
     /**
      * Export payload and die.
      */
     public function exportd(): never {
-        $this->export();
-        die;
+        $this->export()->die();
+    }
+
+    /**
+     * Dies.
+     */
+    public function die(string|int $status = 0): never {
+        die($status);
     }
 }

@@ -112,6 +112,29 @@ PHPDoc checking (uses `local_moodlecheck`).
 
 Language string consistency check only.
 
+### `format`
+
+Format code files with an opinionated code-style.
+
+```bash
+./devkit format local/devkit/classes/
+./devkit format local/devkit/classes/local/cli/commands/format.php
+./devkit format mod/assign/ lang/en/
+```
+
+Formatting pipeline:
+
+| Extension | Formatters |
+|-----------|------------|
+| `.php` | Pint → PHPCBF |
+| `.css`, `.scss` | Biome → Stylelint |
+| `.js`, `.jsx`, `.ts`, `.tsx` | Biome → ESLint |
+| `db/install.xml` | XMLDB |
+
+Ignored paths: `.git/`, `amd/build/`, `js/esm/build/`, `node_modules/`, `tests/fixtures/`, `vendor/`.
+
+Options: `paths` (array arg, files or directories).
+
 ### `mcp:serve`
 
 Start MCP server (stdio). See [MCP docs](mcp.md).

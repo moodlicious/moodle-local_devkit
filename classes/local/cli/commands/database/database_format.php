@@ -16,8 +16,8 @@
 
 namespace local_devkit\local\cli\commands\database;
 
-use local_devkit\local\api\database;
 use local_devkit\local\api\plugins;
+use local_devkit\local\format\xmldb;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -54,9 +54,8 @@ class database_format extends Command {
             return Command::FAILURE;
         }
 
-        $structure = database::get_xmldb_structure($xmlpath);
-        $result = file_put_contents($xmlpath, $structure->xmlOutput());
-        if ($result === false) {
+        $result = xmldb::format($xmlpath);
+        if ($result !== COMMAND::SUCCESS) {
             $io->error("Failed to write install.xml at $xmlpath.");
             return Command::FAILURE;
         }

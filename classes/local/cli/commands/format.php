@@ -47,6 +47,17 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class format extends Command {
     /**
+     * Ignorable path patterns.
+     * @var array
+     */
+    public const IGNORE_PATTERNS = [
+        '*/vendor/*',
+        '*/.git/*',
+        '*/amd/build/*',
+        '*/js/esm/build/*',
+        '*/tests/fixtures/*',
+    ];
+    /**
      * Configure arguments.
      * @return void
      */
@@ -74,6 +85,23 @@ class format extends Command {
      */
     private static function format_run(array $paths): void {
         foreach ($paths as $path) {
+            $fullpath = realpath($path);
+            if ($fullpath === false) {
+                continue;
+            }
+
+            $ignored = false;
+            foreach (self::IGNORE_PATTERNS as $pattern) {
+                if (fnmatch($pattern, $fullpath)) {
+                    $ignored = true;
+                    break;
+                }
+            }
+
+            if ($ignored) {
+                continue;
+            }
+
             match (true) {
                 is_dir($path) => self::format_directory($path),
                 is_file($path) => self::format_file($path),

@@ -226,7 +226,8 @@ class phpstan extends base {
             default => null,
         };
 
-        $excludes = self::get_exclude_patterns(includethirdparty: true);
+        $thirdpartyexcludes = self::get_third_party_exclude_patterns();
+        $excludes = self::get_exclude_patterns();
 
         $moodleroot = utils::get_moodle_root_dir();
         $rulelevel = self::get_rule_level();
@@ -246,7 +247,10 @@ class phpstan extends base {
             'parameters' => [
                 'level' => $rulelevel,
                 'paths' => [$moodleroot],
-                'excludePaths' => $excludes,
+                'excludePaths' => [
+                    'analyse' => $thirdpartyexcludes,
+                    'analyseAndScan' => $excludes,
+                ],
                 'moodle' => [
                     'rootDirectory' => $moodleroot,
                 ],

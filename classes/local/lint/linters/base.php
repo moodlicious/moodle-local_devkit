@@ -209,7 +209,7 @@ abstract class base {
         $paths = array_map(fn(string $path) => str_replace('\\', '/', $path), $paths);
 
         // Remove duplicates.
-        $paths = array_unique($paths);
+        $paths = array_values(array_unique($paths));
 
         return $paths;
     }

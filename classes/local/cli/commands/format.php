@@ -52,7 +52,7 @@ use Symfony\Component\Finder\Finder;
 class format extends Command {
     /**
      * Ignorable path patterns.
-     * @var array
+     * @var string[]
      */
     public const IGNORE_PATTERNS = [
         '*/.git/*',
@@ -83,9 +83,9 @@ class format extends Command {
             ? new ProgressIndicator($output->getErrorOutput())
             : null;
 
-        $progress->start('Starting...');
+        $progress?->start('Starting...');
         self::format_run($paths, $progress);
-        $progress->finish('All done.');
+        $progress?->finish('All done.');
 
         return Command::SUCCESS;
     }
@@ -94,7 +94,7 @@ class format extends Command {
      * Summary of format
      * @param string[] $paths
      */
-    private static function format_run(array $paths, ProgressIndicator $progress): void {
+    private static function format_run(array $paths, ?ProgressIndicator $progress): void {
         foreach ($paths as $path) {
             if (!file_exists($path)) {
                 continue;
@@ -129,12 +129,12 @@ class format extends Command {
     /**
      * Run formatter.
      */
-    private static function format_file(string $path, ProgressIndicator $progress): void {
-        $progress->setMessage("Formatting $path...");
+    private static function format_file(string $path, ?ProgressIndicator $progress): void {
+        $progress?->setMessage("Formatting $path...");
         $formatters = self::pick_formatters($path);
         foreach ($formatters as $formatter) {
             $name = $formatter::get_name();
-            $progress->setMessage("Formatting $path with $name");
+            $progress?->setMessage("Formatting $path with $name");
             $formatter::format($path);
         }
         return;

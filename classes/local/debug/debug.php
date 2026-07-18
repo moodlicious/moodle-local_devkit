@@ -110,15 +110,15 @@ class debug {
                 return;
             }
 
-            $durations = [];
+            $totalduration = 0;
             foreach (range(0, $iterations - 1) as $i) {
                 $start = microtime(true);
                 $value();
                 $end = microtime(true);
-                $durations[$i] = ($end - $start) * 1_000;
+                $totalduration += $end - $start;
             }
 
-            $payload[$key] = array_sum($durations) / $iterations;
+            $payload[$key] = $totalduration / $iterations * 1_000;
         });
         return new self($payload);
     }

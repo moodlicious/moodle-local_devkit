@@ -3,11 +3,14 @@
 namespace core\output;
 
 use moodle_exception;
+use stdClass;
 
 class renderer_base {
     /**
+     * @param string $templatename
+     * @param mixed[]|stdClass $context
      * @return string
-     * @throws moodle_exception
+     * @throws moodle_exception&\Throwable
      */
     public function render_from_template($templatename, $context) {
     }

@@ -2,6 +2,7 @@
 
 class moodle_transaction {
     /**
+     * @param Exception|Throwable $e
      * @return never
      */
     public function rollback($e) {

@@ -18,6 +18,7 @@ namespace local_devkit\local\cli\commands\database;
 
 use Exception;
 use local_devkit\local\api\database;
+use local_devkit\local\schema\database as database_schema;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
@@ -26,10 +27,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Get information about a specific database table.
- *
- * // phpcs:disable moodle.Commenting.ValidTags.Invalid
- * @phpstan-import-type DatabaseTable from database
- * // phpcs:enable moodle.Commenting.ValidTags.Invalid
  *
  * @package   local_devkit
  * @copyright 2026 Felix Yeung
@@ -68,7 +65,7 @@ class database_table extends Command {
      * Helper function to get required data for this command.
      * @param string $tablename
      * @throws Exception
-     * @return DatabaseTable
+     * @return database_schema\table
      */
     public static function get_data(string $tablename) {
         $table = database::find_table($tablename);
@@ -81,19 +78,19 @@ class database_table extends Command {
     /**
      * Displays table as JSON.
      * @param SymfonyStyle $io
-     * @param DatabaseTable $data
+     * @param database_schema\table $data
      * @return void
      */
-    public static function display_json(SymfonyStyle $io, array $data): void {
+    public static function display_json(SymfonyStyle $io, database_schema\table $data): void {
         $io->writeln(json_encode(self::process_json($data), JSON_THROW_ON_ERROR));
     }
 
     /**
      * Processes json for output.
-     * @param DatabaseTable $data
-     * @return DatabaseTable
+     * @param database_schema\table $data
+     * @return database_schema\table
      */
-    public static function process_json(array $data) {
+    public static function process_json(database_schema\table $data) {
         return $data;
     }
 }

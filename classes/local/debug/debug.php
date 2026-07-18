@@ -92,6 +92,32 @@ class debug {
     }
 
     /**
+     * Measures execution time in milliseconds.
+     * @param int $iterations
+     * @return self
+     */
+    public function measure(int $iterations = 1) {
+        $payload = [];
+        $this->payload_each(function ($value, $key) use (&$payload, $iterations) {
+            if (!is_callable($value)) {
+                $payload[$key] = null;
+                return;
+            }
+
+            $durations = [];
+            foreach (range(0, $iterations - 1) as $i) {
+                $start = microtime(true);
+                $value();
+                $end = microtime(true);
+                $durations[$i] = ($end - $start) * 1_000;
+            }
+
+            $payload[$key] = array_sum($durations) / $iterations;
+        });
+        return new self($payload);
+    }
+
+    /**
      * Dies.
      */
     public function die(string|int $status = 0): never {
@@ -100,11 +126,11 @@ class debug {
 
     /**
      * Utility function to loop through each layload.
-     * @param callable(mixed):mixed $callback
+     * @param callable(mixed,int|string):mixed $callback
      */
     private function payload_each(callable $callback): self {
-        foreach ($this->payload as $item) {
-            $callback($item);
+        foreach ($this->payload as $key => $item) {
+            $callback($item, $key);
         }
         return $this;
     }

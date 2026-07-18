@@ -1,0 +1,9 @@
+<?php
+
+class moodle_transaction {
+    /**
+     * @return never
+     */
+    public function rollback($e) {
+    }
+}

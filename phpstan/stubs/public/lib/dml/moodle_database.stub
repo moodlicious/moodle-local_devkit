@@ -1,0 +1,107 @@
+<?php
+
+abstract class moodle_database {
+    /**
+     * @return array{string, array}
+     */
+    public function get_in_or_equal($items, $type = SQL_PARAMS_QM, $prefix = 'param', $equal = true, $onemptyitems = false) {
+    }
+
+    /**
+     * @return stdClass[]
+     */
+    public function get_records($table, ?array $conditions = null, $sort = '', $fields = '*', $limitfrom = 0, $limitnum = 0) {
+    }
+
+    /**
+     * @param IGNORE_MISSING|IGNORE_MULTIPLE|MUST_EXIST $strictness
+     * @return ($strictness is MUST_EXIST ? stdClass : stdClass|false)
+     */
+    public function get_record($table, array $conditions, $fields = '*', $strictness = IGNORE_MISSING) {
+    }
+
+    /**
+     * @param IGNORE_MISSING|IGNORE_MULTIPLE|MUST_EXIST $strictness
+     * @return ($strictness is MUST_EXIST ? stdClass : stdClass|false)
+     */
+    public function get_record_select($table, $select, ?array $params = null, $fields = '*', $strictness = IGNORE_MISSING) {
+    }
+
+    /**
+     * @param IGNORE_MISSING|IGNORE_MULTIPLE|MUST_EXIST $strictness
+     * @return ($strictness is MUST_EXIST ? stdClass : stdClass|false)
+     */
+    public function get_record_sql($sql, ?array $params = null, $strictness = IGNORE_MISSING) {
+    }
+
+    /**
+     * @param IGNORE_MISSING|IGNORE_MULTIPLE|MUST_EXIST $strictness
+     * @return ($strictness is MUST_EXIST ? string : string|false)
+     */
+    public function get_field($table, $return, array $conditions, $strictness = IGNORE_MISSING) {
+    }
+
+    /**
+     * @param IGNORE_MISSING|IGNORE_MULTIPLE|MUST_EXIST $strictness
+     * @return ($strictness is MUST_EXIST ? string : string|false)
+     */
+    public function get_field_select($table, $return, $select, ?array $params = null, $strictness = IGNORE_MISSING) {
+    }
+
+    /**
+     * @param IGNORE_MISSING|IGNORE_MULTIPLE|MUST_EXIST $strictness
+     * @return ($strictness is MUST_EXIST ? string : string|false)
+     */
+    public function get_field_sql($sql, ?array $params = null, $strictness = IGNORE_MISSING) {
+    }
+
+    /**
+     * @return string[]
+     */
+    public function get_fieldset(string $table, string $return, ?array $conditions = null): array {
+    }
+
+    /**
+     * @return string[]
+     */
+    public function get_fieldset_select($table, $return, $select, ?array $params = null) {
+    }
+
+    /**
+     * @return string[]
+     */
+    abstract public function get_fieldset_sql($sql, ?array $params = null);
+
+    /**
+     * @return ($returnid is true ? int : true)
+     */
+    abstract public function insert_record($table, $dataobject, $returnid = true, $bulk = false);
+
+    /**
+     * @return true
+     */
+    abstract public function update_record($table, $dataobject, $bulk = false);
+
+    /**
+     * @return true
+     */
+    public function set_field($table, $newfield, $newvalue, ?array $conditions = null) {
+    }
+
+    /**
+     * @return true
+     */
+    abstract public function set_field_select($table, $newfield, $newvalue, $select, ?array $params = null);
+
+    /**
+     * @return true
+     */
+    public function delete_records($table, ?array $conditions = null) {
+    }
+
+    /**
+     * @return true
+     */
+    public function delete_records_list($table, $field, array $values) {
+    }
+}

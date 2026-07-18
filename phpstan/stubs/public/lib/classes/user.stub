@@ -1,0 +1,12 @@
+<?php
+
+namespace core;
+
+class user {
+    /**
+     * @param IGNORE_MISSING|IGNORE_MULTIPLE|MUST_EXIST $strictness
+     * @return ($strictness is MUST_EXIST ? \stdClass : \stdClass|false)
+     */
+    public static function get_user($userid, $fields = '*', $strictness = IGNORE_MISSING) {
+    }
+}

@@ -19,20 +19,37 @@ namespace local_devkit\local\generators\snippets;
 use Nette\PhpGenerator\ClassManipulator;
 
 /**
- * Class scheduled_task
+ * Class task
  *
  * @package    local_devkit
  * @copyright  2026 Felix
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class scheduled_task extends base {
+class task extends base {
+    /**
+     * Constructor.
+     */
+    public function __construct(
+        string $filepath,
+        /** @var 'scheduled'|'adhoc' $tasktype */
+        private readonly string $tasktype = 'scheduled',
+    ) {
+        parent::__construct($filepath);
+    }
+
     #[\Override]
     public function generate(): string {
         $this->category = 'task';
         [$file, $namespace, $class] = self::php_file_with_namespaced_class();
-        $namespace->addUse(\core\task\scheduled_task::class);
 
-        $class->setExtends(\core\task\scheduled_task::class);
+        $baseclass = match ($this->tasktype) {
+            'scheduled' => \core\task\scheduled_task::class,
+            'adhoc' => \core\task\adhoc_task::class,
+            default => throw new \Exception('Invalid task type'),
+        };
+        $namespace->addUse($baseclass);
+
+        $class->setExtends($baseclass);
         $manipulator = new ClassManipulator($class);
 
         $getname = $manipulator->inheritMethod('get_name');

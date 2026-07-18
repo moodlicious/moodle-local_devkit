@@ -1,0 +1,15 @@
+<?php
+
+namespace core;
+
+use IteratorAggregate;
+use stdClass;
+
+abstract class context extends stdClass implements IteratorAggregate {
+    /**
+     * @param IGNORE_MISSING|IGNORE_MULTIPLE|MUST_EXIST $strictness
+     * @return ($strictness is MUST_EXIST ? static : static|false)
+     */
+    public static function instance_by_id($id, $strictness = MUST_EXIST) {
+    }
+}

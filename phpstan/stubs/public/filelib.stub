@@ -1,0 +1,7 @@
+<?php
+
+/**
+ * @return never
+ */
+function send_file_not_found() {
+}

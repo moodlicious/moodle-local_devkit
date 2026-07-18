@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * @param bool $reset
+ * @return ($reset is false ? file_storage : null)
+ */
+function get_file_storage($reset = false) {
+}

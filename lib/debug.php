@@ -22,6 +22,9 @@ use local_devkit\local\debug\debug;
  * To use this function, require this file in your config.php file,
  * before setup.php is required.
  *
+ * This function assumes the \local_devkit\local\debug\debug
+ * has already been autoloaded.
+ *
  * @package    local_devkit
  * @copyright  2026 Felix
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

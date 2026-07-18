@@ -18,6 +18,8 @@ namespace local_devkit\local\generators\snippets;
 
 use Nette\PhpGenerator\ClassManipulator;
 
+use function in_array;
+
 /**
  * Class task
  *
@@ -32,8 +34,11 @@ class task extends base {
     public function __construct(
         string $filepath,
         /** @var 'scheduled'|'adhoc' $tasktype */
-        private readonly string $tasktype = 'scheduled',
+        private readonly string $tasktype,
     ) {
+        if (!in_array($tasktype, ['scheduled', 'adhoc'])) {
+            throw new \InvalidArgumentException('Invalid task type');
+        }
         parent::__construct($filepath);
     }
 
@@ -45,7 +50,6 @@ class task extends base {
         $baseclass = match ($this->tasktype) {
             'scheduled' => \core\task\scheduled_task::class,
             'adhoc' => \core\task\adhoc_task::class,
-            default => throw new \Exception('Invalid task type'),
         };
         $namespace->addUse($baseclass);
 

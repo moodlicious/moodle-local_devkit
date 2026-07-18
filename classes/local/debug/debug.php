@@ -42,10 +42,9 @@ class debug {
      * Dump payload.
      */
     public function dump(): self {
-        foreach ($this->payload as $item) {
+        return $this->payload_each(function ($item) {
             var_dump($item);
-        }
-        return $this;
+        });
     }
 
     /**
@@ -63,10 +62,9 @@ class debug {
         if ($pretty) {
             $flags |= JSON_PRETTY_PRINT;
         }
-        foreach ($this->payload as $item) {
+        return $this->payload_each(function ($item) use ($flags) {
             echo json_encode($item, $flags), PHP_EOL;
-        }
-        return $this;
+        });
     }
 
     /**
@@ -80,11 +78,10 @@ class debug {
      * Export payload.
      */
     public function export(): self {
-        foreach ($this->payload as $item) {
+        return $this->payload_each(function ($item) {
             var_export($item);
             echo PHP_EOL;
-        }
-        return $this;
+        });
     }
 
     /**
@@ -99,5 +96,16 @@ class debug {
      */
     public function die(string|int $status = 0): never {
         die($status);
+    }
+
+    /**
+     * Utility function to loop through each layload.
+     * @param callable(mixed):mixed $callback
+     */
+    private function payload_each(callable $callback): self {
+        foreach ($this->payload as $item) {
+            $callback($item);
+        }
+        return $this;
     }
 }

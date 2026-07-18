@@ -16,6 +16,8 @@
 
 namespace local_devkit\local\debug;
 
+use InvalidArgumentException;
+
 /**
  * Utilities for debugging.
  *
@@ -96,7 +98,11 @@ class debug {
      * @param int $iterations
      * @return self
      */
-    public function measure(int $iterations = 1) {
+    public function measure(int $iterations = 1): self {
+        if ($iterations < 1) {
+            throw new InvalidArgumentException('Internations must be at least 1.');
+        }
+
         $payload = [];
         $this->payload_each(function ($value, $key) use (&$payload, $iterations) {
             if (!is_callable($value)) {

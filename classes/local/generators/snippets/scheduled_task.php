@@ -29,7 +29,8 @@ class scheduled_task extends base {
     #[\Override]
     public function generate(): string {
         $this->category = 'task';
-        [$file, $class] = self::php_file_with_class();
+        [$file, $namespace, $class] = self::php_file_with_namespaced_class();
+        $namespace->addUse(\core\task\scheduled_task::class);
 
         $class->setExtends(\core\task\scheduled_task::class);
         $manipulator = new ClassManipulator($class);

@@ -20,6 +20,7 @@ use local_devkit\local\component;
 use local_devkit\local\utils;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
+use Nette\PhpGenerator\PhpNamespace;
 
 /**
  * Class base
@@ -63,15 +64,15 @@ abstract class base {
 
     /**
      * Standard PHP File with class.
-     * @return array{PhpFile, ClassType}
+     * @return array{PhpFile, PhpNamespace, ClassType}
      */
-    protected function php_file_with_class(): array {
+    protected function php_file_with_namespaced_class(): array {
         $file = $this->php_file();
         [$namespacename, $classname] = $this->php_class_info();
         $namespace = $file->addNamespace($namespacename);
         $class = $namespace->addClass($classname);
         $this->php_class_add_docblock_tags($class, $this->category);
-        return [$file, $class];
+        return [$file, $namespace, $class];
     }
 
     /**

@@ -1,8 +1,8 @@
 {
-    "preset": "psr12",
     "exclude": [
         "tests/fixtures"
     ],
+    "preset": "psr12",
     "rules": {
         "array_indentation": true,
         "array_syntax": {
@@ -47,11 +47,11 @@
         "method_chaining_indentation": true,
         "native_function_casing": true,
         "native_function_invocation": {
-            "scope": "namespaced",
             "exclude": [
                 "define",
                 "defined"
             ],
+            "scope": "namespaced",
             "strict": true
         },
         "native_function_type_declaration_casing": true,

@@ -94,6 +94,55 @@ define('PARAM_PLUGIN', 'plugin');
 function required_param($parname, $type) {
 }
 
+
+/**
+ * @param string $parname
+ * @param PARAM_ALPHA|PARAM_ALPHAEXT|PARAM_ALPHANUM|PARAM_ALPHANUMEXT|PARAM_AUTH|PARAM_BASE64|PARAM_BOOL|PARAM_CAPABILITY|PARAM_CLEANHTML|PARAM_EMAIL|PARAM_FILE|PARAM_FLOAT|PARAM_LOCALISEDFLOAT|PARAM_HOST|PARAM_INT|PARAM_LANG|PARAM_LOCALURL|PARAM_NOTAGS|PARAM_PATH|PARAM_PEM|PARAM_PERMISSION|PARAM_RAW|PARAM_RAW_TRIMMED|PARAM_SAFEDIR|PARAM_SAFEPATH|PARAM_SEQUENCE|PARAM_TAG|PARAM_TAGLIST|PARAM_TEXT|PARAM_THEME|PARAM_URL|PARAM_USERNAME|PARAM_STRINGID|PARAM_TIMEZONE|PARAM_COMPONENT|PARAM_AREA|PARAM_PLUGIN $type
+ * @return (
+ *     $type is PARAM_ALPHA             ? string|null :
+ *     $type is PARAM_ALPHAEXT          ? string|null :
+ *     $type is PARAM_ALPHANUM          ? string|null :
+ *     $type is PARAM_ALPHANUMEXT       ? string|null :
+ *     $type is PARAM_AUTH              ? string :
+ *     $type is PARAM_BASE64            ? string :
+ *     $type is PARAM_BOOL              ? 0|1 :
+ *     $type is PARAM_CAPABILITY        ? string :
+ *     $type is PARAM_CLEANHTML         ? string :
+ *     $type is PARAM_EMAIL             ? string :
+ *     $type is PARAM_FILE              ? string :
+ *     $type is PARAM_FLOAT             ? float :
+ *     $type is PARAM_LOCALISEDFLOAT    ? float|false :
+ *     $type is PARAM_HOST              ? string :
+ *     $type is PARAM_INT               ? int :
+ *     $type is PARAM_LANG              ? string :
+ *     $type is PARAM_LOCALURL          ? string :
+ *     $type is PARAM_NOTAGS            ? string :
+ *     $type is PARAM_PATH              ? string :
+ *     $type is PARAM_PEM               ? string :
+ *     $type is PARAM_PERMISSION        ? CAP_INHERIT|CAP_ALLOW|CAP_PREVENT|CAP_PROHIBIT :
+ *     $type is PARAM_RAW               ? mixed :
+ *     $type is PARAM_RAW_TRIMMED       ? string :
+ *     $type is PARAM_SAFEDIR           ? string :
+ *     $type is PARAM_SAFEPATH          ? string :
+ *     $type is PARAM_SEQUENCE          ? string|null :
+ *     $type is PARAM_TAG               ? string :
+ *     $type is PARAM_TAGLIST           ? string :
+ *     $type is PARAM_TEXT              ? string :
+ *     $type is PARAM_THEME             ? string :
+ *     $type is PARAM_URL               ? string :
+ *     $type is PARAM_USERNAME          ? string :
+ *     $type is PARAM_STRINGID          ? string :
+ *     $type is PARAM_TIMEZONE          ? string :
+ *     $type is PARAM_COMPONENT         ? string :
+ *     $type is PARAM_AREA              ? string :
+ *     $type is PARAM_PLUGIN            ? string :
+ *     mixed
+ * )[]
+ * @throws coding_exception&\Throwable
+ */
+function required_param_array($parname, $type) {
+}
+
 /**
  * @template T
  * @param string $parname
@@ -142,6 +191,56 @@ function required_param($parname, $type) {
  * @throws coding_exception&\Throwable
  */
 function optional_param($parname, $default, $type) {
+}
+
+/**
+ * @template T
+ * @param string $parname
+ * @param T[] $default
+ * @param PARAM_ALPHA|PARAM_ALPHAEXT|PARAM_ALPHANUM|PARAM_ALPHANUMEXT|PARAM_AUTH|PARAM_BASE64|PARAM_BOOL|PARAM_CAPABILITY|PARAM_CLEANHTML|PARAM_EMAIL|PARAM_FILE|PARAM_FLOAT|PARAM_LOCALISEDFLOAT|PARAM_HOST|PARAM_INT|PARAM_LANG|PARAM_LOCALURL|PARAM_NOTAGS|PARAM_PATH|PARAM_PEM|PARAM_PERMISSION|PARAM_RAW|PARAM_RAW_TRIMMED|PARAM_SAFEDIR|PARAM_SAFEPATH|PARAM_SEQUENCE|PARAM_TAG|PARAM_TAGLIST|PARAM_TEXT|PARAM_THEME|PARAM_URL|PARAM_USERNAME|PARAM_STRINGID|PARAM_TIMEZONE|PARAM_COMPONENT|PARAM_AREA|PARAM_PLUGIN $type
+ * @return T[]|(
+ *     $type is PARAM_ALPHA             ? string|null :
+ *     $type is PARAM_ALPHAEXT          ? string|null :
+ *     $type is PARAM_ALPHANUM          ? string|null :
+ *     $type is PARAM_ALPHANUMEXT       ? string|null :
+ *     $type is PARAM_AUTH              ? string :
+ *     $type is PARAM_BASE64            ? string :
+ *     $type is PARAM_BOOL              ? 0|1 :
+ *     $type is PARAM_CAPABILITY        ? string :
+ *     $type is PARAM_CLEANHTML         ? string :
+ *     $type is PARAM_EMAIL             ? string :
+ *     $type is PARAM_FILE              ? string :
+ *     $type is PARAM_FLOAT             ? float :
+ *     $type is PARAM_LOCALISEDFLOAT    ? float|false :
+ *     $type is PARAM_HOST              ? string :
+ *     $type is PARAM_INT               ? int :
+ *     $type is PARAM_LANG              ? string :
+ *     $type is PARAM_LOCALURL          ? string :
+ *     $type is PARAM_NOTAGS            ? string :
+ *     $type is PARAM_PATH              ? string :
+ *     $type is PARAM_PEM               ? string :
+ *     $type is PARAM_PERMISSION        ? CAP_INHERIT|CAP_ALLOW|CAP_PREVENT|CAP_PROHIBIT :
+ *     $type is PARAM_RAW               ? mixed :
+ *     $type is PARAM_RAW_TRIMMED       ? string :
+ *     $type is PARAM_SAFEDIR           ? string :
+ *     $type is PARAM_SAFEPATH          ? string :
+ *     $type is PARAM_SEQUENCE          ? string|null :
+ *     $type is PARAM_TAG               ? string :
+ *     $type is PARAM_TAGLIST           ? string :
+ *     $type is PARAM_TEXT              ? string :
+ *     $type is PARAM_THEME             ? string :
+ *     $type is PARAM_URL               ? string :
+ *     $type is PARAM_USERNAME          ? string :
+ *     $type is PARAM_STRINGID          ? string :
+ *     $type is PARAM_TIMEZONE          ? string :
+ *     $type is PARAM_COMPONENT         ? string :
+ *     $type is PARAM_AREA              ? string :
+ *     $type is PARAM_PLUGIN            ? string :
+ *     mixed
+ * )[]
+ * @throws coding_exception&\Throwable
+ */
+function optional_param_array($parname, $default, $type) {
 }
 
 /**

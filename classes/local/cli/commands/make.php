@@ -20,7 +20,7 @@ use local_devkit\local\format\base as format_base;
 use local_devkit\local\format\phpcbf;
 use local_devkit\local\format\pint;
 use local_devkit\local\generators\snippets\base as snippet_base;
-use local_devkit\local\generators\snippets\task;
+use local_devkit\local\generators\snippets\php_class;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -72,6 +72,6 @@ class make extends Command {
      * @return array{class-string<snippet_base>, class-string<format_base>[]}
      */
     private function get_generator_and_formatter_classnames() {
-        return [task::class, [pint::class, phpcbf::class]];
+        return [php_class::class, [pint::class, phpcbf::class]];
     }
 }

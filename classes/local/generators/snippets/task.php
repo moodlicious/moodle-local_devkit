@@ -27,7 +27,7 @@ use function in_array;
  * @copyright  2026 Felix
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class task extends base {
+class task extends php_class {
     /**
      * Constructor.
      */

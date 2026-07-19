@@ -34,7 +34,7 @@ class task extends base {
     public function __construct(
         string $filepath,
         /** @var 'scheduled'|'adhoc' $tasktype */
-        private readonly string $tasktype,
+        private readonly string $tasktype = 'scheduled',
     ) {
         if (!in_array($tasktype, ['scheduled', 'adhoc'])) {
             throw new \InvalidArgumentException('Invalid task type');

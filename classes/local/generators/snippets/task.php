@@ -66,6 +66,6 @@ class task extends base {
         $execute->addAttribute('Override');
         $class->setMethods([$getname, $execute]);
 
-        return $file;
+        return $this->print_php_file($file);
     }
 }

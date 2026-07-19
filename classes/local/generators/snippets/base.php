@@ -17,10 +17,12 @@
 namespace local_devkit\local\generators\snippets;
 
 use local_devkit\local\component;
+use local_devkit\local\generators\boilerplate;
 use local_devkit\local\utils;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
+use Nette\PhpGenerator\Printer;
 
 /**
  * Class base
@@ -64,6 +66,29 @@ abstract class base {
      */
     protected function php_file(): PhpFile {
         return new PhpFile();
+    }
+
+    /**
+     * PHP Printer.
+     */
+    protected function php_printer(): Printer {
+        $printer = new Printer();
+        $printer->indentation = '    ';
+        $printer->bracesOnNextLine = false;
+        $printer->linesBetweenMethods = 1;
+        return $printer;
+    }
+
+    /**
+     * Prints a php file, injects license info at top of file.
+     */
+    protected function print_php_file(PhpFile $file): string {
+        $printer = $this->php_printer();
+
+        $phptag = '<?php';
+        $license = boilerplate::generate_for_php(true);
+        $content = $printer->printFile($file);
+        return str_replace($phptag, "$phptag\n$license", $content);
     }
 
     /**

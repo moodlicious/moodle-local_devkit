@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @phpstan-type xmldb_index_type XMLDB_INDEX_UNIQUE|XMLDB_INDEX_NOTUNIQUE
+ */
+class xmldb_index extends xmldb_object {
+    /**
+     * @param string $name
+     * @param xmldb_index_type $type
+     * @param string[] $fields
+     * @param string[] $hints
+     */
+    public function __construct($name, $type = null, $fields = [], $hints = []) {
+    }
+}

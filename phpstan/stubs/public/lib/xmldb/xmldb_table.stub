@@ -1,0 +1,51 @@
+<?php
+/**
+ * @phpstan-import-type xmldb_field_type from xmldb_field
+ * @phpstan-import-type xmldb_key_type from xmldb_key
+ * @phpstan-import-type xmldb_index_type from xmldb_index
+ */
+class xmldb_table extends xmldb_object {
+    /**
+     * @param string $name
+     * @param xmldb_field_type|null $type
+     * @param string|null $precision
+     * @param XMLDB_UNSIGNED|false|null $unsigned
+     * @param XMLDB_NOTNULL|false|null $notnull
+     * @param XMLDB_SEQUENCE|false|null $sequence
+     * @param string|false|null $default
+     * @param string|null $previous
+     * @return xmldb_field
+     */
+    public function add_field(
+        $name,
+        $type,
+        $precision = null,
+        $unsigned = null,
+        $notnull = null,
+        $sequence = null,
+        $default = null,
+        $previous = null,
+    ) {
+    }
+
+    /**
+     * @param string $name
+     * @param xmldb_key_type $type XMLDB_KEY_[PRIMARY|UNIQUE|FOREIGN|FOREIGN_UNIQUE]
+     * @param string[] $fields an array of fieldnames to build the key over
+     * @param string|null $reftable name of the table the FK points to or null
+     * @param string[]|null $reffields an array of fieldnames in the FK table or null
+     * @return void
+     */
+    public function add_key($name, $type, $fields, $reftable = null, $reffields = null) {
+    }
+
+    /**
+     * @param string $name
+     * @param xmldb_index_type $type
+     * @param string[] $fields
+     * @param string[] $hints
+     * @return void
+     */
+    public function add_index($name, $type, $fields, $hints = []) {
+    }
+}

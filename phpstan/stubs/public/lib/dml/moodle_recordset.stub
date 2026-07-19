@@ -1,0 +1,7 @@
+<?php
+
+/**
+ * @implements Iterator<non-empty-string, stdClass>
+ */
+abstract class moodle_recordset implements Iterator {
+}

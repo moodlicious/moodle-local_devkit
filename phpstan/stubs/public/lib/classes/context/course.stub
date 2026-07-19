@@ -1,0 +1,15 @@
+<?php
+
+namespace core\context;
+
+use core\context;
+
+class course extends context {
+    /**
+     * @param int $courseid
+     * @param \IGNORE_MISSING|\IGNORE_MULTIPLE|\MUST_EXIST $strictness
+     * @return ($strictness is \MUST_EXIST ? static : static|false)
+     */
+    public static function instance($courseid, $strictness = MUST_EXIST) {
+    }
+}

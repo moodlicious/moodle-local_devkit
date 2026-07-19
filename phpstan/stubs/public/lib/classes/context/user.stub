@@ -1,0 +1,15 @@
+<?php
+
+namespace core\context;
+
+use core\context;
+
+class user extends context {
+    /**
+     * @param int $userid
+     * @param \IGNORE_MISSING|\IGNORE_MULTIPLE|\MUST_EXIST $strictness
+     * @return ($strictness is \MUST_EXIST ? static : static|false)
+     */
+    public static function instance($userid, $strictness = MUST_EXIST) {
+    }
+}

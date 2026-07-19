@@ -1,0 +1,15 @@
+<?php
+
+namespace core\context;
+
+use core\context;
+
+class module extends context {
+    /**
+     * @param int $cmid
+     * @param \IGNORE_MISSING|\IGNORE_MULTIPLE|\MUST_EXIST $strictness
+     * @return ($strictness is \MUST_EXIST ? static : static|false)
+     */
+    public static function instance($cmid, $strictness = MUST_EXIST) {
+    }
+}

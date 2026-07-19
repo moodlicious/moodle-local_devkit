@@ -28,10 +28,13 @@ jobs:
             - name: Format pint.json
               run: ./scripts/format-pint-json.sh
 
+            - name: Format PHPStan stubs
+              run: ./scripts/phpstan/format-stubs.sh
+
             - name: Check for uncommitted changes
               run: |
                   if [ -n "$(git status --porcelain)" ]; then
-                    echo "::error::Code style issues detected. Please run 'composer pint' and './scripts/format-pint-json.sh' locally."
+                    echo "::error::Code style issues detected. Please run 'composer pint', './scripts/format-pint-json.sh', and './scripts/phpstan/format-stubs.sh' locally."
                     git diff
                     exit 1
                   fi

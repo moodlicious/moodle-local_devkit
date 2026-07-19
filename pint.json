@@ -90,6 +90,7 @@
         "ordered_interfaces": {
             "case_sensitive": false
         },
+        "single_blank_line_at_eof": true,
         "single_line_comment_spacing": true,
         "switch_case_semicolon_to_colon": true,
         "switch_case_space": true,

@@ -1,0 +1,5 @@
+<?php
+
+define('IGNORE_MISSING', 0);
+define('IGNORE_MULTIPLE', 1);
+define('MUST_EXIST', 2);

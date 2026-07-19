@@ -142,6 +142,34 @@ class debug {
     }
 
     /**
+     * Gets performance information.
+     *
+     * Examples:
+     * - `debug()->performance()->json();`
+     * - `debug()->performance('dbqueries')->dump();`
+     *
+     * @param (
+     *     'txt'|'html'|'realtime'|'memory_total'|'memory_growth'|'memory_peak'|'includecount'|
+     *     'dbqueries'|'dbreads_replica'|'dbtime'|'serverload'|'sessionsize'|
+     *     'cachesused'|'cachesused'|'html'
+     * )|null $metric
+     */
+    public function performance(?string $metric = null): self {
+        $info = get_performance_info();
+
+        if ($metric !== null) {
+            $info = isset($info[$metric]) ? [$metric => $info[$metric]] : null;
+            return new self([$info]);
+        }
+
+        // We are only interested in the raw numbers.
+        unset($info['html']);
+        unset($info['txt']);
+
+        return new self([$info]);
+    }
+
+    /**
      * Dies.
      */
     public function die(string|int $status = 0): never {

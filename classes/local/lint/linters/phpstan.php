@@ -285,6 +285,7 @@ class phpstan extends base {
     public function get_stub_files(): array {
         global $CFG;
 
+        require_once(__DIR__ . '/../../../../vendor/autoload.php');
         $stubsdir = "$CFG->dirroot/local/devkit/phpstan/stubs";
 
         if (!is_dir($stubsdir)) {

@@ -33,6 +33,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 use function array_key_exists;
+use function count;
 
 /**
  * Command to lint a directory or file.
@@ -207,7 +208,7 @@ class handler {
      */
     private static function build_command(string $name, array $linters): Command {
         $linter = null;
-        if (\count($linters) === 1) {
+        if (count($linters) === 1) {
             $linter = $linters[0];
         }
 

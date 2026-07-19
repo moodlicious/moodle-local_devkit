@@ -16,6 +16,8 @@
 
 namespace local_devkit\local;
 
+use function strlen;
+
 /**
  * Observer.
  * @package   local_devkit

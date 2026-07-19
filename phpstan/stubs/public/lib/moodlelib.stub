@@ -34,14 +34,7 @@ define('PARAM_THEME', 'theme');
 define('PARAM_URL', 'url');
 define('PARAM_USERNAME', 'username');
 define('PARAM_STRINGID', 'stringid');
-// define('PARAM_CLEAN', 'clean'); (deprecated)
-// define('PARAM_INTEGER', 'int'); (deprecated)
-// define('PARAM_NUMBER', 'float'); (deprecated)
-// define('PARAM_ACTION', 'alphanumext'); (deprecated)
-// define('PARAM_FORMAT', 'alphanumext'); (deprecated)
-// define('PARAM_MULTILANG', 'text'); (deprecated)
 define('PARAM_TIMEZONE', 'timezone');
-// define('PARAM_CLEANFILE', 'cleanfile'); (deprecated)
 define('PARAM_COMPONENT', 'component');
 define('PARAM_AREA', 'area');
 define('PARAM_PLUGIN', 'plugin');

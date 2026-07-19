@@ -17,6 +17,7 @@
 namespace local_devkit\local\debug;
 
 use InvalidArgumentException;
+use local_devkit\local\api\database;
 
 /**
  * Utilities for debugging.
@@ -121,6 +122,23 @@ class debug {
             $payload[$key] = $totalduration / $iterations * 1_000;
         });
         return new self($payload);
+    }
+
+    /**
+     * Gets information about a database table.
+     *
+     * Examples:
+     * - `debug()->table('user', 'notfound', 'config')->dd()`.
+     */
+    public function table(string $tablename, string ...$tablenames): self {
+        $tablenames = [$tablename, ...$tablenames];
+        $tables = [];
+
+        foreach ($tablenames as $name) {
+            $tables[$name] = database::find_table($name);
+        }
+
+        return new self($tables);
     }
 
     /**

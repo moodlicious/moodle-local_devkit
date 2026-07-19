@@ -22,6 +22,10 @@ use local_devkit\local\api\database;
 /**
  * Utilities for debugging.
  *
+ * // phpcs:ignore moodle.Commenting.ValidTags
+ * @template TKey of array-key
+ * @template-covariant TValue
+ *
  * @package    local_devkit
  * @copyright  2026 Felix
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,13 +33,13 @@ use local_devkit\local\api\database;
 class debug {
     /**
      * Any data associated with this debug instance.
-     * @var mixed[]
+     * @var TValue[]
      */
     private array $payload;
 
     /**
      * Constructor.
-     * @param mixed[] $payload
+     * @param TValue[] $payload
      */
     public function __construct(array $payload) {
         $this->payload = $payload;
@@ -43,6 +47,7 @@ class debug {
 
     /**
      * Dump payload.
+     * @return self<TKey, TValue>
      */
     public function dump(): self {
         return $this->payload_each(function ($item, $key) {
@@ -60,6 +65,7 @@ class debug {
 
     /**
      * Dump payload as json.
+     * @return self<TKey, TValue>
      */
     public function json(bool $pretty = true): self {
         $flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
@@ -81,6 +87,7 @@ class debug {
 
     /**
      * Export payload.
+     * @return self<TKey, TValue>
      */
     public function export(): self {
         return $this->payload_each(function ($item, $key) {
@@ -100,7 +107,7 @@ class debug {
     /**
      * Measures execution time in milliseconds.
      * @param int $iterations
-     * @return self
+     * @return self<TKey, float|null>
      */
     public function measure(int $iterations = 1): self {
         if ($iterations < 1) {
@@ -122,7 +129,7 @@ class debug {
                 $totalduration += $end - $start;
             }
 
-            $payload[$key] = $totalduration / $iterations * 1_000;
+            $payload[$key] = (float) $totalduration / $iterations * 1_000;
         });
         return new self($payload);
     }
@@ -132,6 +139,8 @@ class debug {
      *
      * Examples:
      * - `debug()->table('user', 'notfound', 'config')->dd()`.
+     *
+     * @return self<string, mixed>
      */
     public function table(string $tablename, string ...$tablenames): self {
         $tablenames = [$tablename, ...$tablenames];
@@ -156,6 +165,7 @@ class debug {
      *     'dbqueries'|'dbreads_replica'|'dbtime'|'serverload'|'sessionsize'|
      *     'cachesused'|'cachesused'|'html'
      * )|null $metric
+     * @return self<int, mixed[]|null>
      */
     public function performance(?string $metric = null): self {
         $info = get_performance_info();
@@ -182,6 +192,7 @@ class debug {
     /**
      * Utility function to loop through each layload.
      * @param callable(mixed,int|string):mixed $callback
+     * @return self<TKey, TValue>
      */
     private function payload_each(callable $callback): self {
         foreach ($this->payload as $key => $item) {
@@ -193,6 +204,7 @@ class debug {
     /**
      * Utility function print a payload key.
      * @param array-key $key
+     * @return self<TKey, TValue>
      */
     private function payload_print_key(int|string $key): self {
         if (is_numeric($key)) {

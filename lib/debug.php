@@ -25,11 +25,14 @@ use local_devkit\local\debug\debug;
  * This function requires the \local_devkit\local\debug\debug
  * to have already been autoloaded.
  *
+ * // phpcs:ignore moodle.Commenting.ValidTags
+ * @template TValue
+ *
  * @package    local_devkit
  * @copyright  2026 Felix
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @param      mixed[] $payload
- * @return     debug
+ * @param      TValue ...$payload
+ * @return     debug<array-key, TValue>
  */
 function debug(...$payload) {
     return new debug($payload);

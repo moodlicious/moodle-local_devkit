@@ -45,7 +45,7 @@ class task extends base {
     #[\Override]
     public function generate(): string {
         $this->category = 'task';
-        [$file, $namespace, $class] = self::php_file_with_namespaced_class();
+        [$file, $namespace, $class] = $this->php_file_with_namespaced_class();
 
         $baseclass = match ($this->tasktype) {
             'scheduled' => \core\task\scheduled_task::class,

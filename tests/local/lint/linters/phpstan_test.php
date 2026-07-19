@@ -69,7 +69,7 @@ final class phpstan_test extends advanced_testcase {
         $this->resetAfterTest();
         $linter = new phpstan();
         $stubs = $linter->get_stub_files();
-        $this->assertIsArray($stubs);
+        $this->assertNotEmpty($stubs);
     }
 
     /**

@@ -41,7 +41,7 @@ Benchmarks callable(s) in milliseconds:
 
 ```php
 debug(fn() => heavy())->measure();             // Single callable
-debug(fn1, fn2, fn3)->measure(iterations: 10); // Multiple, with iterations
+debug($fn1, $fn2, $fn3)->measure(iterations: 10); // Multiple, with iterations
 ```
 
 ### Database Tables

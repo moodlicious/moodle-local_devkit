@@ -17,29 +17,33 @@
 namespace local_devkit\local\debug;
 
 use InvalidArgumentException;
+use IteratorAggregate;
 use local_devkit\local\api\database;
+use Traversable;
 
 /**
  * Utilities for debugging.
  *
- * // phpcs:ignore moodle.Commenting.ValidTags
+ * // phpcs:disable moodle.Commenting.ValidTags
  * @template TKey of array-key
  * @template-covariant TValue
+ * @implements IteratorAggregate<TKey, TValue>
+ * // phpcs:enable moodle.Commenting.ValidTags
  *
  * @package    local_devkit
  * @copyright  2026 Felix
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class debug {
+class debug implements IteratorAggregate {
     /**
      * Any data associated with this debug instance.
-     * @var TValue[]
+     * @var array<TKey, TValue>
      */
     private array $payload;
 
     /**
      * Constructor.
-     * @param TValue[] $payload
+     * @param array<TKey, TValue> $payload
      */
     public function __construct(array $payload) {
         $this->payload = $payload;
@@ -195,7 +199,7 @@ class debug {
      * @return self<TKey, TValue>
      */
     private function payload_each(callable $callback): self {
-        foreach ($this->payload as $key => $item) {
+        foreach ($this as $key => $item) {
             $callback($item, $key);
         }
         return $this;
@@ -213,5 +217,10 @@ class debug {
 
         echo "$key: ";
         return $this;
+    }
+
+    #[\Override]
+    public function getIterator(): Traversable {
+        yield from $this->payload;
     }
 }

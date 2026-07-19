@@ -285,6 +285,10 @@ class phpstan extends base {
 
         $stubsdir = "$CFG->dirroot/local/devkit/phpstan/stubs";
 
+        if (!is_dir($stubsdir)) {
+            return [];
+        }
+
         $finder = new Finder();
         $finder
             ->files()

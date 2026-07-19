@@ -2,6 +2,8 @@
 
 namespace core;
 
+use core\exception\coding_exception;
+
 class user {
     /**
      * @param int $userid
@@ -10,5 +12,13 @@ class user {
      * @return ($strictness is \MUST_EXIST ? \stdClass : \stdClass|false)
      */
     public static function get_user($userid, $fields = '*', $strictness = IGNORE_MISSING) {
+    }
+
+    /**
+     * @param string $property
+     * @throws coding_exception&\Throwable
+     * @return string
+     */
+    public static function get_property_type($property) {
     }
 }

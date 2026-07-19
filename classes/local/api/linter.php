@@ -21,6 +21,8 @@ use local_devkit\local\lint\linters\base;
 use local_devkit\local\lint\schemas\file;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 
+use function in_array;
+
 /**
  * Linter API.
  *

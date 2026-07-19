@@ -22,6 +22,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+use function count;
+
 /**
  * Command to purge Moodle caches.
  * Same as admin/cli/purge_cache.php.

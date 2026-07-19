@@ -28,6 +28,8 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 
 use function count;
+use function dirname;
+use function in_array;
 
 /**
  * The 'phpstan' linter.

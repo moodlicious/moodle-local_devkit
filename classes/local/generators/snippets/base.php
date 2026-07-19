@@ -44,7 +44,11 @@ abstract class base {
      */
     public function __construct(string $filepath) {
         $this->filepath = utils::get_path_relative_to_moodle_root($filepath);
-        $this->component = component::resolve_component_from_path($this->filepath);
+        $component = component::resolve_component_from_path($this->filepath);
+        if ($component === null) {
+            throw new \InvalidArgumentException("Could not resolve component for path: $this->filepath");
+        }
+        $this->component = $component;
 
         $year = date("Y");
         $this->copyright = "$year Your name";

@@ -36,7 +36,7 @@ abstract class moodle_database {
      * @param dml_conditions $conditions
      * @param string $fields
      * @param dml_strictness $strictness
-     * @return ($strictness is MUST_EXIST ? stdClass : stdClass|false)
+     * @return ($strictness is \MUST_EXIST ? stdClass : stdClass|false)
      * @throws dml_exception&\Throwable
      */
     public function get_record($table, array $conditions, $fields = '*', $strictness = IGNORE_MISSING) {
@@ -48,7 +48,7 @@ abstract class moodle_database {
      * @param mixed[] $params
      * @param string $fields
      * @param dml_strictness $strictness
-     * @return ($strictness is MUST_EXIST ? stdClass : stdClass|false)
+     * @return ($strictness is \MUST_EXIST ? stdClass : stdClass|false)
      * @throws dml_exception&\Throwable
      */
     public function get_record_select($table, $select, ?array $params = null, $fields = '*', $strictness = IGNORE_MISSING) {
@@ -58,7 +58,7 @@ abstract class moodle_database {
      * @param string $sql
      * @param mixed[] $params
      * @param dml_strictness $strictness
-     * @return ($strictness is MUST_EXIST ? stdClass : stdClass|false)
+     * @return ($strictness is \MUST_EXIST ? stdClass : stdClass|false)
      * @throws dml_exception&\Throwable
      */
     public function get_record_sql($sql, ?array $params = null, $strictness = IGNORE_MISSING) {
@@ -69,7 +69,7 @@ abstract class moodle_database {
      * @param string $return
      * @param dml_conditions $conditions
      * @param dml_strictness $strictness
-     * @return ($strictness is MUST_EXIST ? string : string|false)
+     * @return ($strictness is \MUST_EXIST ? string : string|false)
      * @throws dml_exception&\Throwable
      */
     public function get_field($table, $return, array $conditions, $strictness = IGNORE_MISSING) {
@@ -81,7 +81,7 @@ abstract class moodle_database {
      * @param string $select
      * @param mixed[] $params
      * @param dml_strictness $strictness
-     * @return ($strictness is MUST_EXIST ? string : string|false)
+     * @return ($strictness is \MUST_EXIST ? string : string|false)
      * @throws dml_exception&\Throwable
      */
     public function get_field_select($table, $return, $select, ?array $params = null, $strictness = IGNORE_MISSING) {
@@ -91,7 +91,7 @@ abstract class moodle_database {
      * @param string $sql
      * @param mixed[] $params
      * @param dml_strictness $strictness
-     * @return ($strictness is MUST_EXIST ? string : string|false)
+     * @return ($strictness is \MUST_EXIST ? string : string|false)
      * @throws dml_exception&\Throwable
      */
     public function get_field_sql($sql, ?array $params = null, $strictness = IGNORE_MISSING) {

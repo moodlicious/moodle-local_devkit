@@ -20,10 +20,10 @@ use local_devkit\local\debug\debug;
  * Powerful function for debugging.
  *
  * To use this function, require this file in your config.php file,
- * before setup.php is required.
+ * AFTER setup.php is required.
  *
- * This function assumes the \local_devkit\local\debug\debug
- * has already been autoloaded.
+ * This function requires the \local_devkit\local\debug\debug
+ * to have already been autoloaded.
  *
  * @package    local_devkit
  * @copyright  2026 Felix

@@ -265,7 +265,7 @@ function unset_all_config_for_plugin($plugin) {
  * @param string|null $plugin
  * @param string|null $name
  * @return ($name is null ? stdClass : string|false)
- * @throws dml_exception
+ * @throws dml_exception&\Throwable
  */
 function get_config($plugin, $name = null) {
 }
@@ -282,7 +282,7 @@ function get_file_storage($reset = false) {
  * @param string|int|bool|null $value
  * @param stdClass|int|null $user
  * @return true
- * @throws coding_exception
+ * @throws coding_exception&\Throwable
  */
 function set_user_preference($name, $value, $user = null) {
 }
@@ -299,7 +299,7 @@ function set_user_preferences(array $prefarray, $user = null) {
  * @param string $name
  * @param stdClass|int|null $user
  * @return true
- * @throws coding_exception
+ * @throws coding_exception&\Throwable
  */
 function unset_user_preference($name, $user = null) {
 }
@@ -310,7 +310,7 @@ function unset_user_preference($name, $user = null) {
  * @param T $default
  * @param stdClass|int|null $user
  * @return ($name is null ? array<string, string> : string|T|null)
- * @throws coding_exception
+ * @throws coding_exception&\Throwable
  */
 function get_user_preferences($name = null, $default = null, $user = null) {
 }

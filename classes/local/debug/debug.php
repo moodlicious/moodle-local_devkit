@@ -45,7 +45,8 @@ class debug {
      * Dump payload.
      */
     public function dump(): self {
-        return $this->payload_each(function ($item) {
+        return $this->payload_each(function ($item, $key) {
+            $this->payload_print_key($key);
             var_dump($item);
         });
     }
@@ -65,7 +66,8 @@ class debug {
         if ($pretty) {
             $flags |= JSON_PRETTY_PRINT;
         }
-        return $this->payload_each(function ($item) use ($flags) {
+        return $this->payload_each(function ($item, $key) use ($flags) {
+            $this->payload_print_key($key);
             echo json_encode($item, $flags), PHP_EOL;
         });
     }
@@ -81,7 +83,8 @@ class debug {
      * Export payload.
      */
     public function export(): self {
-        return $this->payload_each(function ($item) {
+        return $this->payload_each(function ($item, $key) {
+            $this->payload_print_key($key);
             var_export($item);
             echo PHP_EOL;
         });
@@ -184,6 +187,19 @@ class debug {
         foreach ($this->payload as $key => $item) {
             $callback($item, $key);
         }
+        return $this;
+    }
+
+    /**
+     * Utility function print a payload key.
+     * @param array-key $key
+     */
+    private function payload_print_key(int|string $key): self {
+        if (is_numeric($key)) {
+            return $this;
+        }
+
+        echo "$key: ";
         return $this;
     }
 }

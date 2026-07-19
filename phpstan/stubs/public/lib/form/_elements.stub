@@ -1,0 +1,123 @@
+<?php
+class MoodleQuickForm_advcheckbox extends HTML_QuickForm_advcheckbox implements \core\output\templatable {
+}
+
+class MoodleQuickForm_autocomplete extends MoodleQuickForm_select {
+}
+
+class MoodleQuickForm_button extends HTML_QuickForm_button implements \core\output\templatable {
+}
+
+class MoodleQuickForm_cancel extends MoodleQuickForm_submit {
+}
+
+class MoodleQuickForm_checkbox extends HTML_QuickForm_checkbox implements \core\output\templatable {
+}
+
+class MoodleQuickForm_choicedropdown extends HTML_QuickForm_select implements \core\output\templatable {
+}
+
+class MoodleQuickForm_cohort extends MoodleQuickForm_autocomplete {
+}
+
+class MoodleQuickForm_course extends MoodleQuickForm_autocomplete {
+}
+
+class MoodleQuickForm_date_selector extends MoodleQuickForm_group {
+}
+
+class MoodleQuickForm_date_time_selector extends MoodleQuickForm_group {
+}
+
+class MoodleQuickForm_defaultcustom extends MoodleQuickForm_group {
+}
+
+class MoodleQuickForm_duration extends MoodleQuickForm_group {
+}
+
+class MoodleQuickForm_editor extends HTML_QuickForm_element implements \core\output\templatable {
+}
+
+class MoodleQuickForm_filemanager extends HTML_QuickForm_element implements \core\output\templatable {
+}
+
+class MoodleQuickForm_filepicker extends HTML_QuickForm_input implements \core\output\templatable {
+}
+
+class MoodleQuickForm_filetypes extends MoodleQuickForm_group {
+}
+
+class MoodleQuickForm_float extends MoodleQuickForm_text {
+}
+
+class MoodleQuickForm_grading extends HTML_QuickForm_input implements \core\output\templatable {
+}
+
+class MoodleQuickForm_group extends HTML_QuickForm_group implements \core\output\templatable {
+}
+
+class MoodleQuickForm_header extends HTML_QuickForm_header {
+}
+
+class MoodleQuickForm_hidden extends HTML_QuickForm_hidden {
+}
+
+class MoodleQuickForm_listing extends HTML_QuickForm_input {
+}
+
+class MoodleQuickForm_modgrade extends MoodleQuickForm_group {
+}
+
+class MoodleQuickForm_modvisible extends MoodleQuickForm_select {
+}
+
+class MoodleQuickForm_password extends HTML_QuickForm_password implements \core\output\templatable {
+}
+
+class MoodleQuickForm_passwordunmask extends MoodleQuickForm_password {
+}
+
+class MoodleQuickForm_questioncategory extends MoodleQuickForm_selectgroups {
+}
+
+class MoodleQuickForm_radio extends HTML_QuickForm_radio implements \core\output\templatable {
+}
+
+class MoodleQuickForm_recaptcha extends HTML_QuickForm_input implements \core\output\templatable {
+}
+
+class MoodleQuickForm_searchableselector extends MoodleQuickForm_autocomplete {
+}
+
+class MoodleQuickForm_selectgroups extends HTML_QuickForm_element implements \core\output\templatable {
+}
+
+class MoodleQuickForm_select extends HTML_QuickForm_select implements \core\output\templatable {
+}
+
+class MoodleQuickForm_selectwithlink extends HTML_QuickForm_select implements \core\output\templatable {
+}
+
+class MoodleQuickForm_selectyesno extends MoodleQuickForm_select {
+}
+
+class MoodleQuickForm_static extends HTML_QuickForm_static implements \core\output\templatable {
+}
+
+class MoodleQuickForm_submit extends HTML_QuickForm_submit implements \core\output\templatable {
+}
+
+class MoodleQuickForm_tags extends MoodleQuickForm_autocomplete {
+}
+
+class MoodleQuickForm_textarea extends HTML_QuickForm_textarea implements \core\output\templatable {
+}
+
+class MoodleQuickForm_text extends HTML_QuickForm_text implements \core\output\templatable {
+}
+
+class MoodleQuickForm_url extends HTML_QuickForm_text implements \core\output\templatable {
+}
+
+class MoodleQuickForm_warning extends HTML_QuickForm_static implements \core\output\templatable {
+}

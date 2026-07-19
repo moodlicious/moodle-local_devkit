@@ -1,0 +1,40 @@
+name: Code Style
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+jobs:
+    code-style:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check out repository code
+              uses: actions/checkout@v7
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.3"
+
+            - name: Install dependencies
+              run: composer install --no-interaction
+
+            - name: Run Pint
+              run: ./vendor/bin/pint -v
+
+            - name: Format pint.json
+              run: ./scripts/format-pint-json.sh
+
+            - name: Format PHPStan stubs
+              run: ./scripts/phpstan/format-stubs.sh
+
+            - name: Check for uncommitted changes
+              run: |
+                  if [ -n "$(git status --porcelain)" ]; then
+                    echo "::error::Code style issues detected. Please run 'composer pint', './scripts/format-pint-json.sh', and './scripts/phpstan/format-stubs.sh' locally."
+                    git diff
+                    exit 1
+                  fi

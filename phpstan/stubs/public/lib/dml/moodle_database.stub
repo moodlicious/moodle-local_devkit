@@ -1,0 +1,191 @@
+<?php
+
+/**
+ * @phpstan-type dml_strictness IGNORE_MISSING|IGNORE_MULTIPLE|MUST_EXIST
+ * @phpstan-type dml_conditions mixed[]
+ * @phpstan-type dml_dataobject object|mixed[]
+ *
+ * Note that the database layer returns string or null regardless of the declared field type.
+ * @phpstan-type dml_field_value string|null
+ */
+abstract class moodle_database {
+    /**
+     * @param mixed $items
+     * @param int $type
+     * @param string $prefix
+     * @param bool $equal
+     * @param mixed $onemptyitems
+     * @return array{string, mixed[]}
+     * @throws coding_exception&\Throwable
+     */
+    public function get_in_or_equal($items, $type = SQL_PARAMS_QM, $prefix = 'param', $equal = true, $onemptyitems = false) {
+    }
+
+    /**
+     * @param string $table
+     * @param dml_conditions $conditions
+     * @param string $sort
+     * @param string $fields
+     * @param int $limitfrom
+     * @param int $limitnum
+     * @return stdClass[]
+     * @throws dml_exception&\Throwable
+     */
+    public function get_records($table, ?array $conditions = null, $sort = '', $fields = '*', $limitfrom = 0, $limitnum = 0) {
+    }
+
+    /**
+     * @param string $table
+     * @param dml_conditions $conditions
+     * @param string $fields
+     * @param dml_strictness $strictness
+     * @return ($strictness is \MUST_EXIST ? stdClass : stdClass|false)
+     * @throws dml_exception&\Throwable
+     */
+    public function get_record($table, array $conditions, $fields = '*', $strictness = IGNORE_MISSING) {
+    }
+
+    /**
+     * @param string $table
+     * @param string $select
+     * @param mixed[] $params
+     * @param string $fields
+     * @param dml_strictness $strictness
+     * @return ($strictness is \MUST_EXIST ? stdClass : stdClass|false)
+     * @throws dml_exception&\Throwable
+     */
+    public function get_record_select($table, $select, ?array $params = null, $fields = '*', $strictness = IGNORE_MISSING) {
+    }
+
+    /**
+     * @param string $sql
+     * @param mixed[] $params
+     * @param dml_strictness $strictness
+     * @return ($strictness is \MUST_EXIST ? stdClass : stdClass|false)
+     * @throws dml_exception&\Throwable
+     */
+    public function get_record_sql($sql, ?array $params = null, $strictness = IGNORE_MISSING) {
+    }
+
+    /**
+     * @param string $table
+     * @param string $return
+     * @param dml_conditions $conditions
+     * @param dml_strictness $strictness
+     * @return ($strictness is \MUST_EXIST ? dml_field_value : dml_field_value|false)
+     * @throws dml_exception&\Throwable
+     */
+    public function get_field($table, $return, array $conditions, $strictness = IGNORE_MISSING) {
+    }
+
+    /**
+     * @param string $table
+     * @param string $return
+     * @param string $select
+     * @param mixed[] $params
+     * @param dml_strictness $strictness
+     * @return ($strictness is \MUST_EXIST ? dml_field_value : dml_field_value|false)
+     * @throws dml_exception&\Throwable
+     */
+    public function get_field_select($table, $return, $select, ?array $params = null, $strictness = IGNORE_MISSING) {
+    }
+
+    /**
+     * @param string $sql
+     * @param mixed[] $params
+     * @param dml_strictness $strictness
+     * @return ($strictness is \MUST_EXIST ? dml_field_value : dml_field_value|false)
+     * @throws dml_exception&\Throwable
+     */
+    public function get_field_sql($sql, ?array $params = null, $strictness = IGNORE_MISSING) {
+    }
+
+    /**
+     * @param string $table
+     * @param string $return
+     * @param dml_conditions|null $conditions
+     * @return dml_field_value[]
+     * @throws dml_exception&\Throwable
+     */
+    public function get_fieldset(string $table, string $return, ?array $conditions = null): array {
+    }
+
+    /**
+     * @param string $table
+     * @param string $return
+     * @param string $select
+     * @param mixed[] $params
+     * @return dml_field_value[]
+     * @throws dml_exception&\Throwable
+     */
+    public function get_fieldset_select($table, $return, $select, ?array $params = null) {
+    }
+
+    /**
+     * @param string $sql
+     * @param mixed[] $params
+     * @return dml_field_value[]
+     * @throws dml_exception&\Throwable
+     */
+    abstract public function get_fieldset_sql($sql, ?array $params = null);
+
+    /**
+     * @param string $table
+     * @param dml_dataobject $dataobject
+     * @param bool $returnid
+     * @param bool $bulk
+     * @return ($returnid is true ? int : true)
+     * @throws dml_exception&\Throwable
+     */
+    abstract public function insert_record($table, $dataobject, $returnid = true, $bulk = false);
+
+    /**
+     * @param string $table
+     * @param dml_dataobject $dataobject
+     * @param bool $bulk
+     * @return true
+     * @throws dml_exception&\Throwable
+     */
+    abstract public function update_record($table, $dataobject, $bulk = false);
+
+    /**
+     * @param string $table
+     * @param string $newfield
+     * @param mixed $newvalue
+     * @param dml_conditions $conditions
+     * @return true
+     * @throws dml_exception&\Throwable
+     */
+    public function set_field($table, $newfield, $newvalue, ?array $conditions = null) {
+    }
+
+    /**
+     * @param string $table
+     * @param string $newfield
+     * @param mixed $newvalue
+     * @param string $select
+     * @param mixed[] $params
+     * @return true
+     * @throws dml_exception&\Throwable
+     */
+    abstract public function set_field_select($table, $newfield, $newvalue, $select, ?array $params = null);
+
+    /**
+     * @param string $table
+     * @param dml_conditions|null $conditions
+     * @return true
+     * @throws dml_exception&\Throwable
+     */
+    public function delete_records($table, ?array $conditions = null) {
+    }
+
+    /**
+     * @param string $table
+     * @param string $field
+     * @param mixed[] $values
+     * @return true
+     * @throws dml_exception&\Throwable
+     */
+    public function delete_records_list($table, $field, array $values) {
+    }
+}

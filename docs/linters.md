@@ -8,7 +8,7 @@ Extensible lint system. Runs external tools and parses output.
 |--------|------|-------|
 | phplint | `php -l` | `*.php` |
 | phpcs | `phpcs --report=json` | `*.php` |
-| phpstan | `phpstan analyze` | `*.php` |
+| phpstan | `phpstan analyze` | `*.php` (+ stubs) |
 | eslint | `bunx eslint --format json` | `*.js` (excludes `amd/build/`, `yui/build/`) |
 | stylelint | `bunx stylelint --formatter json` | `*.css`, `*.scss` |
 | phpdoc | `local_moodlecheck` | `*.php` |
@@ -70,6 +70,14 @@ Validates JS/TS files in `amd/src/` and `js/esm/src/` for required boilerplate:
 - **missing-docblock**: each file must have a JSDoc docblock with `@module`, `@copyright`, and `@license` tags.
 - **module-name-incorrect**: the `@module` value must match the component and path (e.g. `local_devkit/linter_config`).
 - **missing-copyright** / **missing-license**: the docblock must include these tags.
+
+## PHPStan Stubs
+
+PHPStan stubs provide type information for Moodle APIs that lack proper type declarations. Stubs are located in `phpstan/stubs/` and mirror Moodle's directory structure.
+
+Stubs are automatically discovered by the PHPStan linter and added to the config's `stubFiles` parameter.
+
+See `phpstan/README.md` for structure and adding stubs.
 
 ## Issue Schema
 

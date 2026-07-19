@@ -1,0 +1,71 @@
+<?php
+
+use core\exception\moodle_exception;
+
+/**
+ * @return never
+ */
+function send_file_not_found() {
+}
+
+/**
+ * @param string $path
+ * @param string $filename
+ * @param bool $pathisstring
+ * @return never
+ * @throws moodle_exception&\Throwable
+ */
+function send_temp_file($path, $filename, $pathisstring = false) {
+}
+
+/**
+ * @param string|stored_file $path
+ * @param string $filename
+ * @param int $lifetime
+ * @param int $filter
+ * @param bool $pathisstring
+ * @param bool $forcedownload
+ * @param string $mimetype
+ * @param bool $dontdie
+ * @param array{
+ *     cacheability?: 'public'|'private',
+ *     immutable?: string|null,
+ *     dontforcesvgdownload?: bool,
+ * } $options
+ * @return ($dontdie is true ? null : never)
+ */
+function send_file(
+    $path,
+    $filename,
+    $lifetime = null,
+    $filter = 0,
+    $pathisstring = false,
+    $forcedownload = false,
+    $mimetype = '',
+    $dontdie = false,
+    array $options = [],
+) {
+}
+
+/**
+ * @param stored_file $storedfile
+ * @param int $lifetime
+ * @param 0|1|2 $filter
+ * @param bool $forcedownload
+ * @param array{
+ *     preview?: string|null,
+ *     filename?: string|null,
+ *     dontdie?: bool,
+ *     cacheability?: 'public'|'private'|null,
+ *     immutable?: string|null,
+ * } $options
+ * @return null|never
+ */
+function send_stored_file(
+    $storedfile,
+    $lifetime = null,
+    $filter = 0,
+    $forcedownload = false,
+    array $options = [],
+) {
+}

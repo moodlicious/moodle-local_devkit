@@ -23,7 +23,13 @@ use local_devkit\local\lint\schemas\issue\phpstan as phpstan_issue;
 use local_devkit\local\lint\severity;
 use local_devkit\local\utils;
 use MoodleQuickForm;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Yaml\Yaml;
+
+use function count;
+use function dirname;
+use function in_array;
 
 /**
  * The 'phpstan' linter.
@@ -171,10 +177,16 @@ class phpstan extends base {
         foreach ($jsonoutput->files as $filepath => $lintedfile) {
             $issues = [];
             $messages = $lintedfile->messages;
+
+            [$path, $context] = self::strip_context_suffix($path);
+
             foreach ($messages as $message) {
                 $issue = phpstan_issue::from_object($message);
                 if ($issue === null) {
                     continue;
+                }
+                if ($context !== null) {
+                    array_unshift($issue->suggestions, $context);
                 }
                 $issues[] = $issue;
             }
@@ -183,6 +195,19 @@ class phpstan extends base {
         }
 
         return $results;
+    }
+
+    /**
+     * Strip the "(in context of class ...)" suffix that PHPStan appends to trait file paths.
+     *
+     * @param string $path The raw path from PHPStan's JSON output.
+     * @return array{0: string, 1: string|null} The clean path and the context string, or null if no suffix.
+     */
+    private static function strip_context_suffix(string $path): array {
+        if (preg_match('/^(.+)\s+\(in context of class (.+)\)$/', $path, $matches)) {
+            return [$matches[1], "In context of class {$matches[2]}"];
+        }
+        return [$path, null];
     }
 
     /**
@@ -201,39 +226,85 @@ class phpstan extends base {
         $strictrules = realpath("$devkitpath/vendor/phpstan/phpstan-strict-rules/rules.neon");
         $devkitbootstrap = realpath("$devkitpath/phpstan-bootstrap.php");
 
-        $tempdirconfig = match (self::get_result_cache_mode()) {
-            self::RESULT_CACHE_PER_COMPONENT => 'tmpDir: tmp',
-            self::RESULT_CACHE_NORMAL => '',
-            default => '',
+        $usetempdir = match (self::get_result_cache_mode()) {
+            self::RESULT_CACHE_PER_COMPONENT => true,
+            self::RESULT_CACHE_NORMAL => false,
+            default => null,
         };
 
-        $excludes = self::get_exclude_patterns(includethirdparty: true);
-        $excludes = array_map(fn($e) => "        - $e", $excludes);
-        $excludelist = implode("\n", $excludes);
+        $thirdpartyexcludes = self::get_third_party_exclude_patterns();
+        $excludes = self::get_exclude_patterns();
 
         $moodleroot = utils::get_moodle_root_dir();
         $rulelevel = self::get_rule_level();
-        $phpstandotneon = <<<NEON
-            includes:
-            - $moodleneonpath
-            - $deprecationrules
-            - $strictrules
 
-            parameters:
-                level: $rulelevel
-                paths:
-                    - $moodleroot
-                excludePaths:
-            $excludelist
-                moodle:
-                    rootDirectory: $moodleroot
-                bootstrapFiles:
-                    - $devkitbootstrap
-                $tempdirconfig
-            NEON;
+        $missingfiles = array_filter(
+            [$moodleneonpath, $deprecationrules, $strictrules, $devkitbootstrap],
+            fn($file) => $file === false,
+        );
+        if ($missingfiles) {
+            throw new \RuntimeException(
+                'PHPStan rule files not found. Please run \'composer install\' in the devkit directory.',
+            );
+        }
+
+        $config = [
+            'includes' => [$moodleneonpath, $deprecationrules, $strictrules],
+            'parameters' => [
+                'level' => $rulelevel,
+                'paths' => [$moodleroot],
+                'excludePaths' => [
+                    'analyse' => $thirdpartyexcludes,
+                    'analyseAndScan' => $excludes,
+                ],
+                'moodle' => [
+                    'rootDirectory' => $moodleroot,
+                ],
+                'bootstrapFiles' => [$devkitbootstrap],
+            ],
+        ];
+
+        if ($usetempdir) {
+            $config['parameters']['tmpDir'] = 'tmp';
+        }
+
+        $stubs = $this->get_stub_files();
+        if (count($stubs) > 0) {
+            $config['parameters']['stubFiles'] = $stubs;
+        }
+
+        $phpstandotneon = Yaml::dump($config, 10);
 
         file_put_contents($neonpath, $phpstandotneon);
         return $neonpath;
+    }
+
+    /**
+     * Get all stub file paths.
+     * @return string[]
+     */
+    public function get_stub_files(): array {
+        global $CFG;
+
+        require_once(__DIR__ . '/../../../../vendor/autoload.php');
+        $stubsdir = "$CFG->dirroot/local/devkit/phpstan/stubs";
+
+        if (!is_dir($stubsdir)) {
+            return [];
+        }
+
+        $finder = new Finder();
+        $finder
+            ->files()
+            ->in($stubsdir)
+            ->name('*.stub');
+
+        $paths = [];
+        foreach ($finder as $file) {
+            $paths[] = $file->getRealPath();
+        }
+
+        return $paths;
     }
 
     /**

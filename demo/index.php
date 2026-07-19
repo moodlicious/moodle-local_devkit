@@ -90,9 +90,9 @@ echo html_writer::tag(
 try {
     $transaction = $DB->start_delegated_transaction();
     $data = $DB->get_records('user', ['id' => $USER->id]);
-    $transaction->rollback(new \Exception('Rolling back transaction for demonstration purposes.'));
-
     VarDumper::dump($data);
+
+    $transaction->rollback(new \Exception('Rolling back transaction for demonstration purposes.'));
 } catch (\Throwable $th) {
     debugbar::instance()->log_exception($th);
     VarDumper::dump($th);

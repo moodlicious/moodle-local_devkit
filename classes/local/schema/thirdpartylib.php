@@ -20,6 +20,8 @@ use core\exception\coding_exception;
 use Exception;
 use SimpleXMLElement;
 
+use function dirname;
+
 /**
  * Class representing a single thirdpartylib.
  *

@@ -208,7 +208,7 @@ class handler {
      */
     private static function build_command(string $name, array $linters): Command {
         $linter = null;
-        if (\count($linters) === 1) {
+        if (count($linters) === 1) {
             $linter = $linters[0];
         }
 

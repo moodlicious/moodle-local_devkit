@@ -21,6 +21,8 @@ namespace local_devkit\local\lint\linters;
 use advanced_testcase;
 use local_devkit\local\attributes\linter;
 
+use function count;
+
 /**
  * Unit tests for the phplint linter.
  *

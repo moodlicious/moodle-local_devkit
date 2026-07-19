@@ -21,6 +21,8 @@ use local_devkit\local\lint\severity;
 use local_devkit\local\utils;
 
 use function count;
+use function sprintf;
+use function strlen;
 
 /**
  * Class github

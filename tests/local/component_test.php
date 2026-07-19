@@ -20,6 +20,8 @@ namespace local_devkit\local;
 
 use advanced_testcase;
 
+use function count;
+
 /**
  * Unit tests for the component class.
  *

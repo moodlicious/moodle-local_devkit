@@ -276,3 +276,41 @@ function get_config($plugin, $name = null) {
  */
 function get_file_storage($reset = false) {
 }
+
+/**
+ * @param string $name
+ * @param string|int|bool|null $value
+ * @param stdClass|int|null $user
+ * @return true
+ * @throws coding_exception
+ */
+function set_user_preference($name, $value, $user = null) {
+}
+
+/**
+ * @param array<string, string|int|bool|null> $prefarray
+ * @param stdClass|int|null $user
+ * @return true
+ */
+function set_user_preferences(array $prefarray, $user = null) {
+}
+
+/**
+ * @param string $name
+ * @param stdClass|int|null $user
+ * @return true
+ * @throws coding_exception
+ */
+function unset_user_preference($name, $user = null) {
+}
+
+/**
+ * @template T
+ * @param string|null $name
+ * @param T $default
+ * @param stdClass|int|null $user
+ * @return ($name is null ? array<string, string> : string|T|null)
+ * @throws coding_exception
+ */
+function get_user_preferences($name = null, $default = null, $user = null) {
+}

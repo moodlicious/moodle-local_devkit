@@ -92,7 +92,7 @@ class database_show extends Command {
     public static function display_table(SymfonyStyle $io, array $data): void {
         foreach ($data as $database) {
             $io->title($database->name);
-            if ($database->comment) {
+            if ($database->comment !== null) {
                 $io->comment($database->comment);
             }
 
@@ -114,7 +114,7 @@ class database_show extends Command {
      */
     public static function display_table_table(SymfonyStyle $io, database_schema\table $table): void {
         $io->section("Table: {$table->name}");
-        if ($table->comment) {
+        if ($table->comment !== null) {
             $io->comment($table->comment);
         }
 

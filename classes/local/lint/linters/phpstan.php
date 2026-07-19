@@ -204,7 +204,7 @@ class phpstan extends base {
      * @return array{0: string, 1: string|null} The clean path and the context string, or null if no suffix.
      */
     private static function strip_context_suffix(string $path): array {
-        if (preg_match('/^(.+)\s+\(in context of class (.+)\)$/', $path, $matches)) {
+        if (preg_match('/^(.+)\s+\(in context of class (.+)\)$/', $path, $matches) === 1) {
             return [$matches[1], "In context of class {$matches[2]}"];
         }
         return [$path, null];
@@ -242,7 +242,7 @@ class phpstan extends base {
             [$moodleneonpath, $deprecationrules, $strictrules, $devkitbootstrap],
             fn($file) => $file === false,
         );
-        if ($missingfiles) {
+        if (count($missingfiles) > 0) {
             throw new \RuntimeException(
                 'PHPStan rule files not found. Please run \'composer install\' in the devkit directory.',
             );
@@ -264,7 +264,7 @@ class phpstan extends base {
             ],
         ];
 
-        if ($usetempdir) {
+        if ($usetempdir === true) {
             $config['parameters']['tmpDir'] = 'tmp';
         }
 

@@ -1,0 +1,4 @@
+<?php
+
+class MoodleQuickForm extends HTML_QuickForm_DHTMLRulesTableless {
+}

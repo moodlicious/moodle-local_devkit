@@ -111,10 +111,14 @@ abstract class base {
             \core_component::get_component_directory($this->component),
         );
 
-        $classesdir = "$componentpath/classes/";
-        $namespace = str_replace($classesdir, '', $dirpath);
+        $classesdir = "$componentpath/classes";
+        if (str_starts_with($dirpath, $classesdir)) {
+            $namespace = substr($dirpath, strlen($classesdir) + 1);
+        } else {
+            $namespace = '';
+        }
         $namespace = str_replace('/', '\\', $namespace);
-        $namespace = "$this->component\\$namespace";
+        $namespace = rtrim("$this->component\\$namespace", '\\');
 
         return [$namespace, $classname];
     }

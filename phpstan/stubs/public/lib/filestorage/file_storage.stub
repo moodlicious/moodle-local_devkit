@@ -1,0 +1,12 @@
+<?php
+
+use stored_file;
+
+class file_storage {
+    /**
+     * @param string $pathnamehash
+     * @return stored_file|false
+     */
+    public function get_file_by_hash($pathnamehash) {
+    }
+}

@@ -18,6 +18,8 @@ namespace local_devkit\local;
 
 use local_devkit\local\api\plugins;
 
+use function strlen;
+
 /**
  * Class component
  *

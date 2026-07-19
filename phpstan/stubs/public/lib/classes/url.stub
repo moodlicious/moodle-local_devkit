@@ -1,0 +1,12 @@
+<?php
+
+namespace core;
+
+class url {
+    /**
+     * @param string|null $anchor
+     * @return void
+     */
+    public function set_anchor($anchor) {
+    }
+}

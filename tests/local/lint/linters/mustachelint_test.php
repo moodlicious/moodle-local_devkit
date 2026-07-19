@@ -21,6 +21,8 @@ namespace local_devkit\local\lint\linters;
 use advanced_testcase;
 use local_devkit\local\attributes\linter;
 
+use function get_class;
+
 /**
  * Unit tests for the mustachelint linter.
  *

@@ -23,8 +23,13 @@ use local_devkit\local\lint\schemas\issue\phpstan as phpstan_issue;
 use local_devkit\local\lint\severity;
 use local_devkit\local\utils;
 use MoodleQuickForm;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
+
+use function count;
+use function dirname;
+use function in_array;
 
 /**
  * The 'phpstan' linter.
@@ -262,10 +267,43 @@ class phpstan extends base {
             $config['parameters']['tmpDir'] = 'tmp';
         }
 
+        $stubs = $this->get_stub_files();
+        if (count($stubs) > 0) {
+            $config['parameters']['stubFiles'] = $stubs;
+        }
+
         $phpstandotneon = Yaml::dump($config, 10);
 
         file_put_contents($neonpath, $phpstandotneon);
         return $neonpath;
+    }
+
+    /**
+     * Get all stub file paths.
+     * @return string[]
+     */
+    public function get_stub_files(): array {
+        global $CFG;
+
+        require_once(__DIR__ . '/../../../../vendor/autoload.php');
+        $stubsdir = "$CFG->dirroot/local/devkit/phpstan/stubs";
+
+        if (!is_dir($stubsdir)) {
+            return [];
+        }
+
+        $finder = new Finder();
+        $finder
+            ->files()
+            ->in($stubsdir)
+            ->name('*.stub');
+
+        $paths = [];
+        foreach ($finder as $file) {
+            $paths[] = $file->getRealPath();
+        }
+
+        return $paths;
     }
 
     /**

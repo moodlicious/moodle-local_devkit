@@ -1,0 +1,17 @@
+<?php
+
+define('FORMAT_MOODLE', '0');
+define('FORMAT_HTML', '1');
+define('FORMAT_PLAIN', '2');
+define('FORMAT_WIKI', '3');
+define('FORMAT_MARKDOWN', '4');
+
+/**
+ * @param string $text
+ * @param \FORMAT_MOODLE|\FORMAT_HTML|\FORMAT_PLAIN|\FORMAT_MARKDOWN $format
+ * @param stdClass|mixed[] $options
+ * @param int $courseiddonotuse {@deprecated}
+ * @return string
+ */
+function format_text($text, $format = \FORMAT_MOODLE, $options = null, $courseiddonotuse = null) {
+}

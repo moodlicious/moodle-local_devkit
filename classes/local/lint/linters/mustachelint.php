@@ -24,6 +24,8 @@ use local_devkit\local\lint\schemas\issue;
 use local_devkit\local\lint\severity;
 use local_devkit\local\utils;
 
+use function strlen;
+
 /**
  * The mustachelint linter.
  *

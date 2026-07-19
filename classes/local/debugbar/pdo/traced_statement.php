@@ -23,6 +23,7 @@ use mariadb_native_moodle_database;
 use moodle_database;
 use mysqli_native_moodle_database;
 
+use function array_slice;
 use function in_array;
 
 /**

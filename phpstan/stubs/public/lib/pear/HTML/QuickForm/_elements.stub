@@ -1,0 +1,48 @@
+<?php
+class HTML_QuickForm_advcheckbox extends HTML_QuickForm_checkbox {
+}
+
+class HTML_QuickForm_button extends HTML_QuickForm_input {
+}
+
+class HTML_QuickForm_checkbox extends HTML_QuickForm_input {
+}
+
+class HTML_QuickForm_DHTMLRulesTableless extends HTML_QuickForm {
+}
+
+class HTML_QuickForm_element extends HTML_Common {
+}
+
+class HTML_QuickForm_group extends HTML_QuickForm_element {
+}
+
+class HTML_QuickForm_header extends HTML_QuickForm_static {
+}
+
+class HTML_QuickForm_hidden extends HTML_QuickForm_input {
+}
+
+class HTML_QuickForm_input extends HTML_QuickForm_element {
+}
+
+class HTML_QuickForm_password extends HTML_QuickForm_input {
+}
+
+class HTML_QuickForm_radio extends HTML_QuickForm_input {
+}
+
+class HTML_QuickForm_select extends HTML_QuickForm_element {
+}
+
+class HTML_QuickForm_static extends HTML_QuickForm_element {
+}
+
+class HTML_QuickForm_submit extends HTML_QuickForm_input {
+}
+
+class HTML_QuickForm_textarea extends HTML_QuickForm_element {
+}
+
+class HTML_QuickForm_text extends HTML_QuickForm_input {
+}

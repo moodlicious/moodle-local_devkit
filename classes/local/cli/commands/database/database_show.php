@@ -18,6 +18,7 @@ namespace local_devkit\local\cli\commands\database;
 
 use Exception;
 use local_devkit\local\api\database;
+use local_devkit\local\schema\database as database_schema;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
@@ -26,15 +27,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command to list all installed plugins.
- *
- * // phpcs:disable moodle.Commenting.ValidTags.Invalid
- * @phpstan-import-type PluginDatabase from database
- * @phpstan-import-type DatabaseField from database
- * @phpstan-import-type DatabaseKey from database
- * @phpstan-import-type DatabaseIndex from database
- * @phpstan-import-type DatabaseTable from database
- * @phpstan-import-type DatabaseKeyReferences from database
- * // phpcs:enable moodle.Commenting.ValidTags.Invalid
  *
  * @package   local_devkit
  * @copyright 2026 Felix Yeung
@@ -74,7 +66,7 @@ class database_show extends Command {
      * Helper function to get the data for this command.
      * @param string|null $component
      * @throws Exception
-     * @return PluginDatabase[]
+     * @return database_schema[]
      */
     public static function get_data(?string $component) {
         if ($component) {
@@ -93,19 +85,21 @@ class database_show extends Command {
     /**
      * Displays tables as a table.
      * @param SymfonyStyle $io
-     * @param PluginDatabase[] $data
+     * @param database_schema[] $data
      * @return void
      */
     public static function display_table(SymfonyStyle $io, array $data): void {
         foreach ($data as $database) {
-            $io->title($database['name']);
-            $io->comment($database['comment']);
+            $io->title($database->name);
+            if ($database->comment) {
+                $io->comment($database->comment);
+            }
 
             $io->text('Tables');
             $io->listing(
                 array_map(
-                    fn(/** @var DatabaseTable $table */ $table) => "{$table['name']}: {$table['comment']}",
-                    $database['tables'],
+                    fn(/** @var DatabaseTable $table */ $table) => "{$table->name}: {$table->comment}",
+                    $database->tables,
                 ),
             );
         }
@@ -114,53 +108,55 @@ class database_show extends Command {
     /**
      * Displays table
      * @param SymfonyStyle $io
-     * @param DatabaseTable $table
+     * @param database_schema\table $table
      * @return void
      */
-    public static function display_table_table(SymfonyStyle $io, array $table): void {
-        $io->section("Table: {$table['name']}");
-        $io->comment($table['comment']);
+    public static function display_table_table(SymfonyStyle $io, database_schema\table $table): void {
+        $io->section("Table: {$table->name}");
+        if ($table->comment) {
+            $io->comment($table->comment);
+        }
 
         $io->text('Fields');
         $io->table(
             ['name', 'type', 'comment'],
-            array_map(fn(/** @var DatabaseField $field */ $field) => [
-                $field['name'],
-                $field['type'],
-                $field['comment'],
-            ], $table['fields']),
+            array_map(fn(database_schema\field $field) => [
+                $field->name,
+                $field->type,
+                $field->comment,
+            ], $table->fields),
         );
 
         $io->text('Indexes');
         $io->table(
             ['name', 'fields', 'unique', 'comment'],
-            array_map(fn(/** @var DatabaseIndex $index */ $index) => [
-                $index['name'],
-                implode(',', $index['fields']),
-                $index['unique'],
-                $index['comment'],
-            ], $table['indexes']),
+            array_map(fn(database_schema\index $index) => [
+                $index->name,
+                implode(',', $index->fields),
+                $index->unique,
+                $index->comment,
+            ], $table->indexes),
         );
 
         $io->text('Keys');
         $io->table(
             ['name', 'type', 'fields', 'references', 'comment'],
-            array_map(fn(/** @var DatabaseKey $key */ $key) => [
-                $key['name'],
-                $key['type'],
-                implode(',', $key['fields']),
-                $key['references']['table']
-                ? $key['references']['table'] . '.' . implode(',', $key['references']['fields'])
+            array_map(fn(database_schema\key $key) => [
+                $key->name,
+                $key->type,
+                implode(',', $key->fields),
+                $key->references->table
+                ? $key->references->table . '.' . implode(',', $key->references->fields)
                 : '',
-                $key['comment'],
-            ], $table['keys']),
+                $key->comment,
+            ], $table->keys),
         );
     }
 
     /**
      * Displays tables as JSON.
      * @param SymfonyStyle $io
-     * @param PluginDatabase[] $data
+     * @param database_schema[] $data
      * @return void
      */
     public static function display_json(SymfonyStyle $io, array $data): void {
@@ -169,19 +165,19 @@ class database_show extends Command {
 
     /**
      * Process json for display.
-     * @param PluginDatabase[] $data
-     * @return array{name: string, tables: array{name: string, comment: string}[]}[]
+     * @param database_schema[] $data
+     * @return array{name: string, tables: array{name: string, comment: string|null}[]}[]
      */
     public static function process_json(array $data): array {
         $json = [];
         foreach ($data as $database) {
             $json[] = [
-                'name' => $database['name'],
-                'comment' => $database['comment'],
+                'name' => $database->name,
+                'comment' => $database->comment,
                 'tables' => array_map(fn(/** @var DatabaseTable $table */ $table) => [
-                    'name' => $table['name'],
-                    'comment' => $table['comment'],
-                ], $database['tables']),
+                    'name' => $table->name,
+                    'comment' => $table->comment,
+                ], $database->tables),
             ];
         }
         return $json;

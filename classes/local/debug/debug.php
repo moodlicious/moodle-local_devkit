@@ -21,6 +21,8 @@ use IteratorAggregate;
 use local_devkit\local\api\database;
 use Traversable;
 
+use function is_callable;
+
 /**
  * Utilities for debugging.
  *

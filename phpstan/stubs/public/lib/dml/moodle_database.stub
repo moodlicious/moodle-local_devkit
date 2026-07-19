@@ -4,6 +4,9 @@
  * @phpstan-type dml_strictness IGNORE_MISSING|IGNORE_MULTIPLE|MUST_EXIST
  * @phpstan-type dml_conditions mixed[]
  * @phpstan-type dml_dataobject object|mixed[]
+ *
+ * Note that the database layer returns string or null regardless of the declared field type.
+ * @phpstan-type dml_field_value string|null
  */
 abstract class moodle_database {
     /**
@@ -69,7 +72,7 @@ abstract class moodle_database {
      * @param string $return
      * @param dml_conditions $conditions
      * @param dml_strictness $strictness
-     * @return ($strictness is \MUST_EXIST ? string : string|false)
+     * @return ($strictness is \MUST_EXIST ? dml_field_value : dml_field_value|false)
      * @throws dml_exception&\Throwable
      */
     public function get_field($table, $return, array $conditions, $strictness = IGNORE_MISSING) {
@@ -81,7 +84,7 @@ abstract class moodle_database {
      * @param string $select
      * @param mixed[] $params
      * @param dml_strictness $strictness
-     * @return ($strictness is \MUST_EXIST ? string : string|false)
+     * @return ($strictness is \MUST_EXIST ? dml_field_value : dml_field_value|false)
      * @throws dml_exception&\Throwable
      */
     public function get_field_select($table, $return, $select, ?array $params = null, $strictness = IGNORE_MISSING) {
@@ -91,7 +94,7 @@ abstract class moodle_database {
      * @param string $sql
      * @param mixed[] $params
      * @param dml_strictness $strictness
-     * @return ($strictness is \MUST_EXIST ? string : string|false)
+     * @return ($strictness is \MUST_EXIST ? dml_field_value : dml_field_value|false)
      * @throws dml_exception&\Throwable
      */
     public function get_field_sql($sql, ?array $params = null, $strictness = IGNORE_MISSING) {
@@ -101,7 +104,7 @@ abstract class moodle_database {
      * @param string $table
      * @param string $return
      * @param dml_conditions|null $conditions
-     * @return string[]
+     * @return dml_field_value[]
      * @throws dml_exception&\Throwable
      */
     public function get_fieldset(string $table, string $return, ?array $conditions = null): array {
@@ -112,7 +115,7 @@ abstract class moodle_database {
      * @param string $return
      * @param string $select
      * @param mixed[] $params
-     * @return string[]
+     * @return dml_field_value[]
      * @throws dml_exception&\Throwable
      */
     public function get_fieldset_select($table, $return, $select, ?array $params = null) {
@@ -121,7 +124,7 @@ abstract class moodle_database {
     /**
      * @param string $sql
      * @param mixed[] $params
-     * @return string[]
+     * @return dml_field_value[]
      * @throws dml_exception&\Throwable
      */
     abstract public function get_fieldset_sql($sql, ?array $params = null);

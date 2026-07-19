@@ -236,6 +236,41 @@ function optional_param_array($parname, $default, $type) {
 }
 
 /**
+ * @param string $name
+ * @param string|int|bool|null $value
+ * @param string|null $plugin
+ * @param boolean $log
+ * @return true
+ */
+function set_config($name, $value, $plugin = null, bool $log = false) {
+}
+
+/**
+ * @param string $name
+ * @param string|null $plugin
+ * @param boolean $log
+ * @return true
+ */
+function unset_config($name, $plugin = null, bool $log = false) {
+}
+
+/**
+ * @param string $plugin
+ * @return true
+ */
+function unset_all_config_for_plugin($plugin) {
+}
+
+/**
+ * @param string|null $plugin
+ * @param string|null $name
+ * @return ($name is null ? stdClass : string|false)
+ * @throws dml_exception
+ */
+function get_config($plugin, $name = null) {
+}
+
+/**
  * @param bool $reset
  * @return ($reset is false ? file_storage : null)
  */

@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @param string $name
+ * @return (
+ *     $name is 'category'      ? enrol_category_plugin :
+ *     $name is 'cohort'        ? enrol_cohort_plugin :
+ *     $name is 'database'      ? enrol_database_plugin :
+ *     $name is 'fee'           ? enrol_fee_plugin :
+ *     $name is 'flatfile'      ? enrol_flatfile_plugin :
+ *     $name is 'guest'         ? enrol_guest_plugin :
+ *     $name is 'imsenterprise' ? enrol_imsenterprise_plugin :
+ *     $name is 'ldap'          ? enrol_ldap_plugin :
+ *     $name is 'lti'           ? enrol_lti_plugin :
+ *     $name is 'manual'        ? enrol_manual_plugin :
+ *     $name is 'meta'          ? enrol_meta_plugin :
+ *     $name is 'paypal'        ? enrol_paypal_plugin :
+ *     $name is 'self'          ? enrol_self_plugin :
+ *     enrol_plugin|null
+ * )
+ */
+function enrol_get_plugin($name) {
+}
+
+abstract class enrol_plugin {
+}

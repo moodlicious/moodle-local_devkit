@@ -52,4 +52,56 @@ class HTML_QuickForm extends HTML_Common {
      */
     public function &addElement($element, ...$args) {
     }
+
+    /**
+     * @param string $elementType
+     * @param mixed[] $args
+     * @return (
+     *    $elementType is 'advcheckbox'         ? MoodleQuickForm_advcheckbox :
+     *    $elementType is 'autocomplete'        ? MoodleQuickForm_autocomplete :
+     *    $elementType is 'button'              ? MoodleQuickForm_button :
+     *    $elementType is 'cancel'              ? MoodleQuickForm_cancel :
+     *    $elementType is 'course'              ? MoodleQuickForm_course :
+     *    $elementType is 'cohort'              ? MoodleQuickForm_cohort :
+     *    $elementType is 'searchableselector'  ? MoodleQuickForm_searchableselector :
+     *    $elementType is 'checkbox'            ? MoodleQuickForm_checkbox :
+     *    $elementType is 'choicedropdown'      ? MoodleQuickForm_choicedropdown :
+     *    $elementType is 'date_selector'       ? MoodleQuickForm_date_selector :
+     *    $elementType is 'date_time_selector'  ? MoodleQuickForm_date_time_selector :
+     *    $elementType is 'duration'            ? MoodleQuickForm_duration :
+     *    $elementType is 'editor'              ? MoodleQuickForm_editor :
+     *    $elementType is 'filemanager'         ? MoodleQuickForm_filemanager :
+     *    $elementType is 'filepicker'          ? MoodleQuickForm_filepicker :
+     *    $elementType is 'filetypes'           ? MoodleQuickForm_filetypes :
+     *    $elementType is 'float'               ? MoodleQuickForm_float :
+     *    $elementType is 'grading'             ? MoodleQuickForm_grading :
+     *    $elementType is 'group'               ? MoodleQuickForm_group :
+     *    $elementType is 'header'              ? MoodleQuickForm_header :
+     *    $elementType is 'hidden'              ? MoodleQuickForm_hidden :
+     *    $elementType is 'listing'             ? MoodleQuickForm_listing :
+     *    $elementType is 'defaultcustom'       ? MoodleQuickForm_defaultcustom :
+     *    $elementType is 'modgrade'            ? MoodleQuickForm_modgrade :
+     *    $elementType is 'modvisible'          ? MoodleQuickForm_modvisible :
+     *    $elementType is 'password'            ? MoodleQuickForm_password :
+     *    $elementType is 'passwordunmask'      ? MoodleQuickForm_passwordunmask :
+     *    $elementType is 'questioncategory'    ? MoodleQuickForm_questioncategory :
+     *    $elementType is 'radio'               ? MoodleQuickForm_radio :
+     *    $elementType is 'recaptcha'           ? MoodleQuickForm_recaptcha :
+     *    $elementType is 'select'              ? MoodleQuickForm_select :
+     *    $elementType is 'selectgroups'        ? MoodleQuickForm_selectgroups :
+     *    $elementType is 'selectwithlink'      ? MoodleQuickForm_selectwithlink :
+     *    $elementType is 'selectyesno'         ? MoodleQuickForm_selectyesno :
+     *    $elementType is 'static'              ? MoodleQuickForm_static :
+     *    $elementType is 'submit'              ? MoodleQuickForm_submit :
+     *    $elementType is 'tags'                ? MoodleQuickForm_tags :
+     *    $elementType is 'text'                ? MoodleQuickForm_text :
+     *    $elementType is 'textarea'            ? MoodleQuickForm_textarea :
+     *    $elementType is 'url'                 ? MoodleQuickForm_url :
+     *    $elementType is 'warning'             ? MoodleQuickForm_warning :
+     *    HTML_QuickForm_element
+     * )
+     * @throws HTML_QuickForm_Error&Throwable
+     */
+    public function &createElement($elementType, ...$args) {
+    }
 }

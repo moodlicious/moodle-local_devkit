@@ -67,7 +67,7 @@ class xmldb extends base {
                     $error['line'],
                     0,
                     $error['message'],
-                    'invalid-structure',
+                    'xml-structure-must-be-valid',
                     self::get_name(),
                     severity::error,
                 ));
@@ -85,11 +85,11 @@ class xmldb extends base {
             $file->add_issue(new issue(
                 0,
                 0,
-                'XML has incorrect formatting.',
-                'incorrect-format',
+                'XML does not match canonical XMDB format.',
+                'format-must-match-canonical',
                 self::get_name(),
                 severity::warning,
-                ['Use the xmldb editor to reformat the file.'],
+                ['Use the XMDB editor to reformat.'],
             ));
         }
 

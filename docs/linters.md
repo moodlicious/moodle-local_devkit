@@ -2,7 +2,7 @@
 
 Extensible lint system. Runs external tools and parses output.
 
-## 9 Linters
+## 10 Linters
 
 | Linter | Tool | Files |
 |--------|------|-------|
@@ -15,6 +15,7 @@ Extensible lint system. Runs external tools and parses output.
 | lang | Custom PHP logic | `**/lang/*/*.php` |
 | mustachelint | Custom PHP logic | `*.mustache` |
 | jsdoc | Custom PHP logic | `**/amd/src/*.js`, `**/js/esm/src/*.ts`, `**/js/esm/src/*.tsx` |
+| xmldb | `xmldb_file` | `*/install.xml` |
 
 ## Configuration
 
@@ -78,6 +79,13 @@ PHPStan stubs provide type information for Moodle APIs that lack proper type dec
 Stubs are automatically discovered by the PHPStan linter and added to the config's `stubFiles` parameter.
 
 See `phpstan/README.md` for structure and adding stubs.
+
+## Xmldb Linter
+
+Validates Moodle XML database files (`db/install.xml`):
+
+- **xml-structure-must-be-valid**: validates XML structure against the XMDB DTD/XSD.
+- **format-must-match-canonical**: checks formatting matches the canonical XMDB output. Use the XMDB editor to reformat.
 
 ## Issue Schema
 

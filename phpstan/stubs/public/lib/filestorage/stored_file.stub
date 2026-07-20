@@ -1,4 +1,18 @@
 <?php
 
 class stored_file {
+    /**
+     * @return true
+     * @throws Exception
+     */
+    public function delete() {
+    }
+
+    /**
+     * @param string $dir
+     * @param string $fileprefix
+     * @return string|false
+     */
+    public function copy_content_to_temp($dir = 'files', $fileprefix = 'tempup_') {
+    }
 }

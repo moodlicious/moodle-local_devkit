@@ -314,3 +314,11 @@ function unset_user_preference($name, $user = null) {
  */
 function get_user_preferences($name = null, $default = null, $user = null) {
 }
+
+/**
+ * @param stdClass|null|false $user
+ * @param bool $override
+ * @return ($user is object ? string : '')
+ */
+function fullname($user, $override = false) {
+}

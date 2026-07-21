@@ -1,4 +1,36 @@
 <?php
 
+use core\url;
+
+abstract class moodleform {
+    /**
+     * @param string|url|null $action
+     * @param mixed $customdata
+     * @param 'get'|'post' $method
+     * @param string $target
+     * @param string|array<string, mixed>|null $attributes
+     * @param bool $editable
+     * @param array<mixed> $ajaxformdata
+     */
+    public function __construct(
+        $action = null,
+        $customdata = null,
+        $method = 'post',
+        $target = '',
+        $attributes = null,
+        $editable = true,
+        $ajaxformdata = null,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @param array<string, string> $files
+     * @return array<string, string>
+     */
+    public function validation($data, $files) {
+    }
+}
+
 class MoodleQuickForm extends HTML_QuickForm_DHTMLRulesTableless {
 }

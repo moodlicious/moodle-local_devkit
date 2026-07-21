@@ -1,0 +1,13 @@
+<?php
+
+namespace core\lock;
+
+interface lock_factory {
+    /**
+     * @param string $resource
+     * @param int $timeout
+     * @param int $maxlifetime
+     * @return \core\lock\lock|false
+     */
+    public function get_lock($resource, $timeout, $maxlifetime = 86400);
+}

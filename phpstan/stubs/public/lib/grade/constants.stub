@@ -1,0 +1,6 @@
+<?php
+
+define('GRADE_UPDATE_OK', 0);
+define('GRADE_UPDATE_FAILED', 1);
+define('GRADE_UPDATE_MULTIPLE', 2);
+define('GRADE_UPDATE_ITEM_LOCKED', 4);

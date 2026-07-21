@@ -1,6 +1,95 @@
 <?php
 
+use core\context;
+
 define('CAP_INHERIT', 0);
 define('CAP_ALLOW', 1);
 define('CAP_PREVENT', -1);
 define('CAP_PROHIBIT', -1000);
+
+/**
+ * @param string[] $capabilities
+ * @param context $context
+ * @param int|stdClass|null $user
+ * @param bool $doanything
+ * @return bool
+ */
+function has_any_capability(array $capabilities, context $context, $user = null, $doanything = true) {
+}
+
+/**
+ * @param string[] $capabilities
+ * @param context $context
+ * @param int|stdClass|null $user
+ * @param bool $doanything
+ * @return bool
+ */
+function has_all_capabilities(array $capabilities, context $context, $user = null, $doanything = true) {
+}
+
+/**
+ * @param string $capability
+ * @param context $context
+ * @param int $userid
+ * @param bool $doanything
+ * @param string $errormessage
+ * @param string $stringfile
+ * @return void|never
+ */
+function require_capability(
+    $capability,
+    context $context,
+    $userid = null,
+    $doanything = true,
+    $errormessage = 'nopermissions',
+    $stringfile = '',
+) {
+}
+
+/**
+ * @param string[] $capabilities
+ * @param context $context
+ * @param int $userid
+ * @param bool $doanything
+ * @param string $errormessage
+ * @param string $stringfile
+ * @return void|never
+ */
+function require_all_capabilities(
+    array $capabilities,
+    context $context,
+    $userid = null,
+    $doanything = true,
+    $errormessage = 'nopermissions',
+    $stringfile = '',
+): void {
+}
+
+/**
+ * @param context $context
+ * @param string|string[] $capability
+ * @param string $fields
+ * @param string $sort
+ * @param int $limitfrom
+ * @param int $limitnum
+ * @param int|string|(int|string)[] $groups
+ * @param int|string|(int|string)[] $exceptions
+ * @param bool $notuseddoanything
+ * @param bool $notusedview
+ * @param bool $useviewallgroups
+ * @return stdClass[]
+ */
+function get_users_by_capability(
+    context $context,
+    $capability,
+    $fields = '',
+    $sort = '',
+    $limitfrom = '',
+    $limitnum = '',
+    $groups = '',
+    $exceptions = '',
+    $notuseddoanything = null,
+    $notusedview = null,
+    $useviewallgroups = false,
+) {
+}

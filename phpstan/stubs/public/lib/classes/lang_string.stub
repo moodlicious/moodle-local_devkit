@@ -1,0 +1,28 @@
+<?php
+
+namespace core;
+
+use core\exception\coding_exception;
+use Stringable;
+use Throwable;
+
+/**
+ * @phpstan-type get_string_a_value string|object|int|float|bool|Stringable
+ * @phpstan-type get_string_a get_string_a_value|array<non-empty-string, get_string_a_value>
+ */
+class lang_string {
+    /**
+     * @param string $identifier
+     * @param string|null $component
+     * @param get_string_a $a
+     * @param string|null $lang
+     * @throws coding_exception&Throwable
+     */
+    public function __construct(
+        string $identifier,
+        ?string $component = '',
+        mixed $a = null,
+        ?string $lang = null,
+    ) {
+    }
+}

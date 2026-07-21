@@ -1,5 +1,8 @@
 <?php
 
+use core\lang_string;
+use Throwable;
+
 // Only params not marked as deprecated will be typed.
 define('PARAM_ALPHA', 'alpha');
 define('PARAM_ALPHAEXT', 'alphaext');
@@ -82,7 +85,7 @@ define('PARAM_PLUGIN', 'plugin');
  *     $type is PARAM_PLUGIN            ? string :
  *     mixed
  * )
- * @throws coding_exception&\Throwable
+ * @throws coding_exception&Throwable
  */
 function required_param($parname, $type) {
 }
@@ -130,7 +133,7 @@ function required_param($parname, $type) {
  *     $type is PARAM_PLUGIN            ? string :
  *     mixed
  * )[]
- * @throws coding_exception&\Throwable
+ * @throws coding_exception&Throwable
  */
 function required_param_array($parname, $type) {
 }
@@ -180,7 +183,7 @@ function required_param_array($parname, $type) {
  *     $type is PARAM_PLUGIN            ? string :
  *     mixed
  * )
- * @throws coding_exception&\Throwable
+ * @throws coding_exception&Throwable
  */
 function optional_param($parname, $default, $type) {
 }
@@ -230,7 +233,7 @@ function optional_param($parname, $default, $type) {
  *     $type is PARAM_PLUGIN            ? string :
  *     mixed
  * )[]
- * @throws coding_exception&\Throwable
+ * @throws coding_exception&Throwable
  */
 function optional_param_array($parname, $default, $type) {
 }
@@ -265,7 +268,7 @@ function unset_all_config_for_plugin($plugin) {
  * @param string|null $plugin
  * @param string|null $name
  * @return ($name is null ? stdClass : string|false)
- * @throws dml_exception&\Throwable
+ * @throws dml_exception&Throwable
  */
 function get_config($plugin, $name = null) {
 }
@@ -282,7 +285,7 @@ function get_file_storage($reset = false) {
  * @param string|int|bool|null $value
  * @param stdClass|int|null $user
  * @return true
- * @throws coding_exception&\Throwable
+ * @throws coding_exception&Throwable
  */
 function set_user_preference($name, $value, $user = null) {
 }
@@ -299,7 +302,7 @@ function set_user_preferences(array $prefarray, $user = null) {
  * @param string $name
  * @param stdClass|int|null $user
  * @return true
- * @throws coding_exception&\Throwable
+ * @throws coding_exception&Throwable
  */
 function unset_user_preference($name, $user = null) {
 }
@@ -310,7 +313,7 @@ function unset_user_preference($name, $user = null) {
  * @param T $default
  * @param stdClass|int|null $user
  * @return ($name is null ? array<string, string> : string|T|null)
- * @throws coding_exception&\Throwable
+ * @throws coding_exception&Throwable
  */
 function get_user_preferences($name = null, $default = null, $user = null) {
 }
@@ -321,4 +324,35 @@ function get_user_preferences($name = null, $default = null, $user = null) {
  * @return ($user is object ? string : '')
  */
 function fullname($user, $override = false) {
+}
+
+/**
+ * @phpstan-import-type get_string_a from lang_string
+ * @param non-empty-string $identifier
+ * @param string $component
+ * @param (
+ *     string|object|int|float|bool|Stringable
+ *     |array<
+ *         string,
+ *         string|object|int|float|bool|Stringable
+ *      >
+ * ) $a
+ * @param bool $lazyload
+ * @return ($lazyload is false ? string : lang_string)
+ * @throws coding_exception&Throwable
+ */
+function get_string($identifier, $component = '', $a = null, $lazyload = false) {
+}
+
+/**
+ * @param string[] $array
+ * @param string $component
+ * @return stdClass
+ */
+function get_strings($array, $component = '') {
+    $string = new stdClass();
+    foreach ($array as $item) {
+        $string->$item = get_string($item, $component);
+    }
+    return $string;
 }

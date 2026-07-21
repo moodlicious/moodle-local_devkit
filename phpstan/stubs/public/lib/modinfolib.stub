@@ -1,6 +1,7 @@
 <?php
 
 use core\exception\moodle_exception;
+use core_course\cm_info;
 use Throwable;
 
 /**

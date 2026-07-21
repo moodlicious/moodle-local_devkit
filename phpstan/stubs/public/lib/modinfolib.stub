@@ -1,0 +1,11 @@
+<?php
+
+/**
+ * @param int|stdClass $courseorid
+ * @param int $userid
+ * @param bool $resetonly
+ * @return ($resetonly is false ? \core_course\modinfo : null)
+ * @throws moodle_exception&Throwable
+ */
+function get_fast_modinfo($courseorid, $userid = 0, $resetonly = false) {
+}

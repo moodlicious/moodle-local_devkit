@@ -1,0 +1,5 @@
+<?php
+
+define('NOGROUPS', 0);
+define('SEPARATEGROUPS', 1);
+define('VISIBLEGROUPS', 2);

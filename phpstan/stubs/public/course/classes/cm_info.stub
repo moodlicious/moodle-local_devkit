@@ -1,0 +1,62 @@
+<?php
+
+namespace core_course;
+
+use core\context\module;
+use core\url;
+use IteratorAggregate;
+
+/**
+ * @property-read int $id
+ * @property-read int $instance
+ * @property-read int $course
+ * @property-read string $idnumber
+ * @property-read int $added
+ * @property-read int $visible
+ * @property-read int $visibleoncoursepage
+ * @property-read int $visibleold
+ * @property-read int $groupmode
+ * @property-read int $groupingid
+ * @property-read bool $coursegroupmodeforce
+ * @property-read NOGROUPS|SEPARATEGROUPS|VISIBLEGROUPS $coursegroupmode
+ * @property-read NOGROUPS|SEPARATEGROUPS|VISIBLEGROUPS $effectivegroupmode
+ * @property-read int $indent
+ * @property-read COMPLETION_TRACKING_NONE|COMPLETION_TRACKING_MANUAL|COMPLETION_TRACKING_AUTOMATIC $completion
+ * @property-read mixed $completiongradeitemnumber
+ * @property-read 1|0 $completionview
+ * @property-read int $completionexpected
+ * @property-read string|null $availability
+ * @property-read 0|1 $showdescription
+ * @property-read string $icon
+ * @property-read string $iconcomponent
+ * @property-read string $modname
+ * @property-read int $module
+ * @property-read string $name Na
+ * @property-read int $sectionnum
+ * @property-read int $sectionid
+ * @property-read mixed[] $conditionscompletion
+ * @property-read mixed[] $conditionsgrade
+ * @property-read mixed[] $conditionsfield
+ * @property-read bool $available
+ * @property-read string $availableinfo
+ * @property-read bool $uservisible
+ * @property-read module $context
+ * @property-read string $modfullname
+ * @property-read string $modplural
+ * @property-read string $content
+ * @property-read url|null $url
+ * @property-read url|null $navigationurl
+ * @property-read string $extraclasses
+ * @property-read string $onclick
+ * @property-read mixed $customdata
+ * @property-read string $afterlink
+ * @property-read string $afterediticons
+ * @property-read bool $deletioninprogress
+ * @property-read bool $downloadcontent
+ * @property-read bool $lang
+ * @property-read int|null $enableaitools
+ * @property-read string|null $enabledaiactions
+ * @implements IteratorAggregate<string, mixed>
+ */
+class cm_info implements IteratorAggregate {
+}

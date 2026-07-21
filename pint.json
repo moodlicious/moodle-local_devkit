@@ -90,6 +90,15 @@
         "ordered_interfaces": {
             "case_sensitive": false
         },
+        "phpdoc_add_missing_param_annotation": true,
+        "phpdoc_order": true,
+        "phpdoc_param_order": true,
+        "phpdoc_return_self_reference": true,
+        "phpdoc_scalar": true,
+        "phpdoc_single_line_var_spacing": true,
+        "phpdoc_trim": true,
+        "phpdoc_trim_consecutive_blank_line_separation": true,
+        "phpdoc_var_without_name": true,
         "single_blank_line_at_eof": true,
         "single_line_comment_spacing": true,
         "switch_case_semicolon_to_colon": true,

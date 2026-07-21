@@ -315,7 +315,7 @@ class debugbar extends BaseDebugBar {
     /**
      * Sends the data through the HTTP headers
      *
-     * @param integer $maxHeaderLength
+     * @param int $maxHeaderLength
      *
      * @return $this
      */

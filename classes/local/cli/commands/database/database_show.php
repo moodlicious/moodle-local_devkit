@@ -36,8 +36,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class database_show extends Command {
     /**
      * Invoke
-     * @param string|null $component
      * @param SymfonyStyle $io
+     * @param string|null $component
      * @return int
      */
     public function __invoke(

@@ -52,6 +52,10 @@ class phpstan extends base {
     public const CONFIG_KEY_RULE_LEVEL = 'rule_level';
     /** @var string */
     public const CONFIG_KEY_RESULT_CACHE_MODE = 'result_cache_mode';
+    /** @var string */
+    public const CONFIG_KEY_STRICT_RULES = 'struct_rules';
+    /** @var string */
+    public const CONFIG_KEY_STRICT_RULES_DEFAULT = '1';
 
     #[\Override]
     public static function get_include_patterns(): array {
@@ -91,6 +95,13 @@ class phpstan extends base {
         }
 
         return $config;
+    }
+
+    /**
+     * Get if per component result cache should be used.
+     */
+    public static function get_strict_rules_enabled(): bool {
+        return (bool) (self::get_config_value(self::CONFIG_KEY_STRICT_RULES) ?? self::CONFIG_KEY_STRICT_RULES_DEFAULT);
     }
 
     #[\Override]
@@ -238,8 +249,12 @@ class phpstan extends base {
         $moodleroot = utils::get_moodle_root_dir();
         $rulelevel = self::get_rule_level();
 
+        $requiredfiles = [$moodleneonpath, $deprecationrules, $devkitbootstrap];
+        if (self::get_strict_rules_enabled()) {
+            $requiredfiles[] = $strictrules;
+        }
         $missingfiles = array_filter(
-            [$moodleneonpath, $deprecationrules, $strictrules, $devkitbootstrap],
+            $requiredfiles,
             fn($file) => $file === false,
         );
         if (count($missingfiles) > 0) {
@@ -249,7 +264,7 @@ class phpstan extends base {
         }
 
         $config = [
-            'includes' => [$moodleneonpath, $deprecationrules, $strictrules],
+            'includes' => [$moodleneonpath, $deprecationrules],
             'parameters' => [
                 'level' => $rulelevel,
                 'paths' => [$moodleroot],
@@ -263,6 +278,10 @@ class phpstan extends base {
                 'bootstrapFiles' => [$devkitbootstrap],
             ],
         ];
+
+        if (self::get_strict_rules_enabled()) {
+            $config['includes'][] = $strictrules;
+        }
 
         if ($usetempdir === true) {
             $config['parameters']['tmpDir'] = 'tmp';
@@ -397,5 +416,8 @@ class phpstan extends base {
         ];
         $form->addElement('select', self::CONFIG_KEY_RESULT_CACHE_MODE, 'Result cache mode', $modes);
         $form->setDefault(self::CONFIG_KEY_RESULT_CACHE_MODE, self::RESULT_CACHE_PER_COMPONENT);
+
+        $form->addElement('selectyesno', self::CONFIG_KEY_STRICT_RULES, 'Use strict rules');
+        $form->setDefault(self::CONFIG_KEY_STRICT_RULES, self::CONFIG_KEY_STRICT_RULES_DEFAULT);
     }
 }

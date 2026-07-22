@@ -47,7 +47,7 @@ class lint {
     public static function list_linters(): object {
         $linterclasses = linter::get_linters_classnames();
         $info = array_map(
-            function (/** @var class-string<base> $linter */ $linter) {
+            function (string /** @var class-string<base> $linter */ $linter): array {
                 $entry = [
                     'name' => $linter::get_name(),
                     'description' => $linter::get_description(),

@@ -41,7 +41,7 @@ class env {
             'ostype',
             'dbtype',
         ];
-        $overviewitems = array_map(function (string $key) {
+        $overviewitems = array_map(function (string $key): array {
             global $CFG;
             $value = property_exists($CFG, $key) ? $CFG->$key : '';
             return [$key => $value];

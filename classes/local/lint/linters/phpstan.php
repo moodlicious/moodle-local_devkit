@@ -125,10 +125,9 @@ class phpstan extends base {
 
     /**
      * Executes phpstan on a given path.
-     * @param string $path
      * @return file[]
      */
-    private function execute($path): array {
+    private function execute(string $path): array {
         $binary = self::get_phpstan_binary_path();
         $config = $this->get_config_neon($path);
         $process = new Process([

@@ -38,7 +38,7 @@ class database {
             $data = database_show::get_data($component);
             return (object) ['data' => $data];
         } catch (Throwable $e) {
-            throw new ToolCallException($e->getMessage());
+            throw new ToolCallException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
@@ -51,7 +51,7 @@ class database {
             $data = database_table::get_data($tablename);
             return (object) ['data' => $data];
         } catch (Throwable $e) {
-            throw new ToolCallException($e->getMessage());
+            throw new ToolCallException($e->getMessage(), $e->getCode(), $e);
         }
     }
 }

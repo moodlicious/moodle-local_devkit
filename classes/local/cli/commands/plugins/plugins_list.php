@@ -61,7 +61,7 @@ class plugins_list extends Command {
             ['Type', 'Name', 'Component', 'Version', 'Release', 'Location'],
             array_filter(
                 array_map(
-                    fn($result): array => [
+                    fn(array $result): array => [
                         $result['type'],
                         $result['name'],
                         $result['component'],

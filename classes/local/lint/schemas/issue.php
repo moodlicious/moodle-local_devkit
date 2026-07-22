@@ -62,7 +62,6 @@ class issue implements JsonSerializable {
 
     /**
      * Factory method to create from a linter result object.
-     * @return self|null
      */
     public static function from_object(object $object): ?self {
         // To be overridden.

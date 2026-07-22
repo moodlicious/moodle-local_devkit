@@ -104,7 +104,6 @@ class linter_config extends dynamic_form {
             'classname' => $linter,
         ];
         $this->set_data($data);
-        return;
     }
 
     #[\Override]

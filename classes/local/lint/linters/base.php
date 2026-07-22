@@ -193,7 +193,7 @@ abstract class base {
 
         $paths = array_column(thirdpartylibs::list(), 'location');
 
-        $paths = array_map(function (string $path) {
+        $paths = array_map(function (string $path): string {
             if (!is_dir($path)) {
                 return $path;
             }
@@ -321,10 +321,9 @@ abstract class base {
 
     /**
      * Checks if a given path matches some patterns.
-     * @param string $path
      * @param string[] $patterns
      */
-    private function path_match_patterns($path, $patterns): bool {
+    private function path_match_patterns(string $path, array $patterns): bool {
         // Normalise path to use forward slashes for consistency with glob patterns.
         $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
 
@@ -423,8 +422,6 @@ abstract class base {
         foreach ($patterns as $togglename => $name) {
             self::define_config_textarea($form, $name, $togglename);
         }
-
-        return;
     }
 
     /**

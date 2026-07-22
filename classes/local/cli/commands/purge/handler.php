@@ -117,11 +117,9 @@ class handler {
         $app->addCommand($command);
 
         // Make commands for running each individual cache.
-        foreach ($caches as $cachekey => $cachename) {
+        foreach (array_keys($caches) as $cachekey) {
             $command = self::build_command("purge:$cachekey", [$cachekey]);
             $app->addCommand($command);
         }
-
-        return;
     }
 }

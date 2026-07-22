@@ -55,7 +55,7 @@ class debug implements IteratorAggregate {
      * @return self<TKey, TValue>
      */
     public function dump(): self {
-        return $this->payload_each(function ($item, $key): void {
+        return $this->payload_each(function ($item, int|string $key): void {
             $this->payload_print_key($key);
             var_dump($item);
         });
@@ -77,7 +77,7 @@ class debug implements IteratorAggregate {
         if ($pretty) {
             $flags |= JSON_PRETTY_PRINT;
         }
-        return $this->payload_each(function ($item, $key) use ($flags): void {
+        return $this->payload_each(function ($item, int|string $key) use ($flags): void {
             $this->payload_print_key($key);
             echo json_encode($item, $flags), PHP_EOL;
         });
@@ -95,7 +95,7 @@ class debug implements IteratorAggregate {
      * @return self<TKey, TValue>
      */
     public function export(): self {
-        return $this->payload_each(function ($item, $key): void {
+        return $this->payload_each(function ($item, int|string $key): void {
             $this->payload_print_key($key);
             var_export($item);
             echo PHP_EOL;

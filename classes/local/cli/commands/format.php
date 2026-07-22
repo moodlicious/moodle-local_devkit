@@ -108,7 +108,7 @@ class format extends Command {
                     ->in($path)
                     ->ignoreVCSIgnored(true);
 
-                $finder->filter(function (\SplFileInfo $file) {
+                $finder->filter(function (\SplFileInfo $file): bool {
                     $realpath = $file->getRealPath();
                     if ($realpath === false) {
                         return false;

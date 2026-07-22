@@ -260,7 +260,5 @@ class handler {
             $command = self::build_command("lint:$name", [$linter]);
             $app->addCommand($command);
         }
-
-        return;
     }
 }

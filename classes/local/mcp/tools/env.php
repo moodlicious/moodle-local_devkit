@@ -35,7 +35,7 @@ class env {
             $data = \local_devkit\local\api\env::overview();
             return (object) ['data' => $data];
         } catch (Throwable $e) {
-            throw new ToolCallException($e->getMessage());
+            throw new ToolCallException($e->getMessage(), $e->getCode(), $e);
         }
     }
 }

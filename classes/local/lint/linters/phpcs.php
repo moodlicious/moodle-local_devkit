@@ -85,10 +85,9 @@ class phpcs extends base {
 
     /**
      * Executes phpcs on a given path.
-     * @param string $path
      * @return file[]
      */
-    private function execute_phpcs($path): array {
+    private function execute_phpcs(string $path): array {
         $excludepatterns = self::get_exclude_patterns();
         $excludedsniffs = self::get_excluded_sniffs();
         $ignore = count($excludepatterns) > 0 ? ['--ignore=' . implode(',', $excludepatterns)] : [];

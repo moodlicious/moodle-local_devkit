@@ -45,7 +45,7 @@ class linter {
 
         $linters = array_filter(
             $linters,
-            function ($linter) use ($linternames) {
+            function ($linter) use ($linternames): bool {
                 if (!is_subclass_of($linter, base::class)) {
                     return false;
                 }
@@ -69,7 +69,7 @@ class linter {
      */
     public static function get_linters_info(array $linters): array {
         return array_values(array_map(
-            function (/** @var class-string<base> $linter */ $linter) {
+            function (string /** @var class-string<base> $linter */ $linter) {
                 $name = $linter::get_name();
                 $description = $linter::get_description();
                 return $description !== null ? "$name: $description" : $name;

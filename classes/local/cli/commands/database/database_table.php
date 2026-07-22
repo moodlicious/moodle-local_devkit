@@ -80,9 +80,8 @@ class database_table extends Command {
 
     /**
      * Processes json for output.
-     * @return database_schema\table
      */
-    public static function process_json(database_schema\table $data) {
+    public static function process_json(database_schema\table $data): database_schema\table {
         return $data;
     }
 }

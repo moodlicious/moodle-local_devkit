@@ -178,7 +178,7 @@ class lang extends base {
         $manager = $usestringmanager ? get_string_manager() : null;
         foreach ($langdirdata as $langdir => $components) {
             foreach ($components as $component => $locales) {
-                foreach ($locales as $locale => $strings) {
+                foreach (array_keys($locales) as $locale) {
                     $langdirdata[$langdir][$component][$locale] = $manager !== null
                         ? $manager->load_component_strings($component, $locale)
                         : self::load_component_strings(

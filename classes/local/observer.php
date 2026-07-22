@@ -49,6 +49,5 @@ class observer {
         ];
 
         $collector->addMeasure($label, params: $params);
-        return;
     }
 }

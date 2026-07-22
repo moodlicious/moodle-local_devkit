@@ -136,7 +136,7 @@ class mustachelint extends base {
         $comments = $matches[0];
 
         return array_filter(
-            array_map(function (string $comment) {
+            array_map(function (string $comment): string|null {
                 $comment = preg_replace('/^\{\{!\R?/', '', $comment); // Remove opening line.
                 if ($comment !== null && $comment !== '') {
                     $comment = preg_replace('/^\}\}$/m', '', $comment);   // Remove closing line.

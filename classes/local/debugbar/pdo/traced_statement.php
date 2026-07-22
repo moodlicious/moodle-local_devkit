@@ -57,7 +57,7 @@ class traced_statement extends TracedStatement {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         $lastframe = array_pop($backtrace);
 
-        $backtrace = array_filter($backtrace, function ($frame) use ($blacklistedclasses) {
+        $backtrace = array_filter($backtrace, function (array $frame) use ($blacklistedclasses): bool {
             if (!isset($frame['class'])) {
                 return true;
             }
@@ -73,7 +73,6 @@ class traced_statement extends TracedStatement {
 
         $this->backtrace = $backtrace;
         $this->sql = "$this->sql\n" . $this->format_backtrace($backtrace);
-        return;
     }
     // phpcs:enable moodle.NamingConventions.ValidFunctionName.LowercaseMethod
     /**

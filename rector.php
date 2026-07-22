@@ -24,11 +24,8 @@ return RectorConfig::configure()
         __DIR__ . '/lang',
         __DIR__ . '/lib',
         __DIR__ . '/tests',
-        __DIR__ . '/phpstan-bootstrap.php',
-        __DIR__ . '/rector.php',
-        __DIR__ . '/settings.php',
-        __DIR__ . '/version.php',
     ])
+    ->withRootFiles()
     ->withSkip([
         __DIR__ . '/tests/fixtures',
     ])

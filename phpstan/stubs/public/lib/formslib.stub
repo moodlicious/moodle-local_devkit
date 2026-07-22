@@ -24,6 +24,57 @@ abstract class moodleform {
     }
 
     /**
+     * @param string $elname
+     * @return string|false
+     */
+    public function save_temp_file($elname) {
+    }
+
+    /**
+     * @param string $elname
+     * @return stored_file[]|false|null
+     */
+    protected function get_draft_files($elname) {
+    }
+
+    /**
+     * @param string $elname
+     * @param int $newcontextid
+     * @param string $newcomponent
+     * @param string $newfilearea
+     * @param int $newitemid
+     * @param string $newfilepath
+     * @param string $newfilename
+     * @param bool $overwrite
+     * @param int $newuserid
+     * @return stored_file|false
+     */
+    public function save_stored_file(
+        $elname,
+        $newcontextid,
+        $newcomponent,
+        $newfilearea,
+        $newitemid,
+        $newfilepath = '/',
+        $newfilename = null,
+        $overwrite = false,
+        $newuserid = null,
+    ) {
+    }
+
+    /**
+     * @param string $elname
+     * @return string|false
+     */
+    public function get_file_content($elname) {
+    }
+
+    /**
+     * @return void
+     */
+    abstract protected function definition();
+
+    /**
      * @param array<string, mixed> $data
      * @param array<string, string> $files
      * @return array<string, string>

@@ -1,0 +1,14 @@
+<?php
+
+use core\exception\coding_exception;
+use Throwable;
+
+abstract class moodleform_mod extends moodleform {
+    /**
+     * @param string|null $customlabel
+     * @return void
+     * @throws coding_exception&Throwable
+     */
+    protected function standard_intro_elements($customlabel = null) {
+    }
+}

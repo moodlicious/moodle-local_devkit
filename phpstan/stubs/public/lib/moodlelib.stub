@@ -425,7 +425,7 @@ function fullname($user, $override = false) {
 
 /**
  * @phpstan-import-type get_string_a from lang_string
- * @param non-empty-string $identifier
+ * @param string $identifier
  * @param string $component
  * @param (
  *     string|object|int|float|bool|Stringable

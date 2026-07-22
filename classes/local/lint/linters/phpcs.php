@@ -22,6 +22,8 @@ use local_devkit\local\lint\schemas\issue\phpcs as phpcs_issue;
 use MoodleQuickForm;
 use Symfony\Component\Process\Process;
 
+use function count;
+
 /**
  * The 'php -l' linter.
  *

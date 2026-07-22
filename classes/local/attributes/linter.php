@@ -31,7 +31,6 @@ use Attribute;
 class linter {
     /**
      * Constructor.
-     * @param string $description
      */
     public function __construct(
         /** @var string */

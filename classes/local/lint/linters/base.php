@@ -33,6 +33,7 @@ use Symfony\Component\Console\Helper\ProgressIndicator;
 
 use function array_key_exists;
 use function count;
+use function is_object;
 
 /**
  * The abstract base linter.
@@ -485,7 +486,8 @@ abstract class base {
         if ($configstring === '' || $configstring === false) {
             return null;
         }
-        return json_decode($configstring, false);
+        $config = json_decode($configstring, false);
+        return is_object($config) ? $config : null;
     }
 
     /**

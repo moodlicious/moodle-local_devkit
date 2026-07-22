@@ -189,7 +189,7 @@ class phpstan extends base {
             $issues = [];
             $messages = $lintedfile->messages;
 
-            [$path, $context] = self::strip_context_suffix($path);
+            [$filepath, $context] = self::strip_context_suffix($filepath);
 
             foreach ($messages as $message) {
                 $issue = phpstan_issue::from_object($message);

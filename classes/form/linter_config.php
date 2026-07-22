@@ -21,6 +21,8 @@ use core\context\system;
 use core\url;
 use core_form\dynamic_form;
 
+use function is_string;
+
 /**
  * Class linter_config
  *
@@ -36,7 +38,7 @@ class linter_config extends dynamic_form {
     public function get_linter_classname() {
         /** @var class-string<\local_devkit\local\lint\linters\base>|null $classname */
         $classname = $this->optional_param('classname', null, PARAM_TEXT);
-        if ($classname !== null) {
+        if (is_string($classname) && $classname !== '') {
             return $classname;
         }
 
@@ -44,7 +46,7 @@ class linter_config extends dynamic_form {
         if ($data !== null && property_exists($data, 'classname')) {
             /** @var class-string<\local_devkit\local\lint\linters\base>|null $classname */
             $classname = $data->classname;
-            if ($classname !== null) {
+            if (is_string($classname) && $classname !== '') {
                 return $classname;
             }
         }

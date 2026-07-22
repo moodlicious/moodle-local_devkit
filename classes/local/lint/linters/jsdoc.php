@@ -56,14 +56,14 @@ class jsdoc extends base {
             return [self::create_file_with_fatal_issue($filepath, "Unable to read file.")];
         }
 
-        $modulename = self::resolve_module_name($filepath);
+        $modulename = $this->resolve_module_name($filepath);
         if ($modulename === null) {
             return [self::create_file_with_fatal_issue($filepath, "Unable to resolve module name from file path.")];
         }
 
         $issues = [
-            ...self::get_issues_for_boilerplate($content),
-            ...self::get_issues_for_docblock($content, $modulename),
+            ...$this->get_issues_for_boilerplate($content),
+            ...$this->get_issues_for_docblock($content, $modulename),
         ];
 
         return [new file($filepath, $issues)];
@@ -72,7 +72,7 @@ class jsdoc extends base {
     /**
      * Resolve the expected module name from a file path.
      */
-    private static function resolve_module_name(string $filepath): ?string {
+    private function resolve_module_name(string $filepath): ?string {
         $relative = utils::get_path_relative_to_moodle_root($filepath);
         $component = component::resolve_component_from_path($relative);
         if ($component === null) {
@@ -98,7 +98,7 @@ class jsdoc extends base {
      * Check for the presence of GPL boilerplate in the file.
      * @return issue[]
      */
-    private static function get_issues_for_boilerplate(string $content): array {
+    private function get_issues_for_boilerplate(string $content): array {
         if (boilerplate::check_has_boilerplate($content, 'js')) {
             return [];
         }
@@ -117,7 +117,7 @@ class jsdoc extends base {
      * Check for the presence and correctness of the docblock.
      * @return issue[]
      */
-    private static function get_issues_for_docblock(string $content, string $expectedmodule): array {
+    private function get_issues_for_docblock(string $content, string $expectedmodule): array {
         preg_match_all('/\/\*\*[\s\S]*?\*\//', $content, $matches);
         $docblocks = $matches[0];
 

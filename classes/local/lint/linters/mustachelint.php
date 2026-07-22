@@ -70,11 +70,11 @@ class mustachelint extends base {
         }
 
         $issues = [
-            ...self::get_issues_for_boilerplate($content),
+            ...$this->get_issues_for_boilerplate($content),
         ];
 
-        $comments = self::extract_comments_from_template($content);
-        $documentation = self::get_documentation_comment($comments);
+        $comments = $this->extract_comments_from_template($content);
+        $documentation = $this->get_documentation_comment($comments);
 
         $issues = [
             ...$issues,
@@ -131,7 +131,7 @@ class mustachelint extends base {
      * Match any mustache comments and return them.
      * @return string[]
      */
-    private static function extract_comments_from_template(string $content): array {
+    private function extract_comments_from_template(string $content): array {
         preg_match_all('/^\{\{!$[\s\S]*?^\}\}$/m', $content, $matches);
         $comments = $matches[0];
 
@@ -151,7 +151,7 @@ class mustachelint extends base {
      * Check for the presence of GPL boilerplate in the file.
      * @return issue[]
      */
-    private static function get_issues_for_boilerplate(string $content): array {
+    private function get_issues_for_boilerplate(string $content): array {
         if (boilerplate::check_has_boilerplate($content, 'mustache')) {
             return [];
         }
@@ -170,7 +170,7 @@ class mustachelint extends base {
      * Finds the documentation comment.
      * @param string[] $comments
      */
-    private static function get_documentation_comment(array $comments): ?string {
+    private function get_documentation_comment(array $comments): ?string {
         foreach ($comments as $comment) {
             $trimmed = trim($comment);
 

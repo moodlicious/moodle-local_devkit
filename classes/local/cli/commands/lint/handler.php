@@ -237,8 +237,8 @@ class handler {
             ->addOption(
                 'rules',
                 mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                default: [],
                 description: 'Filter by rule name (case-insensitive substring, or /pattern/flags for regex)',
+                default: [],
             )
             ->addOption('linters', mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, default: $linternames)
             ->setCode(self::invoke(...));

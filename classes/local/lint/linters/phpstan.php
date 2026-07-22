@@ -184,7 +184,7 @@ class phpstan extends base {
             $issues = [];
             $messages = $lintedfile->messages;
 
-            [$filepath, $context] = self::strip_context_suffix($filepath);
+            [$filepath, $context] = $this->strip_context_suffix($filepath);
 
             foreach ($messages as $message) {
                 $issue = phpstan_issue::from_object($message);
@@ -209,7 +209,7 @@ class phpstan extends base {
      * @param string $path The raw path from PHPStan's JSON output.
      * @return array{0: string, 1: string|null} The clean path and the context string, or null if no suffix.
      */
-    private static function strip_context_suffix(string $path): array {
+    private function strip_context_suffix(string $path): array {
         if (preg_match('/^(.+)\s+\(in context of class (.+)\)$/', $path, $matches) === 1) {
             return [$matches[1], "In context of class {$matches[2]}"];
         }

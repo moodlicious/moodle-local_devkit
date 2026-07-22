@@ -313,8 +313,8 @@ abstract class base {
             issue::simple(
                 message: $message,
                 rule: 'devkit-internal-fatal',
-                severity: severity::fatal,
                 source: self::get_name(),
+                severity: severity::fatal,
             ),
         ]);
     }

@@ -359,12 +359,12 @@ abstract class base {
      * @return bool
      */
     public function can_lint_file(string $filepath): bool {
-        $includematch = $this->path_match_patterns($filepath, self::get_include_patterns());
+        $includematch = $this->path_match_patterns($filepath, static::get_include_patterns());
         if (!$includematch) {
             return false;
         }
 
-        $excludematch = $this->path_match_patterns($filepath, self::get_exclude_patterns());
+        $excludematch = $this->path_match_patterns($filepath, static::get_exclude_patterns());
         if ($excludematch) {
             return false;
         }

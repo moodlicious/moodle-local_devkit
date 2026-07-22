@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @phpstan-type debug_level DEBUG_NONE|DEBUG_MINIMAL|DEBUG_NORMAL|DEBUG_ALL|DEBUG_DEVELOPER
+ */
+abstract class advanced_testcase extends base_testcase {
+    /**
+     * @param null|string $debugmessage
+     * @param null|debug_level $debuglevel
+     * @param string $message
+     * @return void
+     */
+    public function assertDebuggingCalled($debugmessage = null, $debuglevel = null, $message = '') {
+    }
+}

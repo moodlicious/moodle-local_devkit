@@ -6,7 +6,6 @@ declare(strict_types=1);
 use Rector\CodeQuality\Rector\If_\ShortenElseIfRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
-use Rector\TypeDeclaration\Rector\StmtsAwareInterface\SafeDeclareStrictTypesRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -34,7 +33,6 @@ return RectorConfig::configure()
     ->withCodeQualityLevel(86)
     ->withSkip([
         RemoveUselessVarTagRector::class,
-        SafeDeclareStrictTypesRector::class,
         ShortenElseIfRector::class,
     ])
 ;

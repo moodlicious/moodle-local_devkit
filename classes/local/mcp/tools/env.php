@@ -29,7 +29,6 @@ use Throwable;
 class env {
     /**
      * Get an overview of the current Moodle environment.
-     * @return object
      */
     public static function env_overview(): object {
         try {

@@ -67,7 +67,6 @@ class phpstan extends base {
 
     /**
      * Get the rule level to be analysed.
-     * @return int
      */
     public static function get_rule_level(): int {
         $config = self::get_config_value(self::CONFIG_KEY_RULE_LEVEL);
@@ -85,7 +84,6 @@ class phpstan extends base {
 
     /**
      * Get if per component result cache should be used.
-     * @return string
      */
     public static function get_result_cache_mode(): string {
         $config = self::get_config_value(self::CONFIG_KEY_RESULT_CACHE_MODE);
@@ -158,11 +156,9 @@ class phpstan extends base {
 
     /**
      * Parses the phpstan JSON result.
-     * @param string $output
-     * @param string $path
      * @return file[]
      */
-    private function parse_json(string $output, string $path) {
+    private function parse_json(string $output, string $path): array {
         $results = [];
         $jsonoutput = json_decode($output);
         if ($jsonoutput === null) {
@@ -223,7 +219,6 @@ class phpstan extends base {
 
     /**
      * Generates a temporary config neon for linting.
-     * @return string
      */
     public function generate_temp_config_neon(string $path): string {
         global $CFG;
@@ -255,7 +250,7 @@ class phpstan extends base {
         }
         $missingfiles = array_filter(
             $requiredfiles,
-            fn($file) => $file === false,
+            fn($file): bool => $file === false,
         );
         if (count($missingfiles) > 0) {
             throw new \RuntimeException(
@@ -328,8 +323,6 @@ class phpstan extends base {
 
     /**
      * Generate a temp directory for the current run.
-     * @param string $path
-     * @return string
      */
     public function generate_temp_dir(string $path): string {
         global $CFG;
@@ -351,7 +344,6 @@ class phpstan extends base {
     /**
      * Walks up the file path until we find a phpstan.neon.
      * If none found, then generate one.
-     * @return string
      */
     public function get_config_neon(string $path): string {
         $filename = 'phpstan.neon';
@@ -381,7 +373,6 @@ class phpstan extends base {
 
     /**
      * Gets the phpstan binary path.
-     * @return string|null
      */
     public static function get_phpstan_binary_path(): ?string {
         global $CFG;

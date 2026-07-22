@@ -36,7 +36,6 @@ class database_format extends Command {
      * Invoke
      * @param string $component The component name of the plugin.
      * @param SymfonyStyle $io The input/output style interface.
-     * @return int
      */
     public function __invoke(
         #[Argument('The component name of the plugin.')] string $component,

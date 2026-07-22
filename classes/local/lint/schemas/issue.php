@@ -40,12 +40,6 @@ use local_devkit\local\lint\severity;
 class issue implements JsonSerializable {
     /**
      * Constructor.
-     * @param int $line
-     * @param int $column
-     * @param string $message
-     * @param string|null $rule
-     * @param string $source
-     * @param severity $severity
      * @param string[] $suggestions
      */
     public function __construct(
@@ -68,7 +62,6 @@ class issue implements JsonSerializable {
 
     /**
      * Factory method to create from a linter result object.
-     * @param object $object
      * @return self|null
      */
     public static function from_object(object $object): ?self {
@@ -78,10 +71,6 @@ class issue implements JsonSerializable {
 
     /**
      * Utility function to get an object's property value, with fallback value.
-     * @param object $object
-     * @param string $property
-     * @param mixed $default
-     * @return mixed
      */
     protected static function object_property(object $object, string $property, mixed $default = null): mixed {
         if (!property_exists($object, $property)) {
@@ -95,11 +84,6 @@ class issue implements JsonSerializable {
 
     /**
      * Helper function to create a simple issue.
-     * @param string $message
-     * @param string|null $rule
-     * @param string $source
-     * @param severity $severity
-     * @return self
      */
     public static function simple(
         string $message,

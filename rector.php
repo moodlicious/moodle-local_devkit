@@ -24,6 +24,9 @@ return RectorConfig::configure()
         __DIR__ . '/tests/fixtures',
     ])
     ->withPhpSets()
-    ->withTypeCoverageLevel(0)
-    ->withDeadCodeLevel(0)
-    ->withCodeQualityLevel(0);
+    ->withImportNames(importShortClasses: false)
+    ->withTypeCoverageLevel(25)
+    ->withTypeCoverageDocblockLevel(25)
+    ->withDeadCodeLevel(25)
+    ->withCodeQualityLevel(25)
+;

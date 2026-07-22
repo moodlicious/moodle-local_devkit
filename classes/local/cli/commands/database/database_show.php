@@ -36,9 +36,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class database_show extends Command {
     /**
      * Invoke
-     * @param string|null $component
-     * @param SymfonyStyle $io
-     * @return int
      */
     public function __invoke(
         SymfonyStyle $io,
@@ -64,11 +61,10 @@ class database_show extends Command {
 
     /**
      * Helper function to get the data for this command.
-     * @param string|null $component
      * @throws Exception
      * @return database_schema[]
      */
-    public static function get_data(?string $component) {
+    public static function get_data(?string $component): array {
         $plugintables = [];
         if ($component !== null) {
             $plugintable = database::list_plugin_tables($component);
@@ -85,9 +81,7 @@ class database_show extends Command {
 
     /**
      * Displays tables as a table.
-     * @param SymfonyStyle $io
      * @param database_schema[] $data
-     * @return void
      */
     public static function display_table(SymfonyStyle $io, array $data): void {
         foreach ($data as $database) {
@@ -99,7 +93,7 @@ class database_show extends Command {
             $io->text('Tables');
             $io->listing(
                 array_map(
-                    fn(/** @var DatabaseTable $table */ $table) => "{$table->name}: {$table->comment}",
+                    fn(/** @var DatabaseTable $table */ $table): string => "{$table->name}: {$table->comment}",
                     $database->tables,
                 ),
             );
@@ -108,9 +102,6 @@ class database_show extends Command {
 
     /**
      * Displays table
-     * @param SymfonyStyle $io
-     * @param database_schema\table $table
-     * @return void
      */
     public static function display_table_table(SymfonyStyle $io, database_schema\table $table): void {
         $io->section("Table: {$table->name}");
@@ -121,7 +112,7 @@ class database_show extends Command {
         $io->text('Fields');
         $io->table(
             ['name', 'type', 'comment'],
-            array_map(fn(database_schema\field $field) => [
+            array_map(fn(database_schema\field $field): array => [
                 $field->name,
                 $field->type,
                 $field->comment,
@@ -131,7 +122,7 @@ class database_show extends Command {
         $io->text('Indexes');
         $io->table(
             ['name', 'fields', 'unique', 'comment'],
-            array_map(fn(database_schema\index $index) => [
+            array_map(fn(database_schema\index $index): array => [
                 $index->name,
                 implode(',', $index->fields),
                 $index->unique,
@@ -142,7 +133,7 @@ class database_show extends Command {
         $io->text('Keys');
         $io->table(
             ['name', 'type', 'fields', 'references', 'comment'],
-            array_map(fn(database_schema\key $key) => [
+            array_map(fn(database_schema\key $key): array => [
                 $key->name,
                 $key->type,
                 implode(',', $key->fields),
@@ -156,9 +147,7 @@ class database_show extends Command {
 
     /**
      * Displays tables as JSON.
-     * @param SymfonyStyle $io
      * @param database_schema[] $data
-     * @return void
      */
     public static function display_json(SymfonyStyle $io, array $data): void {
         $io->writeln(json_encode(self::process_json($data), JSON_THROW_ON_ERROR));
@@ -175,7 +164,7 @@ class database_show extends Command {
             $json[] = [
                 'name' => $database->name,
                 'comment' => $database->comment,
-                'tables' => array_map(fn(/** @var DatabaseTable $table */ $table) => [
+                'tables' => array_map(fn(/** @var DatabaseTable $table */ $table): array => [
                     'name' => $table->name,
                     'comment' => $table->comment,
                 ], $database->tables),

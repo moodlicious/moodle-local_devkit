@@ -36,9 +36,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class database_table extends Command {
     /**
      * Invoke
-     * @param string $tablename
-     * @param SymfonyStyle $io
-     * @return int
      */
     public function __invoke(
         #[Argument('The table name.')] string $tablename,
@@ -63,7 +60,6 @@ class database_table extends Command {
 
     /**
      * Helper function to get required data for this command.
-     * @param string $tablename
      * @throws Exception
      * @return database_schema\table
      */
@@ -77,9 +73,6 @@ class database_table extends Command {
 
     /**
      * Displays table as JSON.
-     * @param SymfonyStyle $io
-     * @param database_schema\table $data
-     * @return void
      */
     public static function display_json(SymfonyStyle $io, database_schema\table $data): void {
         $io->writeln(json_encode(self::process_json($data), JSON_THROW_ON_ERROR));
@@ -87,7 +80,6 @@ class database_table extends Command {
 
     /**
      * Processes json for output.
-     * @param database_schema\table $data
      * @return database_schema\table
      */
     public static function process_json(database_schema\table $data) {

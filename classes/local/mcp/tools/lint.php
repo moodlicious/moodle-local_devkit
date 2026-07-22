@@ -18,6 +18,8 @@ namespace local_devkit\local\mcp\tools;
 
 use Exception;
 use local_devkit\local\api\linter;
+use local_devkit\local\lint\linters\base;
+use local_devkit\local\lint\schemas\file;
 use local_devkit\local\utils;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Schema\ToolAnnotations;
@@ -45,7 +47,7 @@ class lint {
     public static function list_linters(): object {
         $linterclasses = linter::get_linters_classnames();
         $info = array_map(
-            function (/** @var class-string<\local_devkit\local\lint\linters\base> $linter */ $linter) {
+            function (/** @var class-string<base> $linter */ $linter) {
                 $entry = [
                     'name' => $linter::get_name(),
                     'description' => $linter::get_description(),
@@ -66,7 +68,7 @@ class lint {
      * @param string[]|null $linters list of linter names to run (e.g. phpcs, phpstan), or null to run all
      * @return object{
      *     linters: string[], // list of linters that have run
-     *     files: \local_devkit\local\lint\schemas\file[], // list of files and their issues
+     *     files: file[], // list of files and their issues
      * }
      */
     #[McpTool(

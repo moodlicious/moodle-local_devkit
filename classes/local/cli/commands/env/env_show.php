@@ -33,7 +33,6 @@ class env_show extends Command {
     /**
      * Invoke
      * @param SymfonyStyle $io The input/output style interface.
-     * @return int
      */
     public function __invoke(
         SymfonyStyle $io,

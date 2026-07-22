@@ -27,7 +27,6 @@ use DebugBar\DataCollector\PDO\TraceablePDO;
 interface devkit_database_interface {
     /**
      * Get the TraceablePDO instance.
-     * @return TraceablePDO
      */
     public function get_pdo(): TraceablePDO;
 }

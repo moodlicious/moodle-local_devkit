@@ -74,7 +74,6 @@ class phpdoc extends base {
 
     /**
      * Gets the installed path.
-     * @return string|null
      */
     private static function get_installed_path(): ?string {
         /** @var string|null $cache */

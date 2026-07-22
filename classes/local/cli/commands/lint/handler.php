@@ -17,6 +17,10 @@
 namespace local_devkit\local\cli\commands\lint;
 
 use local_devkit\local\api\linter;
+use local_devkit\local\lint\formatters\github;
+use local_devkit\local\lint\formatters\json;
+use local_devkit\local\lint\formatters\jsonl;
+use local_devkit\local\lint\formatters\text;
 use local_devkit\local\lint\linters\base;
 use local_devkit\local\lint\schemas\file;
 use local_devkit\local\utils;
@@ -52,16 +56,8 @@ class handler {
     /**
      * Invoke
      * @param string[] $paths
-     * @param SymfonyStyle $io
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param string $format
-     * @param bool $decorate
-     * @param bool $progress
-     * @param bool $relative
      * @param string[] $rules
      * @param string[] $linters
-     * @return int
      */
     private static function invoke(
         #[Argument('Paths to lint (must be absolute or relative to the Moodle root)')] array $paths,
@@ -79,10 +75,10 @@ class handler {
         chdir(utils::get_moodle_root_dir());
         /** @var array<string, class-string<\local_devkit\local\lint\formatters\base>> $formatterclasses */
         $formatterclasses = [
-            'json' => \local_devkit\local\lint\formatters\json::class,
-            'jsonl' => \local_devkit\local\lint\formatters\jsonl::class,
-            'text' => \local_devkit\local\lint\formatters\text::class,
-            'github' => \local_devkit\local\lint\formatters\github::class,
+            'json' => json::class,
+            'jsonl' => jsonl::class,
+            'text' => text::class,
+            'github' => github::class,
         ];
         if (!array_key_exists($format, $formatterclasses)) {
             $io->writeln('Available format options are:');
@@ -97,7 +93,7 @@ class handler {
         $formatter->relative = $relative;
         $formatter->displaycomponent = $displaycomponent;
 
-        if ($formatter instanceof \local_devkit\local\lint\formatters\text) {
+        if ($formatter instanceof text) {
             $formatter->decorate = $decorate;
         }
 
@@ -116,7 +112,7 @@ class handler {
             return Command::FAILURE;
         }
 
-        if (count($realpaths) === 1 && $formatter instanceof \local_devkit\local\lint\formatters\github) {
+        if (count($realpaths) === 1 && $formatter instanceof github) {
             $formatter->set_plugin_root($realpaths[0]);
         }
 
@@ -178,7 +174,7 @@ class handler {
         return array_map(function (file $file) use ($patterns): file {
             $filtered = array_filter(
                 $file->issues,
-                fn($issue) => $issue->rule !== null && self::matches_any_pattern($issue->rule, $patterns),
+                fn($issue): bool => $issue->rule !== null && self::matches_any_pattern($issue->rule, $patterns),
             );
             $file->issues = array_values($filtered);
             return $file;
@@ -187,9 +183,7 @@ class handler {
 
     /**
      * Checks if a value matches any of the given regex patterns.
-     * @param string $value
      * @param string[] $patterns
-     * @return bool
      */
     private static function matches_any_pattern(string $value, array $patterns): bool {
         foreach ($patterns as $pattern) {
@@ -202,9 +196,7 @@ class handler {
 
     /**
      * Builds the command for linters
-     * @param string $name
      * @param class-string<base>[] $linters
-     * @return Command
      */
     private static function build_command(string $name, array $linters): Command {
         $linter = null;
@@ -254,8 +246,6 @@ class handler {
 
     /**
      * Register linter command
-     * @param Application $app
-     * @return void
      */
     public static function register(Application $app): void {
         $linters = linter::get_linters_classnames();

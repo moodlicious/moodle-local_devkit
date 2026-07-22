@@ -16,6 +16,7 @@
 
 namespace local_devkit\local\cli\commands\plugins;
 
+use local_devkit\local\api\plugins;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
@@ -32,8 +33,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class plugins_list extends Command {
     /**
      * Invoke
-     * @param SymfonyStyle $io
-     * @return int
      */
     public function __invoke(
         SymfonyStyle $io,
@@ -44,7 +43,7 @@ class plugins_list extends Command {
         // phpcs:ignore moodle.NamingConventions.ValidVariableName.VariableNameLowerCase
         $includestandard = $includeStandard;
 
-        $results = \local_devkit\local\api\plugins::list($includestandard);
+        $results = plugins::list($includestandard);
 
         if ($json) {
             $jsonstring = json_encode($results);
@@ -62,7 +61,7 @@ class plugins_list extends Command {
             ['Type', 'Name', 'Component', 'Version', 'Release', 'Location'],
             array_filter(
                 array_map(
-                    fn($result) => [
+                    fn($result): array => [
                         $result['type'],
                         $result['name'],
                         $result['component'],

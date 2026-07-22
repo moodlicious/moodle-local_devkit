@@ -58,7 +58,6 @@ class biome extends base {
 
     /**
      * Get the biome.jsonc file.
-     * @return string|null
      */
     private static function get_config_path(): ?string {
         global $CFG;

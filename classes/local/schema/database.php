@@ -26,8 +26,6 @@ namespace local_devkit\local\schema;
 class database {
     /**
      * Constructor.
-     * @param string $name
-     * @param string|null $comment
      * @param database\table[] $tables
      */
     public function __construct(

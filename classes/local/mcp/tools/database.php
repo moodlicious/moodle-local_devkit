@@ -32,7 +32,6 @@ class database {
     /**
      * Show database tables defined, all or for a specific plugin component.
      * @param string|null $component The plugin component name. E.g. mod_assign.
-     * @return object
      */
     public static function db_show_tables(?string $component = null): object {
         try {
@@ -46,7 +45,6 @@ class database {
     /**
      * Get the fields, indexes and keys of a specific database table.
      * @param string $tablename The database table name.
-     * @return object
      */
     public static function db_get_table(string $tablename): object {
         try {

@@ -31,7 +31,6 @@ class mysqli_native_devkit_database extends mysqli_native_moodle_database implem
 
     /**
      * Constructor.
-     * @param mysqli_native_moodle_database $db
      */
     protected function __construct(mysqli_native_moodle_database $db) {
         parent::__construct();
@@ -44,8 +43,6 @@ class mysqli_native_devkit_database extends mysqli_native_moodle_database implem
 
     /**
      * Wrap the provided database instance with the devkit database class, if not already wrapped.
-     * @param mysqli_native_moodle_database $db
-     * @return self
      */
     public static function wrap(mysqli_native_moodle_database $db): self {
         if ($db instanceof self) {

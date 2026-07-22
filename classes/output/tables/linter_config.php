@@ -67,9 +67,8 @@ class linter_config extends html_table {
 
     /**
      * Initialises JS.
-     * @return void
      */
-    public function init_js() {
+    public function init_js(): void {
         global $PAGE;
         $PAGE->requires->js_call_amd('local_devkit/linter_config', 'init', []);
     }

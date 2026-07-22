@@ -76,22 +76,19 @@ class traced_statement extends TracedStatement {
         return;
     }
     // phpcs:enable moodle.NamingConventions.ValidFunctionName.LowercaseMethod
-
     /**
      * Format a backtrace array into a string for logging.
      * @param Backtrace $backtrace
-     * @return string
      */
     protected function format_backtrace(array $backtrace): string {
         $formattedframes = array_map($this->format_backtrace_frame(...), $backtrace);
-        $formattedframes = array_filter($formattedframes, fn($frame) => $frame !== null);
+        $formattedframes = array_filter($formattedframes, fn($frame): bool => $frame !== null);
         return implode("\n", $formattedframes);
     }
 
     /**
      * Format a single backtrace frame for logging.
      * @param BacktraceFrame $frame
-     * @return string|null
      */
     protected function format_backtrace_frame(array $frame): ?string {
         $location = isset($frame['file'], $frame['line'])

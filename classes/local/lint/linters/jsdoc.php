@@ -71,8 +71,6 @@ class jsdoc extends base {
 
     /**
      * Resolve the expected module name from a file path.
-     * @param string $filepath
-     * @return string|null
      */
     private static function resolve_module_name(string $filepath): ?string {
         $relative = utils::get_path_relative_to_moodle_root($filepath);
@@ -98,7 +96,6 @@ class jsdoc extends base {
 
     /**
      * Check for the presence of GPL boilerplate in the file.
-     * @param string $content
      * @return issue[]
      */
     private static function get_issues_for_boilerplate(string $content): array {
@@ -118,8 +115,6 @@ class jsdoc extends base {
 
     /**
      * Check for the presence and correctness of the docblock.
-     * @param string $content
-     * @param string $expectedmodule
      * @return issue[]
      */
     private static function get_issues_for_docblock(string $content, string $expectedmodule): array {

@@ -26,6 +26,8 @@ use DebugBar\DataCollector\PhpInfoCollector;
 use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DebugBar as BaseDebugBar;
+use DebugBar\JavascriptRenderer;
+use DebugBar\Storage\AbstractStorage;
 use DebugBar\Storage\SqliteStorage;
 use ErrorException;
 use local_devkit\local\debugbar\collectors\config_collector;
@@ -102,7 +104,6 @@ class debugbar extends BaseDebugBar {
 
     /**
      * Get the singleton instance of the debugbar.
-     * @return self
      */
     public static function instance(): self {
         if (self::$instance !== null) {
@@ -117,7 +118,6 @@ class debugbar extends BaseDebugBar {
      *
      * // phpcs:ignore moodle.Commenting.ValidTags.Invalid
      * @template T of DataCollectorInterface
-     * @param string $name
      * @param class-string<T> $class
      * @return T|null
      */
@@ -135,7 +135,6 @@ class debugbar extends BaseDebugBar {
 
     /**
      * Get the database collector instance, or null if it is not available or of the wrong type.
-     * @return PDOCollector|null
      */
     public function get_database_collector(): ?PDOCollector {
         return $this->get_collector('pdo', PDOCollector::class);
@@ -143,7 +142,6 @@ class debugbar extends BaseDebugBar {
 
     /**
      * Get the time data collector instance, or null if it is not available or of the wrong type.
-     * @return TimeDataCollector|null
      */
     public function get_time_data_collector(): ?TimeDataCollector {
         return $this->get_collector('time', TimeDataCollector::class);
@@ -151,7 +149,6 @@ class debugbar extends BaseDebugBar {
 
     /**
      * Get the exceptions collector instance, or null if it is not available or of the wrong type.
-     * @return ExceptionsCollector|null
      */
     public function get_exceptions_collector(): ?ExceptionsCollector {
         return $this->get_collector('exceptions', ExceptionsCollector::class);
@@ -159,7 +156,6 @@ class debugbar extends BaseDebugBar {
 
     /**
      * Get the exceptions collector instance, or null if it is not available or of the wrong type.
-     * @return config_collector|null
      */
     public function get_config_collector(): ?config_collector {
         return $this->get_collector('config', config_collector::class);
@@ -167,7 +163,6 @@ class debugbar extends BaseDebugBar {
 
     /**
      * Get the exceptions collector instance, or null if it is not available or of the wrong type.
-     * @return MessagesCollector|null
      */
     public function get_messages_collector(): ?MessagesCollector {
         return $this->get_collector('messages', MessagesCollector::class);
@@ -175,7 +170,6 @@ class debugbar extends BaseDebugBar {
 
     /**
      * Get the exceptions collector instance, or null if it is not available or of the wrong type.
-     * @return string_manager_collector|null
      */
     public function get_string_manager_collector(): ?string_manager_collector {
         return $this->get_collector('string_manager', string_manager_collector::class);
@@ -183,11 +177,6 @@ class debugbar extends BaseDebugBar {
 
     /**
      * Custom error handler to convert PHP errors to exceptions and log them to the debugbar.
-     * @param int $errno
-     * @param string $errstr
-     * @param string $errfile
-     * @param int $errline
-     * @return bool
      */
     public function error_handler(int $errno, string $errstr, string $errfile, int $errline): bool {
         // Convert the error to an exception and log it to the debugbar.
@@ -200,8 +189,6 @@ class debugbar extends BaseDebugBar {
 
     /**
      * Custom exception handler to log uncaught exceptions to the debugbar.
-     * @param Throwable $exception
-     * @return void
      */
     public function exception_handler(Throwable $exception): void {
         $this->log_exception($exception);
@@ -213,7 +200,6 @@ class debugbar extends BaseDebugBar {
     /**
      * Logs exception to the debugbar's ExceptionsCollector.
      * @param Throwable $exception The exception to log.
-     * @return void
      */
     public function log_exception(Throwable $exception): void {
         $collector = $this->get_exceptions_collector();
@@ -225,10 +211,7 @@ class debugbar extends BaseDebugBar {
 
     /**
      * Logs a message
-     * @param mixed $message
-     * @param log_level $level
      * @param mixed[] $context
-     * @return void
      */
     public static function log(mixed $message, log_level $level = log_level::INFO, array $context = []): void {
         self::instance()->get_messages_collector()?->log($level->value, $message, $context);
@@ -271,9 +254,8 @@ class debugbar extends BaseDebugBar {
 
     /**
      * Initialises the storage for debugbar.
-     * @return \DebugBar\Storage\AbstractStorage
      */
-    private function init_storage() {
+    private function init_storage(): AbstractStorage {
         global $CFG;
 
         $plugintempdir = "$CFG->tempdir/local_devkit";
@@ -293,7 +275,7 @@ class debugbar extends BaseDebugBar {
 
     /**
      * Initialises the renderer for debugbar.
-     * @return \DebugBar\JavascriptRenderer
+     * @return JavascriptRenderer
      */
     private function init_renderer() {
         $renderer = $this->getJavascriptRenderer();
@@ -315,9 +297,7 @@ class debugbar extends BaseDebugBar {
     /**
      * Sends the data through the HTTP headers
      *
-     * @param integer $maxHeaderLength
      *
-     * @return $this
      */
     #[\Override]
     public function sendDataInHeaders(

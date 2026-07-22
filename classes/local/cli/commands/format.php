@@ -16,6 +16,8 @@
 
 namespace local_devkit\local\cli\commands;
 
+use core\di;
+use local_devkit\local\format\base;
 use local_devkit\local\format\biome;
 use local_devkit\local\format\eslint;
 use local_devkit\local\format\phpcbf;
@@ -64,7 +66,6 @@ class format extends Command {
     ];
     /**
      * Configure arguments.
-     * @return void
      */
     protected function configure(): void {
         $this->addArgument('paths', InputArgument::IS_ARRAY);
@@ -148,23 +149,23 @@ class format extends Command {
 
     /**
      * Picks formatters.
-     * @return \local_devkit\local\format\base[]
+     * @return base[]
      */
     private static function pick_formatters(string $path): array {
         $ext = pathinfo($path, PATHINFO_EXTENSION);
 
         $formatters = match ($ext) {
             'php' => [
-                \core\di::get(pint::class),
-                \core\di::get(phpcbf::class),
+                di::get(pint::class),
+                di::get(phpcbf::class),
             ],
             'css', 'scss' => [
-                \core\di::get(biome::class),
-                \core\di::get(stylelint::class),
+                di::get(biome::class),
+                di::get(stylelint::class),
             ],
             'js', 'jsx', 'ts', 'tsx' => [
-                \core\di::get(biome::class),
-                \core\di::get(eslint::class),
+                di::get(biome::class),
+                di::get(eslint::class),
             ],
             default => null,
         };
@@ -174,7 +175,7 @@ class format extends Command {
         }
 
         if ($ext === 'xml' && str_ends_with(str_replace('\\', '/', $path), '/db/install.xml')) {
-            return [\core\di::get(xmldb::class)];
+            return [di::get(xmldb::class)];
         }
 
         return [];

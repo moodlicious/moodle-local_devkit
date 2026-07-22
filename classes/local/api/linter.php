@@ -39,7 +39,7 @@ class linter {
     public static function get_linters_classnames(?array $linternames = null): array {
         /** @var class-string<base>[] $linters */
         $linters = array_map(
-            fn($linter) => "\\$linter",
+            fn($linter): string => "\\$linter",
             array_keys(component::get_component_classes_in_namespace('local_devkit', 'local\lint\linters')),
         );
 
@@ -68,7 +68,7 @@ class linter {
      * @return string[]
      */
     public static function get_linters_info(array $linters): array {
-        $info = array_values(array_map(
+        return array_values(array_map(
             function (/** @var class-string<base> $linter */ $linter) {
                 $name = $linter::get_name();
                 $description = $linter::get_description();
@@ -76,7 +76,6 @@ class linter {
             },
             $linters,
         ));
-        return $info;
     }
 
     /**
@@ -88,14 +87,14 @@ class linter {
      */
     public static function run(array $paths, array $linterclasses, ?ProgressIndicator $progress = null): array {
         $linters = array_map(
-            fn(/** @var class-string<base> $linterclass */ $linterclass) => new $linterclass($progress),
+            fn(/** @var class-string<base> $linterclass */ $linterclass): object => new $linterclass($progress),
             $linterclasses,
         );
 
         $progress?->start('Starting.');
         $resultsitems = array_map(
-            fn(string $path) => array_map(
-                fn(base $linter) => $linter->lint($path),
+            fn(string $path): array => array_map(
+                fn(base $linter): array => $linter->lint($path),
                 $linters,
             ),
             $paths,

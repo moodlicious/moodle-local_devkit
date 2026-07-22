@@ -63,7 +63,7 @@ class component {
         }
 
         $result = self::get_component_path_map();
-        uasort($result, fn(string $a, string $b) => strlen($b) <=> strlen($a));
+        uasort($result, fn(string $a, string $b): int => strlen($b) <=> strlen($a));
         return $result;
     }
 
@@ -72,8 +72,6 @@ class component {
      *
      * Skips empty component paths and checks directory boundaries to avoid
      * prefix collisions (e.g. mod/assign vs mod/assignment).
-     * @param string $path
-     * @return string|null
      */
     public static function resolve_component_from_path(string $path): ?string {
         $componentpathmap = self::get_component_path_map_sorted_cached();

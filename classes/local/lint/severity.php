@@ -31,7 +31,6 @@ enum severity: string {
 
     /**
      * Gets severity from eslint.
-     * @param int $severity
      * @return severity
      */
     public static function from_eslint(int $severity) {
@@ -45,7 +44,6 @@ enum severity: string {
 
     /**
      * Gets severity from stylelint.
-     * @param string $severity
      * @return severity
      */
     public static function from_stylelint(string $severity) {
@@ -58,7 +56,6 @@ enum severity: string {
 
     /**
      * Gets severity from phpcs.
-     * @param int $severity
      * @return severity
      */
     public static function from_phpcs(int $severity) {
@@ -72,7 +69,6 @@ enum severity: string {
 
     /**
      * Gets severity from phpdoc.
-     * @param string $severity
      * @return severity
      */
     public static function from_phpdoc(string $severity) {

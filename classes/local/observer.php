@@ -27,11 +27,9 @@ use core\event\base;
 class observer {
     /**
      * Observe everything any log it!
-     * @param base $event
-     * @return void
      */
-    public static function observe_all_events(base $event) {
-        if (!(devkit::is_enabled() && \local_devkit\local\config\debugbar::is_enabled())) {
+    public static function observe_all_events(base $event): void {
+        if (!devkit::is_enabled() || !\local_devkit\local\config\debugbar::is_enabled()) {
             return;
         }
 

@@ -26,9 +26,6 @@ namespace local_devkit\local\schema\database;
 class index {
     /**
      * Constructor.
-     * @param string $name
-     * @param string|null $comment
-     * @param bool $unique
      * @param string[] $fields
      */
     public function __construct(

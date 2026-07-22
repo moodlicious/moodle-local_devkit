@@ -110,11 +110,9 @@ class phpcs extends base {
 
     /**
      * Parses the PHPCS JSON result.
-     * @param string $output
-     * @param string $path
      * @return file[]
      */
-    private function parse_phpcs_json(string $output, string $path) {
+    private function parse_phpcs_json(string $output, string $path): array {
         $results = [];
         $jsonoutput = json_decode($output);
         if ($jsonoutput === null) {

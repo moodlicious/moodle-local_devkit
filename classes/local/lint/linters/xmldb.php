@@ -99,7 +99,6 @@ class xmldb extends base {
     /**
      * Parses the error from xmldb back into a neat format.
      * Reverses the error formatting from {@see xmldb_file::validateXMLStructure()}
-     * @param string $text
      * @return array{line: int, message: string}[]
      */
     public function parse_error_string(string $text): array {

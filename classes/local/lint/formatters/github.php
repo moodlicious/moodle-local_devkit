@@ -86,8 +86,6 @@ class github extends base {
 
     /**
      * Maps devkit severity to github annotations.
-     * @param severity $severity
-     * @return string
      */
     protected function map_severity(severity $severity): string {
         return match ($severity) {
@@ -100,8 +98,6 @@ class github extends base {
 
     /**
      * Escapes property value.
-     * @param string $value
-     * @return string
      */
     protected function escape_property(string $value): string {
         return str_replace(
@@ -113,8 +109,6 @@ class github extends base {
 
     /**
      * Escapes message.
-     * @param string $value
-     * @return string
      */
     protected function escape_message(string $value): string {
         return str_replace(
@@ -134,8 +128,6 @@ class github extends base {
 
     /**
      * Gets path to file, a repo-relative path.
-     * @param file $file
-     * @return string
      */
     protected function get_annotation_path(file $file): string {
         if ($this->pluginroot !== null) {

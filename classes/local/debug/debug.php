@@ -111,7 +111,6 @@ class debug implements IteratorAggregate {
 
     /**
      * Measures execution time in milliseconds.
-     * @param int $iterations
      * @return self<TKey, float|null>
      */
     public function measure(int $iterations = 1): self {
@@ -208,7 +207,6 @@ class debug implements IteratorAggregate {
 
     /**
      * Utility function print a payload key.
-     * @param array-key $key
      * @return self<TKey, TValue>
      */
     private function payload_print_key(int|string $key): self {

@@ -26,8 +26,6 @@ namespace local_devkit\local\schema\database;
 class table {
     /**
      * Constructor.
-     * @param string $name
-     * @param string|null $comment
      * @param field[] $fields
      * @param key[] $keys
      * @param index[] $indexes

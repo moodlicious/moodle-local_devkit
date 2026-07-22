@@ -31,7 +31,6 @@ use function in_array;
 class phpstan extends issue {
     /**
      * Factory method to create from an phpcs message object.
-     * @param object $object
      * @return self|null
      */
     public static function from_object(object $object): ?self {

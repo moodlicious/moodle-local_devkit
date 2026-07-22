@@ -115,20 +115,18 @@ debugbar::log(new Exception('Exceptions'), log_level::CRITICAL);
 
 /**
  * Slow function for demo
- * @param string $id
- * @return string
  */
-function slow_function(string $id) {
+function slow_function(string $id): string {
     sleep(1);
     usleep(248160);
     return "Slow function ID=$id completed";
 }
 
-$slowfuncresults = debugbar::measure('a slow function', fn() => slow_function('A'));
+$slowfuncresults = debugbar::measure('a slow function', fn(): string => slow_function('A'));
 echo html_writer::div($slowfuncresults);
 
 $duration = null;
-$slowfuncresults = debugbar::measure('a slow function', fn() => slow_function('B'), duration: $duration);
+$slowfuncresults = debugbar::measure('a slow function', fn(): string => slow_function('B'), duration: $duration);
 echo html_writer::div($slowfuncresults);
 echo html_writer::div("That took {$duration}s!");
 

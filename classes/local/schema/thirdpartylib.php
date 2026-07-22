@@ -59,8 +59,6 @@ class thirdpartylib {
 
     /**
      * Creates an instance from {@see \SimpleXMLElement}.
-     * @param string $basepath
-     * @param SimpleXMLElement $element
      * @throws Exception
      * @return thirdpartylib
      */

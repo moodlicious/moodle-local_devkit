@@ -80,11 +80,10 @@ class lang extends base {
         // Let's be really cheeky and just filter the lint_directory results for the current file.
         [$langdir] = $segments;
         $results = $this->lint_directory($langdir);
-        $results = array_filter(
+        return array_filter(
             $results,
-            fn(file $result) => $result->file === $filepath,
+            fn(file $result): bool => $result->file === $filepath,
         );
-        return $results;
     }
 
     #[\Override]
@@ -94,17 +93,14 @@ class lang extends base {
         $stringdata = $this->normalise_strings($rawstringdata);
 
         $results = $this->validate($stringdata);
-        $results = array_filter(
+        return array_filter(
             $results,
-            fn(file $result) => str_starts_with($result->file, $directorypath),
+            fn(file $result): bool => str_starts_with($result->file, $directorypath),
         );
-        return $results;
     }
 
     /**
      * Walks up the directory tree and find the nearest lang directory.
-     * @param string $directorypath
-     * @return string
      */
     private static function find_nearest_langdir_up(string $directorypath): string {
         global $CFG;
@@ -136,9 +132,7 @@ class lang extends base {
             return $directorypath;
         }
 
-        $directorypath = $root . implode(DIRECTORY_SEPARATOR, $segments);
-
-        return $directorypath;
+        return $root . implode(DIRECTORY_SEPARATOR, $segments);
     }
 
     /**
@@ -147,8 +141,6 @@ class lang extends base {
      * Loading strings via the manager will fallback on undefined strings,
      * so we add an option to disable and load directly from file.
      *
-     * @param string $directorypath
-     * @param bool $usestringmanager
      * @return RawLangdirs
      */
     private function load_strings(string $directorypath, bool $usestringmanager = false): array {
@@ -370,11 +362,7 @@ class lang extends base {
                         line: self::identifier_line($identifier, $localelangfile),
                     );
                 }
-
-                continue;
             }
-
-            continue;
         }
 
         return $results;
@@ -383,7 +371,6 @@ class lang extends base {
     /**
      * Splits the lang file into the /lang dir, locale code, and component name.
      * Can use {@see self::split_lang_filepath} to reconstruct the file path from parts.
-     * @param string $filepath
      * @return array{string, string, string} - lang dir, locale, component
      */
     private static function split_lang_filepath(string $filepath): ?array {
@@ -403,10 +390,6 @@ class lang extends base {
     /**
      * Utility function to recreate the language file path.
      * Can use {@see self::split_lang_filepath} to split the file path back into parts.
-     * @param string $langdir
-     * @param string $component
-     * @param string $locale
-     * @return string
      */
     private static function compose_lang_filepath(string $langdir, string $component, string $locale): string {
         return implode(DIRECTORY_SEPARATOR, [$langdir, $locale, "$component.php"]);
@@ -414,14 +397,6 @@ class lang extends base {
 
     /**
      * Helper function to create a simple issue.
-     * @param string $path
-     * @param string $message
-     * @param string|null $rule
-     * @param int $line
-     * @param int $column
-     * @param string $source
-     * @param severity $severity
-     * @return file
      */
     private static function single_file_issue(
         string $path,
@@ -440,9 +415,6 @@ class lang extends base {
 
     /**
      * Resolves the line number for a specific identifier in a language file, falling back to 0.
-     * @param string $identifier
-     * @param string $langfile
-     * @return int
      */
     private static function identifier_line(string $identifier, string $langfile): int {
         return self::find_identifier_line_number_in_file($identifier, $langfile) ?? 0;
@@ -450,7 +422,6 @@ class lang extends base {
 
     /**
      * Extracts {$a} / {$a->key} placeholders from a given string.
-     * @param string $string
      * @return string[]
      */
     private static function extract_placeholders(string $string): array {
@@ -466,19 +437,15 @@ class lang extends base {
     /**
      * Converts a set of placeholders into string suitable to use in the issue message.
      * @param string[] $placeholders
-     * @return string
      */
     private static function placeholders_to_string(array $placeholders): string {
-        $placeholders = array_map(fn($placeholder) => "`$placeholder`", $placeholders);
+        $placeholders = array_map(fn($placeholder): string => "`$placeholder`", $placeholders);
         $string = implode(',', $placeholders);
         return "($string)";
     }
 
     /**
      * Resolves the line number for a specific identifier in a language file.
-     * @param string $identifier
-     * @param string $langfile
-     * @return int|null
      */
     private static function find_identifier_line_number_in_file(string $identifier, string $langfile): ?int {
         $source = file_get_contents($langfile);

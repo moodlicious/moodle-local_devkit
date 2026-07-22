@@ -27,9 +27,8 @@ use DebugBar\DataCollector\ConfigCollector;
 class config_collector extends ConfigCollector {
     /**
      * Sets the moodle $CFG object as the collector data.
-     * @return void
      */
-    public function populate() {
+    public function populate(): void {
         global $CFG;
         $data = (array) clone $CFG;
 

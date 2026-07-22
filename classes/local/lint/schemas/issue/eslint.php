@@ -32,7 +32,6 @@ use function in_array;
 class eslint extends issue {
     /**
      * Factory method to create from an eslint message object.
-     * @param object $object
      * @return self|null
      */
     public static function from_object(object $object): ?self {

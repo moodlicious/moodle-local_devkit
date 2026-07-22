@@ -34,6 +34,6 @@ use local_devkit\local\debug\debug;
  * @param      TValue ...$payload
  * @return     debug<array-key, TValue>
  */
-function debug(...$payload) {
+function debug(...$payload): debug {
     return new debug($payload);
 }

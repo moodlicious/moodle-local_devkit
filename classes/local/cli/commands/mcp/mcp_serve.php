@@ -16,6 +16,10 @@
 
 namespace local_devkit\local\cli\commands\mcp;
 
+use local_devkit\local\mcp\tools\database;
+use local_devkit\local\mcp\tools\env;
+use local_devkit\local\mcp\tools\lint;
+use local_devkit\local\mcp\tools\plugins;
 use Mcp\Server;
 use Mcp\Server\Transport\StdioTransport;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -32,18 +36,17 @@ use Symfony\Component\Console\Command\Command;
 class mcp_serve extends Command {
     /**
      * Invoke
-     * @return int
      */
     public function __invoke(): int {
         // Build and run the server.
         $server = Server::builder()
             ->setServerInfo('Moodle devkit plugin MCP server', '0.0.1')
-            ->addTool(\local_devkit\local\mcp\tools\plugins::list_plugins(...))
-            ->addTool(\local_devkit\local\mcp\tools\database::db_show_tables(...))
-            ->addTool(\local_devkit\local\mcp\tools\database::db_get_table(...))
-            ->addTool(\local_devkit\local\mcp\tools\lint::list_linters(...))
-            ->addTool(\local_devkit\local\mcp\tools\lint::lint_files(...))
-            ->addTool(\local_devkit\local\mcp\tools\env::env_overview(...))
+            ->addTool(plugins::list_plugins(...))
+            ->addTool(database::db_show_tables(...))
+            ->addTool(database::db_get_table(...))
+            ->addTool(lint::list_linters(...))
+            ->addTool(lint::lint_files(...))
+            ->addTool(env::env_overview(...))
             ->build();
 
         $transport = new StdioTransport();

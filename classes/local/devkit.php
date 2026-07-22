@@ -25,7 +25,6 @@ namespace local_devkit\local;
 class devkit {
     /**
      * Determines if the plugin should load.
-     * @return bool
      */
     public static function is_enabled(): bool {
         // phpcs:ignore moodle.Commenting.InlineComment
@@ -33,11 +32,6 @@ class devkit {
         if (PHPUNIT_TEST) {
             return false;
         }
-
-        if ((bool) getenv('MDL_LOCAL_DEVKIT_DISABLE')) {
-            return false;
-        }
-
-        return true;
+        return !(bool) getenv('MDL_LOCAL_DEVKIT_DISABLE');
     }
 }

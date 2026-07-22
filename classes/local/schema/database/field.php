@@ -26,9 +26,6 @@ namespace local_devkit\local\schema\database;
 class field {
     /**
      * Constructor.
-     * @param string $name
-     * @param string|null $comment
-     * @param string $type
      */
     public function __construct(
         /** @var string $name */

@@ -12,6 +12,7 @@ Collection of tools for Moodle devs. Debug bar, CLI commands, linter framework, 
 
 | Feature | Description |
 |---------|-------------|
+| [Debug](debug.md) | Fluent `debug()` utility for quick variable inspection, performance measurement, and database table info. |
 | [Debug Bar](debugbar.md) | PHP Debug Bar with 9 collectors. Log messages, measure timings, see DB queries, track events. |
 | [CLI Commands](cli.md) | Symfony Console app. Lint, list plugins, inspect DB schema, start MCP server. |
 | [Lint Framework](linters.md) | 7 linters. PHPCS, PHPStan, ESLint, Stylelint, PHPDoc, PHP syntax, lang strings. |

@@ -329,7 +329,7 @@ function clean_param_array(?array $param, $type, $recursive = false) {
  *     $type is PARAM_AREA              ? string :
  *     $type is PARAM_PLUGIN            ? string :
  *     mixed
- * )[]
+ * )
  * @throws coding_exception&Throwable
  */
 function clean_param($param, $type) {

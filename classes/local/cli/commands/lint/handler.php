@@ -23,6 +23,7 @@ use local_devkit\local\lint\formatters\jsonl;
 use local_devkit\local\lint\formatters\text;
 use local_devkit\local\lint\linters\base;
 use local_devkit\local\lint\schemas\file;
+use local_devkit\local\lint\schemas\issue;
 use local_devkit\local\utils;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Attribute\Argument;
@@ -174,7 +175,7 @@ class handler {
         return array_map(function (file $file) use ($patterns): file {
             $filtered = array_filter(
                 $file->issues,
-                fn($issue): bool => $issue->rule !== null && self::matches_any_pattern($issue->rule, $patterns),
+                fn(issue $issue): bool => $issue->rule !== null && self::matches_any_pattern($issue->rule, $patterns),
             );
             $file->issues = array_values($filtered);
             return $file;
@@ -205,7 +206,7 @@ class handler {
         }
 
         $linternames = array_map(
-            fn(/** @var class-string<base> $linter */ $linter) => $linter::get_name(),
+            fn(string /** @var class-string<base> $linter */ $linter) => $linter::get_name(),
             $linters,
         );
         $command = new Command($name);

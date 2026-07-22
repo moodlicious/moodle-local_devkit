@@ -81,7 +81,7 @@ class traced_statement extends TracedStatement {
      */
     protected function format_backtrace(array $backtrace): string {
         $formattedframes = array_map($this->format_backtrace_frame(...), $backtrace);
-        $formattedframes = array_filter($formattedframes, fn($frame): bool => $frame !== null);
+        $formattedframes = array_filter($formattedframes, fn(?string $frame): bool => $frame !== null);
         return implode("\n", $formattedframes);
     }
 

@@ -124,7 +124,7 @@ class phpcs extends base {
             $messages = $lintedfile->messages;
             foreach ($messages as $message) {
                 $issue = phpcs_issue::from_object($message);
-                if ($issue === null) {
+                if (!$issue instanceof phpcs_issue) {
                     continue;
                 }
                 $issues[] = $issue;

@@ -143,7 +143,7 @@ class mustachelint extends base {
                 }
                 return $comment;
             }, $comments),
-            fn($comment): bool => $comment !== null && $comment !== '',
+            fn(?string $comment): bool => $comment !== null && $comment !== '',
         );
     }
 

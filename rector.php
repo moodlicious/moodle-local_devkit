@@ -27,10 +27,10 @@ return RectorConfig::configure()
     ])
     ->withPhpSets()
     ->withImportNames(importShortClasses: false)
-    ->withTypeCoverageLevel(60)
+    ->withTypeCoverageLevel(70)
     ->withTypeCoverageDocblockLevel(20)
-    ->withDeadCodeLevel(60)
-    ->withCodeQualityLevel(60)
+    ->withDeadCodeLevel(70)
+    ->withCodeQualityLevel(70)
     ->withSkip([
         RemoveUselessVarTagRector::class,
         ShortenElseIfRector::class,

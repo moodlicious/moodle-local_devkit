@@ -39,13 +39,13 @@ class linter {
     public static function get_linters_classnames(?array $linternames = null): array {
         /** @var class-string<base>[] $linters */
         $linters = array_map(
-            fn($linter): string => "\\$linter",
+            fn(string $linter): string => "\\$linter",
             array_keys(component::get_component_classes_in_namespace('local_devkit', 'local\lint\linters')),
         );
 
         $linters = array_filter(
             $linters,
-            function ($linter) use ($linternames): bool {
+            function (string $linter) use ($linternames): bool {
                 if (!is_subclass_of($linter, base::class)) {
                     return false;
                 }
@@ -87,7 +87,7 @@ class linter {
      */
     public static function run(array $paths, array $linterclasses, ?ProgressIndicator $progress = null): array {
         $linters = array_map(
-            fn(/** @var class-string<base> $linterclass */ $linterclass): object => new $linterclass($progress),
+            fn(string /** @var class-string<base> $linterclass */ $linterclass): object => new $linterclass($progress),
             $linterclasses,
         );
 

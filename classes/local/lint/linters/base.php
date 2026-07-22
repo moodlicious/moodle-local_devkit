@@ -82,7 +82,7 @@ abstract class base {
      * Sets the processing file in the progress.
      */
     public function set_progress_file(string $path): void {
-        if ($this->progress === null) {
+        if (!$this->progress instanceof ProgressIndicator) {
             return;
         }
 

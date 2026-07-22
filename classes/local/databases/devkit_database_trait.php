@@ -116,7 +116,7 @@ trait devkit_database_trait {
 
         $mysqliresult = $result instanceof mysqli_result ? $result : null;
 
-        if ($mysqliresult !== null) {
+        if ($mysqliresult instanceof mysqli_result) {
             $statement->end(rowCount: (int) $mysqliresult->num_rows);
         } else {
             $statement->end();

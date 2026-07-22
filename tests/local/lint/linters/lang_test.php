@@ -20,6 +20,8 @@ namespace local_devkit\local\lint\linters;
 
 use advanced_testcase;
 use local_devkit\local\attributes\linter;
+use local_devkit\local\lint\schemas\file;
+use local_devkit\local\lint\schemas\issue;
 
 /**
  * Unit tests for the lang linter.
@@ -68,7 +70,7 @@ final class lang_test extends advanced_testcase {
         // Array_filter preserves keys, use reset() to get first result.
         $result = reset($results);
         self::assertNotFalse($result);
-        $rules = array_map(fn($i) => $i->rule, $result->issues);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $result->issues);
         self::assertContains('linting-requires-en-locale', $rules);
     }
 
@@ -81,9 +83,9 @@ final class lang_test extends advanced_testcase {
         // Validate_component creates separate file results per issue,
         // and array_filter preserves keys — collect all issues across results.
         $allissues = array_merge(
-            ...array_map(fn($r) => $r->issues, $results),
+            ...array_map(fn(file $r): array => $r->issues, $results),
         );
-        $rules = array_map(fn($i) => $i->rule, $allissues);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $allissues);
         self::assertContains('identifier-missing', $rules);
     }
 
@@ -94,9 +96,9 @@ final class lang_test extends advanced_testcase {
         $filepath = $this->fixturedir . '/lang/en/local_devkit.php';
         $results = $this->linter->lint_file($filepath);
         $allissues = array_merge(
-            ...array_map(fn($r) => $r->issues, $results),
+            ...array_map(fn(file $r): array => $r->issues, $results),
         );
-        $rules = array_map(fn($i) => $i->rule, $allissues);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $allissues);
         self::assertContains('identifier-safely-missing', $rules);
     }
 
@@ -107,9 +109,9 @@ final class lang_test extends advanced_testcase {
         $filepath = $this->fixturedir . '/lang/fr/missing_placeholder.php';
         $results = $this->linter->lint_file($filepath);
         $allissues = array_merge(
-            ...array_map(fn($r) => $r->issues, $results),
+            ...array_map(fn(file $r): array => $r->issues, $results),
         );
-        $rules = array_map(fn($i) => $i->rule, $allissues);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $allissues);
         self::assertContains('identifier-placeholders-missing', $rules);
     }
 
@@ -120,9 +122,9 @@ final class lang_test extends advanced_testcase {
         $filepath = $this->fixturedir . '/lang/de/extra_placeholder.php';
         $results = $this->linter->lint_file($filepath);
         $allissues = array_merge(
-            ...array_map(fn($r) => $r->issues, $results),
+            ...array_map(fn(file $r): array => $r->issues, $results),
         );
-        $rules = array_map(fn($i) => $i->rule, $allissues);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $allissues);
         self::assertContains('identifier-placeholders-extra', $rules);
     }
 

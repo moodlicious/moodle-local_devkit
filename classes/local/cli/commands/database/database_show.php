@@ -19,6 +19,7 @@ namespace local_devkit\local\cli\commands\database;
 use Exception;
 use local_devkit\local\api\database;
 use local_devkit\local\schema\database as database_schema;
+use local_devkit\local\schema\database\table;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
@@ -68,7 +69,7 @@ class database_show extends Command {
         $plugintables = [];
         if ($component !== null) {
             $plugintable = database::list_plugin_tables($component);
-            if ($plugintable === null) {
+            if (!$plugintable instanceof database_schema) {
                 throw new Exception("Component '$component' does not define db/install.xml.");
             }
             $plugintables[] = $plugintable;
@@ -93,7 +94,7 @@ class database_show extends Command {
             $io->text('Tables');
             $io->listing(
                 array_map(
-                    fn(/** @var DatabaseTable $table */ $table): string => "{$table->name}: {$table->comment}",
+                    fn(table $table): string => "{$table->name}: {$table->comment}",
                     $database->tables,
                 ),
             );
@@ -164,7 +165,7 @@ class database_show extends Command {
             $json[] = [
                 'name' => $database->name,
                 'comment' => $database->comment,
-                'tables' => array_map(fn(/** @var DatabaseTable $table */ $table): array => [
+                'tables' => array_map(fn(table $table): array => [
                     'name' => $table->name,
                     'comment' => $table->comment,
                 ], $database->tables),

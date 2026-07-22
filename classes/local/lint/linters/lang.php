@@ -439,7 +439,7 @@ class lang extends base {
      * @param string[] $placeholders
      */
     private static function placeholders_to_string(array $placeholders): string {
-        $placeholders = array_map(fn($placeholder): string => "`$placeholder`", $placeholders);
+        $placeholders = array_map(fn(string $placeholder): string => "`$placeholder`", $placeholders);
         $string = implode(',', $placeholders);
         return "($string)";
     }

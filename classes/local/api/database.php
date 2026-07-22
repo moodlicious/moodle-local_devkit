@@ -124,7 +124,7 @@ class database {
         $plugintables = [];
         foreach ($plugins as $plugin) {
             $tables = self::list_plugin_tables($plugin['component']);
-            if ($tables === null) {
+            if (!$tables instanceof database_schema) {
                 continue;
             }
             $plugintables[] = $tables;

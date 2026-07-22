@@ -17,6 +17,7 @@
 namespace local_devkit\local;
 
 use core\event\base;
+use DebugBar\DataCollector\TimeDataCollector;
 
 /**
  * Observer.
@@ -34,7 +35,7 @@ class observer {
         }
 
         $collector = debugbar::instance()->get_time_data_collector();
-        if ($collector === null) {
+        if (!$collector instanceof TimeDataCollector) {
             return;
         }
 

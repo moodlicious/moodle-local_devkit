@@ -19,6 +19,7 @@ namespace local_devkit\local\cli\commands\database;
 use Exception;
 use local_devkit\local\api\database;
 use local_devkit\local\schema\database as database_schema;
+use local_devkit\local\schema\database\table;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
@@ -65,7 +66,7 @@ class database_table extends Command {
      */
     public static function get_data(string $tablename) {
         $table = database::find_table($tablename);
-        if ($table === null) {
+        if (!$table instanceof table) {
             throw new Exception("Table with name '$tablename' not found.");
         }
         return $table;

@@ -20,6 +20,7 @@ namespace local_devkit\local\lint\linters;
 
 use advanced_testcase;
 use local_devkit\local\attributes\linter;
+use local_devkit\local\lint\schemas\issue;
 
 use function count;
 
@@ -69,7 +70,7 @@ final class phplint_test extends advanced_testcase {
         $filepath = $this->fixturedir . '/php/syntax-error.php';
         $results = $this->linter->lint_file($filepath);
         $last = $results[count($results) - 1];
-        $rules = array_map(fn($i) => $i->rule, $last->issues);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $last->issues);
         self::assertContains('php-file-must-parse-successfully', $rules);
     }
 

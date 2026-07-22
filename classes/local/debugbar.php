@@ -86,7 +86,7 @@ class debugbar extends BaseDebugBar {
         // If the PDO collector is available, set the TimeDataCollector on it so it can log query execution times.
         $pdo = $this->get_database_collector();
         $td = $this->get_time_data_collector();
-        if ($pdo !== null && $td !== null) {
+        if ($pdo instanceof PDOCollector && $td instanceof TimeDataCollector) {
             $pdo->setTimeDataCollector($td);
         }
 
@@ -106,7 +106,7 @@ class debugbar extends BaseDebugBar {
      * Get the singleton instance of the debugbar.
      */
     public static function instance(): self {
-        if (self::$instance !== null) {
+        if (self::$instance instanceof \local_devkit\local\debugbar) {
             return self::$instance;
         }
         self::$instance = new self();
@@ -203,7 +203,7 @@ class debugbar extends BaseDebugBar {
      */
     public function log_exception(Throwable $exception): void {
         $collector = $this->get_exceptions_collector();
-        if ($collector === null) {
+        if (!$collector instanceof ExceptionsCollector) {
             return;
         }
         $collector->addException($exception);

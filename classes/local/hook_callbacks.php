@@ -19,6 +19,7 @@ namespace local_devkit\local;
 use core\hook\after_config;
 use core\hook\output\before_footer_html_generation;
 use core\hook\output\before_standard_head_html_generation;
+use DebugBar\DataCollector\PDO\TraceablePDO;
 use local_devkit\local\databases\helper;
 
 /**
@@ -45,7 +46,7 @@ class hook_callbacks {
         global $DB;
         $DB = helper::wrap_database($DB);
         $pdo = helper::get_pdo($DB);
-        if ($pdo !== null) {
+        if ($pdo instanceof TraceablePDO) {
             $debugbar = debugbar::instance();
             $debugbar->get_database_collector()?->addConnection($pdo, 'moodle');
             $debugbar->get_time_data_collector()?->addMeasure('debugbar:start');

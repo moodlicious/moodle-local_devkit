@@ -20,6 +20,7 @@ namespace local_devkit\local\lint\linters;
 
 use advanced_testcase;
 use local_devkit\local\attributes\linter;
+use local_devkit\local\lint\schemas\issue;
 
 /**
  * Unit tests for the jsdoc linter.
@@ -75,7 +76,7 @@ final class jsdoc_test extends advanced_testcase {
         $filepath = $this->fixturedir . '/amd/src/missing-boilerplate.js';
         $results = $this->linter->lint_file($filepath);
         self::assertCount(1, $results);
-        $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $results[0]->issues);
         self::assertContains('missing-boilerplate', $rules);
     }
 
@@ -86,7 +87,7 @@ final class jsdoc_test extends advanced_testcase {
         $filepath = $this->fixturedir . '/amd/src/missing-docblock.js';
         $results = $this->linter->lint_file($filepath);
         self::assertCount(1, $results);
-        $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $results[0]->issues);
         self::assertContains('missing-docblock', $rules);
     }
 
@@ -97,7 +98,7 @@ final class jsdoc_test extends advanced_testcase {
         $filepath = $this->fixturedir . '/amd/src/incomplete-docblock.js';
         $results = $this->linter->lint_file($filepath);
         self::assertCount(1, $results);
-        $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $results[0]->issues);
         self::assertContains('missing-copyright', $rules);
         self::assertContains('missing-license', $rules);
     }
@@ -109,7 +110,7 @@ final class jsdoc_test extends advanced_testcase {
         $filepath = $this->fixturedir . '/amd/src/wrong-module-name.js';
         $results = $this->linter->lint_file($filepath);
         self::assertCount(1, $results);
-        $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $results[0]->issues);
         self::assertContains('module-name-incorrect', $rules);
     }
 

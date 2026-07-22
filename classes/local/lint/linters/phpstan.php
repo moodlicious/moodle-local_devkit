@@ -188,7 +188,7 @@ class phpstan extends base {
 
             foreach ($messages as $message) {
                 $issue = phpstan_issue::from_object($message);
-                if ($issue === null) {
+                if (!$issue instanceof phpstan_issue) {
                     continue;
                 }
                 if ($context !== null) {
@@ -249,7 +249,7 @@ class phpstan extends base {
         }
         $missingfiles = array_filter(
             $requiredfiles,
-            fn($file): bool => $file === false,
+            fn(string|false $file): bool => $file === false,
         );
         if (count($missingfiles) > 0) {
             throw new \RuntimeException(

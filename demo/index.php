@@ -60,7 +60,7 @@ echo $OUTPUT->header();
 
 echo html_writer::tag(
     'div',
-    join(array_map(fn($line) => html_writer::tag('code', $line . '<br>'), [
+    implode(array_map(fn($line) => html_writer::tag('code', $line . '<br>'), [
         '$transaction = $DB->start_delegated_transaction();',
         '$data = $DB->get_records("user", ["id" => $USER->id]);',
         '$transaction->allow_commit();',
@@ -80,7 +80,7 @@ try {
 
 echo html_writer::tag(
     'div',
-    join(array_map(fn($line) => html_writer::tag('code', $line . '<br>'), [
+    implode(array_map(fn($line) => html_writer::tag('code', $line . '<br>'), [
         '$transaction = $DB->start_delegated_transaction();',
         '$data = $DB->get_records("user", ["id" => $USER->id]);',
         '$transaction->rollback(new \Exception("Rolling back transaction for demonstration purposes."));',

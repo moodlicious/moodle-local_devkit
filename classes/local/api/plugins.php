@@ -50,8 +50,8 @@ class plugins {
 
         $results = [];
 
-        foreach ($plugininfo as $type => $plugins) {
-            foreach ($plugins as $name => $plugin) {
+        foreach ($plugininfo as $plugins) {
+            foreach ($plugins as $plugin) {
                 $isstandard = $plugin->is_standard();
                 if (!$includestandard && $isstandard) {
                     continue;

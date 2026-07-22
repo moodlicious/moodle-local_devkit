@@ -38,17 +38,16 @@ use function is_callable;
  */
 class debug implements IteratorAggregate {
     /**
-     * Any data associated with this debug instance.
-     * @var array<TKey, TValue>
-     */
-    private array $payload;
-
-    /**
      * Constructor.
      * @param array<TKey, TValue> $payload
      */
-    public function __construct(array $payload) {
-        $this->payload = $payload;
+    public function __construct(
+        /**
+         * Any data associated with this debug instance.
+         * @var array<TKey, TValue>
+         */
+        private readonly array $payload,
+    ) {
     }
 
     /**

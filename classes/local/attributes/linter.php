@@ -27,18 +27,16 @@ use Attribute;
  */
 #[Attribute(Attribute::TARGET_CLASS)]
 class linter {
-    /** @var string */
-    public string $name;
-    /** @var string */
-    public string|null $description;
-
     /**
      * Constructor.
      * @param string $name
      * @param string $description
      */
-    public function __construct(string $name, ?string $description = null) {
-        $this->name = $name;
-        $this->description = $description;
+    public function __construct(
+        /** @var string */
+        public string $name,
+        /** @var string|null */
+        public ?string $description = null,
+    ) {
     }
 }

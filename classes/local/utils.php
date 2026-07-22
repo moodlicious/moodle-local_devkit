@@ -55,11 +55,7 @@ class utils {
     public static function get_moodle_root_dir(): string {
         global $CFG;
 
-        if (isset($CFG->root)) {
-            return $CFG->root;
-        }
-
-        return $CFG->dirroot;
+        return $CFG->root ?? $CFG->dirroot;
     }
 
     /**
@@ -87,7 +83,7 @@ class utils {
         $rootdir = rtrim($rootnormalised, '/') . '/';
         $pathdir = rtrim($pathnormalised, '/') . '/';
 
-        if (strpos($pathdir, $rootdir) !== 0) {
+        if (!str_starts_with($pathdir, $rootdir)) {
             return $path;
         }
 

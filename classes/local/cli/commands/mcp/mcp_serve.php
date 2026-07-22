@@ -38,12 +38,12 @@ class mcp_serve extends Command {
         // Build and run the server.
         $server = Server::builder()
             ->setServerInfo('Moodle devkit plugin MCP server', '0.0.1')
-            ->addTool([\local_devkit\local\mcp\tools\plugins::class, 'list_plugins'])
-            ->addTool([\local_devkit\local\mcp\tools\database::class, 'db_show_tables'])
-            ->addTool([\local_devkit\local\mcp\tools\database::class, 'db_get_table'])
-            ->addTool([\local_devkit\local\mcp\tools\lint::class, 'list_linters'])
-            ->addTool([\local_devkit\local\mcp\tools\lint::class, 'lint_files'])
-            ->addTool([\local_devkit\local\mcp\tools\env::class, 'env_overview'])
+            ->addTool(\local_devkit\local\mcp\tools\plugins::list_plugins(...))
+            ->addTool(\local_devkit\local\mcp\tools\database::db_show_tables(...))
+            ->addTool(\local_devkit\local\mcp\tools\database::db_get_table(...))
+            ->addTool(\local_devkit\local\mcp\tools\lint::list_linters(...))
+            ->addTool(\local_devkit\local\mcp\tools\lint::lint_files(...))
+            ->addTool(\local_devkit\local\mcp\tools\env::env_overview(...))
             ->build();
 
         $transport = new StdioTransport();

@@ -82,7 +82,7 @@ class thirdpartylibs {
             foreach ($xml as $library) {
                 try {
                     $libraries[] = thirdpartylib::from_xml_element($file, $library);
-                } catch (Exception $e) {
+                } catch (Exception) {
                     continue;
                 }
             }

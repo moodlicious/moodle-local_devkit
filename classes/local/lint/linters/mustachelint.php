@@ -273,7 +273,7 @@ class mustachelint extends base {
                             severity::warning,
                         );
                     }
-                } catch (\Throwable $th) {
+                } catch (\Throwable) {
                     $issues[] = issue::simple(
                         'Unable to render template with json example',
                         'template-render-error',

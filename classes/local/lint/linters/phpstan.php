@@ -338,7 +338,7 @@ class phpstan extends base {
         $component = null;
         try {
             $component = component::resolve_component_from_path(utils::get_path_relative_to_moodle_root($path)) ?? '_';
-        } catch (\Exception $th) {
+        } catch (\Exception) {
             $component = '_';
         }
 

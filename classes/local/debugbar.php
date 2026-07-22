@@ -96,8 +96,8 @@ class debugbar extends BaseDebugBar {
         $message?->addBacktraceExcludePaths(['/local/devkit/classes/local/debugbar.php']);
 
         // Set our own handlers to log errors and exceptions to the debugbar.
-        set_error_handler([$this, 'error_handler']);
-        set_exception_handler([$this, 'exception_handler']);
+        set_error_handler($this->error_handler(...));
+        set_exception_handler($this->exception_handler(...));
     }
 
     /**
@@ -343,7 +343,7 @@ class debugbar extends BaseDebugBar {
             return;
         }
 
-        if (str_contains($url, '/local/devkit/debugbar/open.php')) {
+        if (str_contains((string) $url, '/local/devkit/debugbar/open.php')) {
             return;
         }
 

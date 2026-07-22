@@ -68,15 +68,14 @@ abstract class base {
     /** @var string */
     public const CONFIG_KEY_EXCLUDE_PATTERNS = 'exclude_patterns';
 
-    /** @var ProgressIndicator|null */
-    protected ?ProgressIndicator $progress;
-
     /**
      * Constructor
      * @param ProgressIndicator $progress
      */
-    public function __construct(?ProgressIndicator $progress = null) {
-        $this->progress = $progress;
+    public function __construct(
+        /** @var ProgressIndicator|null */
+        protected ?ProgressIndicator $progress = null,
+    ) {
     }
 
     /**

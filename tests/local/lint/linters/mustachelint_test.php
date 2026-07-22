@@ -21,8 +21,6 @@ namespace local_devkit\local\lint\linters;
 use advanced_testcase;
 use local_devkit\local\attributes\linter;
 
-use function get_class;
-
 /**
  * Unit tests for the mustachelint linter.
  *
@@ -106,7 +104,7 @@ final class mustachelint_test extends advanced_testcase {
      * Test that a template with mixed-case template name reports template-name-casing.
      */
     public function test_mixed_case_name(): void {
-        $class = get_class($this->linter);
+        $class = $this->linter::class;
         $original = $class::$mocktemplatename;
         $class::$mocktemplatename = 'local_devkit/Test';
 

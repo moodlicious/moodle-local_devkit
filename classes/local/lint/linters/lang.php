@@ -208,7 +208,7 @@ class lang extends base {
             $string = [];
             include($filepath);
             return $string;
-        } catch (\Throwable $th) {
+        } catch (\Throwable) {
             return [];
         }
     }

@@ -37,19 +37,19 @@ class thirdpartylib {
     public string $name;
 
     /** @var string|null */
-    public ?string $description;
+    public ?string $description = null;
 
     /** @var string|null */
-    public ?string $version;
+    public ?string $version = null;
 
     /** @var string */
     public string $license;
 
     /** @var string|null */
-    public ?string $licenseversion;
+    public ?string $licenseversion = null;
 
     /** @var string|null */
-    public ?string $repository;
+    public ?string $repository = null;
 
     /** @var bool */
     public bool $customised;

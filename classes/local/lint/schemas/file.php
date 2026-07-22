@@ -32,10 +32,6 @@ use local_devkit\local\utils;
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class file implements JsonSerializable {
-    /** @var string */
-    public readonly string $file;
-    /** @var issue[] */
-    public array $issues;
     /** @var string|null */
     private ?string $component = null;
     /** @var bool */
@@ -46,9 +42,12 @@ class file implements JsonSerializable {
      * @param string $file
      * @param issue[] $issues
      */
-    public function __construct(string $file, array $issues = []) {
-        $this->file = $file;
-        $this->issues = $issues;
+    public function __construct(
+        /** @var string */
+        public readonly string $file,
+        /** @var issue[] */
+        public array $issues = [],
+    ) {
     }
 
     /**

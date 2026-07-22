@@ -38,21 +38,6 @@ use local_devkit\local\lint\severity;
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class issue implements JsonSerializable {
-    /** @var int Line number of the issue */
-    public int $line;
-    /** @var int Column of the issue */
-    public int $column;
-    /** @var string Message of the issue */
-    public string $message;
-    /** @var string The linter rule used */
-    public ?string $rule;
-    /** @var string The error source */
-    public string $source;
-    /** @var severity The severity of the issue */
-    public severity $severity;
-    /** @var string[] Suggestions on how to resolve the issue */
-    public array $suggestions;
-
     /**
      * Constructor.
      * @param int $line
@@ -64,21 +49,21 @@ class issue implements JsonSerializable {
      * @param string[] $suggestions
      */
     public function __construct(
-        int $line,
-        int $column,
-        string $message,
-        ?string $rule,
-        string $source,
-        severity $severity,
-        array $suggestions = [],
+        /** @var int Line number of the issue */
+        public int $line,
+        /** @var int Column of the issue */
+        public int $column,
+        /** @var string Message of the issue */
+        public string $message,
+        /** @var string The linter rule used */
+        public ?string $rule,
+        /** @var string The error source */
+        public string $source,
+        /** @var severity The severity of the issue */
+        public severity $severity,
+        /** @var string[] Suggestions on how to resolve the issue */
+        public array $suggestions = [],
     ) {
-        $this->line = $line;
-        $this->column = $column;
-        $this->message = $message;
-        $this->rule = $rule;
-        $this->source = $source;
-        $this->severity = $severity;
-        $this->suggestions = $suggestions;
     }
 
     /**

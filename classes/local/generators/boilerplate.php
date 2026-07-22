@@ -92,8 +92,8 @@ class boilerplate {
      */
     public static function check_has_boilerplate(string $content, string $format): bool {
         $generator = match ($format) {
-            'js' => [self::class, 'generate_for_javascript'],
-            'mustache' => [self::class, 'generate_for_mustache'],
+            'js' => self::generate_for_javascript(...),
+            'mustache' => self::generate_for_mustache(...),
             default => throw new \InvalidArgumentException("Unknown format: $format"),
         };
 

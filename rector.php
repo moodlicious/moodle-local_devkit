@@ -6,6 +6,7 @@ declare(strict_types=1);
 use Rector\CodeQuality\Rector\If_\ShortenElseIfRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
+use Rector\EarlyReturn\Rector\If_\ChangeOrIfContinueToMultiContinueRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -27,11 +28,15 @@ return RectorConfig::configure()
     ])
     ->withPhpSets()
     ->withImportNames(importShortClasses: false)
-    ->withTypeCoverageLevel(73)
-    ->withTypeCoverageDocblockLevel(20)
-    ->withDeadCodeLevel(64)
-    ->withCodeQualityLevel(86)
+    ->withPreparedSets(
+        deadCode: true,
+        codeQuality: true,
+        typeDeclarations: true,
+        typeDeclarationDocblocks: true,
+        earlyReturn: true,
+    )
     ->withSkip([
+        ChangeOrIfContinueToMultiContinueRector::class,
         RemoveUselessVarTagRector::class,
         ShortenElseIfRector::class,
     ])

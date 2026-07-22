@@ -4,6 +4,12 @@
 declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\If_\ShortenElseIfRector;
+use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
+use Rector\CodingStyle\Rector\ClassLike\NewlineBetweenClassLikeStmtsRector;
+use Rector\CodingStyle\Rector\ClassMethod\NewlineBeforeNewAssignSetRector;
+use Rector\CodingStyle\Rector\Encapsed\EncapsedStringsToSprintfRector;
+use Rector\CodingStyle\Rector\Encapsed\WrapEncapsedVariableInCurlyBracesRector;
+use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\EarlyReturn\Rector\If_\ChangeOrIfContinueToMultiContinueRector;
@@ -31,13 +37,20 @@ return RectorConfig::configure()
     ->withPreparedSets(
         deadCode: true,
         codeQuality: true,
+        codingStyle: true,
         typeDeclarations: true,
         typeDeclarationDocblocks: true,
         earlyReturn: true,
     )
     ->withSkip([
+        CatchExceptionNameMatchingTypeRector::class,
         ChangeOrIfContinueToMultiContinueRector::class,
+        EncapsedStringsToSprintfRector::class,
+        NewlineAfterStatementRector::class,
+        NewlineBeforeNewAssignSetRector::class,
+        NewlineBetweenClassLikeStmtsRector::class,
         RemoveUselessVarTagRector::class,
         ShortenElseIfRector::class,
+        WrapEncapsedVariableInCurlyBracesRector::class,
     ])
 ;

@@ -128,7 +128,7 @@ class lang extends base {
             break;
         }
 
-        if (count($segments) === 0) {
+        if ($segments === []) {
             return $directorypath;
         }
 
@@ -340,7 +340,7 @@ class lang extends base {
                 $localelangfile = $this->compose_lang_filepath($langdir, $component, $locale);
                 $placeholders = $this->extract_placeholders($string);
                 $missingplaceholders = array_diff($requiredplaceholders, $placeholders);
-                if (count($missingplaceholders) > 0) {
+                if ($missingplaceholders !== []) {
                     $placeholdersmsg = $this->placeholders_to_string($missingplaceholders);
                     $results[] = $this->single_file_issue(
                         $localelangfile,
@@ -351,7 +351,7 @@ class lang extends base {
                 }
 
                 $extraplaceholders = array_diff($placeholders, $requiredplaceholders);
-                if (count($extraplaceholders) > 0) {
+                if ($extraplaceholders !== []) {
                     $placeholdersmsg = $this->placeholders_to_string($extraplaceholders);
                     $results[] = $this->single_file_issue(
                         $localelangfile,
@@ -378,7 +378,7 @@ class lang extends base {
         $locale = array_pop($segments);
         $langdir = implode(DIRECTORY_SEPARATOR, $segments);
 
-        if (count($segments) === 0 || $locale === null || $component === '') {
+        if ($segments === [] || $locale === null || $component === '') {
             return null;
         }
 

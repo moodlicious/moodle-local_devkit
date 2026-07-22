@@ -125,7 +125,7 @@ class handler {
 
         $results = linter::run($realpaths, $linters, progress: $progressindicator);
 
-        if (count($rules) > 0) {
+        if ($rules !== []) {
             $error = self::validate_rules($rules);
             if ($error !== null) {
                 $io->error($error);

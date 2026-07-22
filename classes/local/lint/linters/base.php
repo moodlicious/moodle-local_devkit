@@ -249,7 +249,7 @@ abstract class base {
 
         foreach ($iterator as $path) {
             $lintresults = $this->lint_file($path);
-            if (count($lintresults) > 0) {
+            if ($lintresults !== []) {
                 $results = [...$results, ...$lintresults];
             }
         }

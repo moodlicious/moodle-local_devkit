@@ -27,7 +27,6 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 
-use function count;
 use function dirname;
 use function in_array;
 
@@ -251,9 +250,9 @@ class phpstan extends base {
             $requiredfiles,
             fn(string|false $file): bool => $file === false,
         );
-        if (count($missingfiles) > 0) {
+        if ($missingfiles !== []) {
             throw new \RuntimeException(
-                'PHPStan rule files not found. Please run \'composer install\' in the devkit directory.',
+                "PHPStan rule files not found. Please run 'composer install' in the devkit directory.",
             );
         }
 
@@ -282,7 +281,7 @@ class phpstan extends base {
         }
 
         $stubs = $this->get_stub_files();
-        if (count($stubs) > 0) {
+        if ($stubs !== []) {
             $config['parameters']['stubFiles'] = $stubs;
         }
 

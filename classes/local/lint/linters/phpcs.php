@@ -22,8 +22,6 @@ use local_devkit\local\lint\schemas\issue\phpcs as phpcs_issue;
 use MoodleQuickForm;
 use Symfony\Component\Process\Process;
 
-use function count;
-
 /**
  * The 'php -l' linter.
  *
@@ -90,8 +88,8 @@ class phpcs extends base {
     private function execute_phpcs(string $path): array {
         $excludepatterns = self::get_exclude_patterns();
         $excludedsniffs = self::get_excluded_sniffs();
-        $ignore = count($excludepatterns) > 0 ? ['--ignore=' . implode(',', $excludepatterns)] : [];
-        $exclude = count($excludedsniffs) > 0 ? ['--exclude=' . implode(',', $excludedsniffs)] : [];
+        $ignore = $excludepatterns !== [] ? ['--ignore=' . implode(',', $excludepatterns)] : [];
+        $exclude = $excludedsniffs !== [] ? ['--exclude=' . implode(',', $excludedsniffs)] : [];
         $process = new Process([
             'phpcs',
             '--cache',

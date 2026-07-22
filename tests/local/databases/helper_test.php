@@ -39,6 +39,6 @@ final class helper_test extends advanced_testcase {
         $mockdb = $this->createMock(moodle_database::class);
         $result = helper::get_pdo($mockdb);
 
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 }

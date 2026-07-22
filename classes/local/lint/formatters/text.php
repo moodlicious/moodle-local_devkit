@@ -49,7 +49,7 @@ class text extends base {
                 $rule = "$issue->source/$issue->rule";
                 $filelink = $fileresult->format_path($issue->line, $issue->column, $decorateoutput, $this->relative);
                 $suggestions = implode('//', $issue->suggestions);
-                $suggestions = $suggestions ? " Suggestions: $suggestions" : '';
+                $suggestions = $suggestions !== '' ? " Suggestions: $suggestions" : '';
                 $out = "{$componentprefix}{$filelink}: $severity: $message ($rule)$suggestions";
                 $this->io->writeln($out);
             }

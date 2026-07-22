@@ -49,7 +49,7 @@ final class base_test extends advanced_testcase {
      */
     public function test_get_name_returns_classname(): void {
         $name = $this->create_simple_base_class()::get_name();
-        $this->assertSame('base', $name);
+        self::assertSame('base', $name);
     }
 
     /**
@@ -57,7 +57,7 @@ final class base_test extends advanced_testcase {
      */
     public function test_get_description_returns_null(): void {
         $description = $this->create_simple_base_class()::get_description();
-        $this->assertNull($description);
+        self::assertNull($description);
     }
 
     /**
@@ -65,7 +65,7 @@ final class base_test extends advanced_testcase {
      */
     public function test_get_include_patterns_returns_empty_array(): void {
         $patterns = $this->create_simple_base_class()::get_include_patterns();
-        $this->assertSame([], $patterns);
+        self::assertSame([], $patterns);
     }
 
     /**
@@ -73,10 +73,10 @@ final class base_test extends advanced_testcase {
      */
     public function test_get_exclude_patterns_returns_default_patterns(): void {
         $patterns = $this->create_simple_base_class()::get_exclude_patterns();
-        $this->assertContains('*/.git/*', $patterns);
-        $this->assertContains('*/node_modules/*', $patterns);
-        $this->assertContains('*/vendor/*', $patterns);
-        $this->assertContains('*/tests/fixtures/*', $patterns);
+        self::assertContains('*/.git/*', $patterns);
+        self::assertContains('*/node_modules/*', $patterns);
+        self::assertContains('*/vendor/*', $patterns);
+        self::assertContains('*/tests/fixtures/*', $patterns);
     }
 
     /**
@@ -85,7 +85,7 @@ final class base_test extends advanced_testcase {
     public function test_can_lint_file_returns_false_when_no_include_patterns(): void {
         $linter = $this->create_simple_base_class();
         $result = $linter->can_lint_file('/some/path/file.php');
-        $this->assertFalse($result);
+        self::assertFalse($result);
     }
 
     /**
@@ -94,7 +94,7 @@ final class base_test extends advanced_testcase {
     public function test_can_lint_file_returns_true_with_matching_include(): void {
         $linter = new phplint();
         $result = $linter->can_lint_file('/some/path/file.php');
-        $this->assertTrue($result);
+        self::assertTrue($result);
     }
 
     /**
@@ -103,7 +103,7 @@ final class base_test extends advanced_testcase {
     public function test_can_lint_file_returns_false_when_matches_exclude(): void {
         $linter = new phplint();
         $result = $linter->can_lint_file('/project/node_modules/somelib/file.php');
-        $this->assertFalse($result);
+        self::assertFalse($result);
     }
 
     /**
@@ -112,7 +112,7 @@ final class base_test extends advanced_testcase {
     public function test_can_lint_file_requires_both_include_and_not_exclude(): void {
         $linter = new phplint();
         $result = $linter->can_lint_file('/project/node_modules/somelib/file.php');
-        $this->assertFalse($result);
+        self::assertFalse($result);
     }
 
     /**
@@ -135,11 +135,11 @@ final class base_test extends advanced_testcase {
 
         $flattened = base::flatten_results($results);
 
-        $this->assertCount(1, $flattened);
-        $this->assertSame($filepath, $flattened[0]->file);
-        $this->assertCount(2, $flattened[0]->issues);
-        $this->assertSame('Error 1', $flattened[0]->issues[0]->message);
-        $this->assertSame('Error 2', $flattened[0]->issues[1]->message);
+        self::assertCount(1, $flattened);
+        self::assertSame($filepath, $flattened[0]->file);
+        self::assertCount(2, $flattened[0]->issues);
+        self::assertSame('Error 1', $flattened[0]->issues[0]->message);
+        self::assertSame('Error 2', $flattened[0]->issues[1]->message);
     }
 
     /**
@@ -156,7 +156,7 @@ final class base_test extends advanced_testcase {
 
         $flattened = base::flatten_results($results);
 
-        $this->assertCount(2, $flattened);
+        self::assertCount(2, $flattened);
     }
 
     /**
@@ -164,7 +164,7 @@ final class base_test extends advanced_testcase {
      */
     public function test_flatten_results_returns_empty_for_empty_input(): void {
         $flattened = base::flatten_results([]);
-        $this->assertSame([], $flattened);
+        self::assertSame([], $flattened);
     }
 
     /**

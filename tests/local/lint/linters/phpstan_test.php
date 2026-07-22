@@ -35,7 +35,7 @@ final class phpstan_test extends advanced_testcase {
      */
     public function test_get_include_patterns(): void {
         $patterns = phpstan::get_include_patterns();
-        $this->assertContains('*.php', $patterns);
+        self::assertContains('*.php', $patterns);
     }
 
     /**
@@ -43,7 +43,7 @@ final class phpstan_test extends advanced_testcase {
      */
     public function test_get_include_patterns_includes_parent_patterns(): void {
         $patterns = phpstan::get_include_patterns();
-        $this->assertContains('*.php', $patterns);
+        self::assertContains('*.php', $patterns);
     }
 
     /**
@@ -51,7 +51,7 @@ final class phpstan_test extends advanced_testcase {
      */
     public function test_get_rule_level_default(): void {
         $level = phpstan::get_rule_level();
-        $this->assertSame(8, $level);
+        self::assertSame(8, $level);
     }
 
     /**
@@ -59,7 +59,7 @@ final class phpstan_test extends advanced_testcase {
      */
     public function test_get_result_cache_mode_default(): void {
         $mode = phpstan::get_result_cache_mode();
-        $this->assertSame(phpstan::RESULT_CACHE_PER_COMPONENT, $mode);
+        self::assertSame(phpstan::RESULT_CACHE_PER_COMPONENT, $mode);
     }
 
     /**
@@ -69,7 +69,7 @@ final class phpstan_test extends advanced_testcase {
         $this->resetAfterTest();
         $linter = new phpstan();
         $stubs = $linter->get_stub_files();
-        $this->assertNotEmpty($stubs);
+        self::assertNotEmpty($stubs);
     }
 
     /**
@@ -79,9 +79,9 @@ final class phpstan_test extends advanced_testcase {
         $this->resetAfterTest();
         $linter = new phpstan();
         $stubs = $linter->get_stub_files();
-        $this->assertNotEmpty($stubs);
+        self::assertNotEmpty($stubs);
         foreach ($stubs as $stub) {
-            $this->assertStringEndsWith('.stub', $stub);
+            self::assertStringEndsWith('.stub', $stub);
         }
     }
 
@@ -93,7 +93,7 @@ final class phpstan_test extends advanced_testcase {
         $linter = new phpstan();
         $stubs = $linter->get_stub_files();
         foreach ($stubs as $stub) {
-            $this->assertFileExists($stub);
+            self::assertFileExists($stub);
         }
     }
 
@@ -104,6 +104,6 @@ final class phpstan_test extends advanced_testcase {
         $this->resetAfterTest();
         $linter = new phpstan();
         $stubs = $linter->get_stub_files();
-        $this->assertSame($stubs, array_unique($stubs));
+        self::assertSame($stubs, array_unique($stubs));
     }
 }

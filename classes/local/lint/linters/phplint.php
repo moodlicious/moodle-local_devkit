@@ -69,7 +69,7 @@ class phplint extends base {
             0,
             trim($output),
             'php-file-must-parse-successfully',
-            $this->get_name(),
+            self::get_name(),
             severity::error,
         ));
 

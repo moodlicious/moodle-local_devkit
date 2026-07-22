@@ -46,7 +46,7 @@ class eslint extends issue {
         // The message also includes nodeType, messageId, endLine, endColumn, but we won't use it.
 
         // Some messages return empty ruleId, ignore those for now.
-        if (!$ruleid) {
+        if ($ruleid === null || $ruleid === '') {
             return null;
         }
 

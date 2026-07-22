@@ -107,18 +107,20 @@ trait devkit_database_trait {
      * End query wrapper.
      * @param mysqli_result|null $result
      * @return void
+     * phpcs:ignore moodle.Commenting.ValidTags
+     * @phpstan-ignore-next-line method.childParameterType
      */
     protected function query_end($result) {
         parent::query_end($result);
 
         $statement = array_pop($this->executedstatements);
-        if (!$statement) {
+        if ($statement === null) {
             return;
         }
 
         $mysqliresult = $result instanceof mysqli_result ? $result : null;
 
-        if ($mysqliresult) {
+        if ($mysqliresult !== null) {
             $statement->end(rowCount: (int) $mysqliresult->num_rows);
         } else {
             $statement->end();

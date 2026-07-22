@@ -57,7 +57,7 @@ class debugbar extends BaseDebugBar {
         $this->init_renderer();
 
         $editor = \local_devkit\local\config\debugbar::get_editor();
-        if ($editor) {
+        if ($editor !== null) {
             $this->setEditor($editor);
         }
 
@@ -84,7 +84,7 @@ class debugbar extends BaseDebugBar {
         // If the PDO collector is available, set the TimeDataCollector on it so it can log query execution times.
         $pdo = $this->get_database_collector();
         $td = $this->get_time_data_collector();
-        if ($pdo && $td) {
+        if ($pdo !== null && $td !== null) {
             $pdo->setTimeDataCollector($td);
         }
 
@@ -105,7 +105,7 @@ class debugbar extends BaseDebugBar {
      * @return self
      */
     public static function instance(): self {
-        if (self::$instance) {
+        if (self::$instance !== null) {
             return self::$instance;
         }
         self::$instance = new self();
@@ -217,7 +217,7 @@ class debugbar extends BaseDebugBar {
      */
     public function log_exception(Throwable $exception): void {
         $collector = $this->get_exceptions_collector();
-        if (!$collector) {
+        if ($collector === null) {
             return;
         }
         $collector->addException($exception);

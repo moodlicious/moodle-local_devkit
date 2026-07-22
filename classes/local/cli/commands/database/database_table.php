@@ -69,7 +69,7 @@ class database_table extends Command {
      */
     public static function get_data(string $tablename) {
         $table = database::find_table($tablename);
-        if (!$table) {
+        if ($table === null) {
             throw new Exception("Table with name '$tablename' not found.");
         }
         return $table;

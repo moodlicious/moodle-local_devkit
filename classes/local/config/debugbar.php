@@ -44,6 +44,10 @@ class debugbar {
      * @return string|null The editor name or null if not set.
      */
     public static function get_editor(): ?string {
-        return get_config('local_devkit', 'debugbar_editor') ?: null;
+        $config = get_config('local_devkit', 'debugbar_editor');
+        if ($config === false || $config === '') {
+            return null;
+        }
+        return $config;
     }
 }

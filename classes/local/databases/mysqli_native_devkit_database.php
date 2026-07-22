@@ -34,6 +34,7 @@ class mysqli_native_devkit_database extends mysqli_native_moodle_database implem
      * @param mysqli_native_moodle_database $db
      */
     protected function __construct(mysqli_native_moodle_database $db) {
+        parent::__construct();
         $this->pdo = new TraceablePDO(
             new PDO("mysql:host={$db->dbhost};dbname={$db->dbname}", $db->dbuser, $db->dbpass),
         );

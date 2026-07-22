@@ -69,9 +69,10 @@ class database_show extends Command {
      * @return database_schema[]
      */
     public static function get_data(?string $component) {
-        if ($component) {
+        $plugintables = [];
+        if ($component !== null) {
             $plugintable = database::list_plugin_tables($component);
-            if (!$plugintable) {
+            if ($plugintable === null) {
                 throw new Exception("Component '$component' does not define db/install.xml.");
             }
             $plugintables[] = $plugintable;
@@ -91,7 +92,7 @@ class database_show extends Command {
     public static function display_table(SymfonyStyle $io, array $data): void {
         foreach ($data as $database) {
             $io->title($database->name);
-            if ($database->comment) {
+            if ($database->comment !== null) {
                 $io->comment($database->comment);
             }
 
@@ -113,7 +114,7 @@ class database_show extends Command {
      */
     public static function display_table_table(SymfonyStyle $io, database_schema\table $table): void {
         $io->section("Table: {$table->name}");
-        if ($table->comment) {
+        if ($table->comment !== null) {
             $io->comment($table->comment);
         }
 
@@ -145,7 +146,7 @@ class database_show extends Command {
                 $key->name,
                 $key->type,
                 implode(',', $key->fields),
-                $key->references->table
+                $key->references->table !== null
                 ? $key->references->table . '.' . implode(',', $key->references->fields)
                 : '',
                 $key->comment,

@@ -36,7 +36,7 @@ class observer {
         }
 
         $collector = debugbar::instance()->get_time_data_collector();
-        if (!$collector) {
+        if ($collector === null) {
             return;
         }
 

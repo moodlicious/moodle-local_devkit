@@ -20,6 +20,8 @@ use local_devkit\local\lint\schemas\file;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+use function count;
+
 /**
  * The base formatter.
  *
@@ -51,7 +53,7 @@ abstract class base {
      */
     protected static function exit_code(array $results): int {
         foreach ($results as $file) {
-            if ($file->issues) {
+            if (count($file->issues) > 0) {
                 return Command::FAILURE;
             }
         }

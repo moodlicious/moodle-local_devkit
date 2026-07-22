@@ -56,17 +56,35 @@ class boilerplate {
     }
 
     /**
-     * Get the canonical GPL boilerplate with JS line comments.
+     * Get the canonical GPL boilerplate with '//' comments.
      * @param bool $usehttps
      * @return string
      */
-    public static function generate_for_javascript(bool $usehttps): string {
+    public static function generate_with_slash_comments(bool $usehttps): string {
         $raw = self::get_boilerplate($usehttps);
 
         $lines = explode("\n", rtrim($raw));
         $commented = array_map(fn(string $line): string => $line === '' ? '//' : "// $line", $lines);
 
         return implode("\n", $commented) . "\n";
+    }
+
+    /**
+     * Get the canonical GPL boilerplate with JS line comments.
+     * @param bool $usehttps
+     * @return string
+     */
+    public static function generate_for_javascript(bool $usehttps): string {
+        return self::generate_with_slash_comments($usehttps);
+    }
+
+    /**
+     * Get the canonical GPL boilerplate with JS line comments.
+     * @param bool $usehttps
+     * @return string
+     */
+    public static function generate_for_php(bool $usehttps): string {
+        return self::generate_with_slash_comments($usehttps);
     }
 
     /**

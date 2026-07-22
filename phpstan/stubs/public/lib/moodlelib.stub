@@ -424,6 +424,35 @@ function fullname($user, $override = false) {
 }
 
 /**
+ * @param stdClass $user
+ * @param stdClass|string $from
+ * @param string $subject
+ * @param string $messagetext
+ * @param string $messagehtml
+ * @param string $attachment
+ * @param string $attachname
+ * @param bool $usetrueaddress
+ * @param string $replyto
+ * @param string $replytoname
+ * @param int $wordwrapwidth
+ * @return bool
+ */
+function email_to_user(
+    $user,
+    $from,
+    $subject,
+    $messagetext,
+    $messagehtml = '',
+    $attachment = '',
+    $attachname = '',
+    $usetrueaddress = true,
+    $replyto = '',
+    $replytoname = '',
+    $wordwrapwidth = 79,
+) {
+}
+
+/**
  * @phpstan-import-type get_string_a from lang_string
  * @param string $identifier
  * @param string $component

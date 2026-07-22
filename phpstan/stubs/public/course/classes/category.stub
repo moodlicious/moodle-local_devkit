@@ -1,0 +1,26 @@
+<?php
+
+use core\output\renderable;
+use core_cache\cacheable_object_interface;
+use IteratorAggregate;
+use Throwable;
+
+use const IGNORE_MISSING;
+use const IGNORE_MULTIPLE;
+use const MUST_EXIST;
+
+/**
+ * @implements IteratorAggregate<string, mixed>
+ */
+class core_course_category implements cacheable_object_interface, IteratorAggregate, renderable {
+    /**
+     * @param int $id
+     * @param IGNORE_MISSING|IGNORE_MULTIPLE|MUST_EXIST $strictness
+     * @param bool $alwaysreturnhidden
+     * @param int|stdClass|null $user
+     * @return ($strictness is MUST_EXIST ? self : null|self)
+     * @throws moodle_exception&Throwable
+     */
+    public static function get($id, $strictness = MUST_EXIST, $alwaysreturnhidden = false, $user = null) {
+    }
+}

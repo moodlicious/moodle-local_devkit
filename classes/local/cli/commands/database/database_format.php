@@ -43,7 +43,7 @@ class database_format extends Command {
         SymfonyStyle $io,
     ): int {
         $plugin = plugins::get_by_component($component);
-        if (!$plugin) {
+        if ($plugin === null) {
             $io->error("Component $component not found.");
             return Command::FAILURE;
         }

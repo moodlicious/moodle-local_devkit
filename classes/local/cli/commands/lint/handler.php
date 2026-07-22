@@ -128,9 +128,9 @@ class handler {
 
         $results = linter::run($realpaths, $linters, progress: $progressindicator);
 
-        if ($rules) {
+        if (count($rules) > 0) {
             $error = self::validate_rules($rules);
-            if ($error) {
+            if ($error !== null) {
                 $io->error($error);
                 return Command::FAILURE;
             }
@@ -147,7 +147,7 @@ class handler {
      */
     private static function validate_rules(array $rules): ?string {
         foreach ($rules as $rule) {
-            if (preg_match(self::REGEX_PATTERN, $rule)) {
+            if (preg_match(self::REGEX_PATTERN, $rule) === 1) {
                 if (@preg_match($rule, '') === false) {
                     return "Invalid regex pattern \"{$rule}\": " . preg_last_error_msg();
                 }
@@ -169,7 +169,7 @@ class handler {
      */
     private static function filter_results_by_rules(array $results, array $rules): array {
         $patterns = array_map(function (string $rule): string {
-            if (preg_match(self::REGEX_PATTERN, $rule)) {
+            if (preg_match(self::REGEX_PATTERN, $rule) === 1) {
                 return $rule;
             }
             return '#' . $rule . '#i';
@@ -193,7 +193,7 @@ class handler {
      */
     private static function matches_any_pattern(string $value, array $patterns): bool {
         foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $value)) {
+            if (preg_match($pattern, $value) === 1) {
                 return true;
             }
         }
@@ -217,9 +217,9 @@ class handler {
             $linters,
         );
         $command = new Command($name);
-        if ($linter) {
+        if ($linter !== null) {
             $description = $linter::get_description();
-            if ($description) {
+            if ($description !== null) {
                 $command->setDescription($description);
             }
         } else {

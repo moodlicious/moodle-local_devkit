@@ -73,7 +73,7 @@ class lang extends base {
     #[\Override]
     public function lint_file(string $filepath): array {
         $segments = self::split_lang_filepath($filepath);
-        if (!$segments) {
+        if ($segments === null) {
             return [];
         }
 
@@ -132,7 +132,7 @@ class lang extends base {
             break;
         }
 
-        if (!$segments) {
+        if (count($segments) === 0) {
             return $directorypath;
         }
 
@@ -156,9 +156,6 @@ class lang extends base {
             new RecursiveDirectoryIterator($directorypath, RecursiveDirectoryIterator::SKIP_DOTS),
         );
 
-        $locales = [];
-        $components = [];
-
         $langdirdata = [];
 
         foreach ($iterator as $path) {
@@ -167,7 +164,7 @@ class lang extends base {
             }
 
             $segments = self::split_lang_filepath($path);
-            if (!$segments) {
+            if ($segments === null) {
                 continue;
             }
 
@@ -190,10 +187,10 @@ class lang extends base {
         foreach ($langdirdata as $langdir => $components) {
             foreach ($components as $component => $locales) {
                 foreach ($locales as $locale => $strings) {
-                    $langdirdata[$langdir][$component][$locale] = $manager
+                    $langdirdata[$langdir][$component][$locale] = $manager !== null
                         ? $manager->load_component_strings($component, $locale)
                         : self::load_component_strings(
-                            $this->compose_lang_filepath($langdir, $component, $locale),
+                            self::compose_lang_filepath($langdir, $component, $locale),
                         );
                 }
             }
@@ -300,7 +297,7 @@ class lang extends base {
         $englishlocaleid = 'en';
         $englishlangfilepath = self::compose_lang_filepath($langdir, $component, $englishlocaleid);
 
-        if (!in_array($englishlocaleid, $locales)) {
+        if (!in_array($englishlocaleid, $locales, true)) {
             $results[] = self::single_file_issue(
                 $englishlangfilepath,
                 "Missing required '$englishlocaleid' locale",
@@ -313,7 +310,7 @@ class lang extends base {
             $identifierlocales = array_keys($localesdata);
 
             // Validate that all strings have the 'en' locale.
-            if (!in_array($englishlocaleid, $identifierlocales)) {
+            if (!in_array($englishlocaleid, $identifierlocales, true)) {
                 $results[] = self::single_file_issue(
                     $englishlangfilepath,
                     "Identifier '$identifier' is not present in the '$englishlocaleid' locale",
@@ -353,7 +350,7 @@ class lang extends base {
                 $localelangfile = self::compose_lang_filepath($langdir, $component, $locale);
                 $placeholders = self::extract_placeholders($string);
                 $missingplaceholders = array_diff($requiredplaceholders, $placeholders);
-                if ($missingplaceholders) {
+                if (count($missingplaceholders) > 0) {
                     $placeholdersmsg = self::placeholders_to_string($missingplaceholders);
                     $results[] = self::single_file_issue(
                         $localelangfile,
@@ -364,7 +361,7 @@ class lang extends base {
                 }
 
                 $extraplaceholders = array_diff($placeholders, $requiredplaceholders);
-                if ($extraplaceholders) {
+                if (count($extraplaceholders) > 0) {
                     $placeholdersmsg = self::placeholders_to_string($extraplaceholders);
                     $results[] = self::single_file_issue(
                         $localelangfile,
@@ -396,7 +393,7 @@ class lang extends base {
         $locale = array_pop($segments);
         $langdir = implode(DIRECTORY_SEPARATOR, $segments);
 
-        if (!$langdir || !$locale || !$component) {
+        if (count($segments) === 0 || $locale === null || $component === '') {
             return null;
         }
 
@@ -504,7 +501,7 @@ class lang extends base {
             }
 
             $j = $i + 1;
-            while ($j < $count && is_array($tokens[$j]) && in_array($tokens[$j][0], $skiptokens)) {
+            while ($j < $count && is_array($tokens[$j]) && in_array($tokens[$j][0], $skiptokens, true)) {
                 $j++;
             }
             if ($j >= $count || $tokens[$j] !== '[') {
@@ -512,7 +509,7 @@ class lang extends base {
             }
 
             $k = $j + 1;
-            while ($k < $count && is_array($tokens[$k]) && in_array($tokens[$k][0], $skiptokens)) {
+            while ($k < $count && is_array($tokens[$k]) && in_array($tokens[$k][0], $skiptokens, true)) {
                 $k++;
             }
             if (
@@ -525,7 +522,7 @@ class lang extends base {
             }
 
             $l = $k + 1;
-            while ($l < $count && is_array($tokens[$l]) && in_array($tokens[$l][0], $skiptokens)) {
+            while ($l < $count && is_array($tokens[$l]) && in_array($tokens[$l][0], $skiptokens, true)) {
                 $l++;
             }
             if ($l >= $count || $tokens[$l] !== ']') {
@@ -533,7 +530,7 @@ class lang extends base {
             }
 
             $m = $l + 1;
-            while ($m < $count && is_array($tokens[$m]) && in_array($tokens[$m][0], $skiptokens)) {
+            while ($m < $count && is_array($tokens[$m]) && in_array($tokens[$m][0], $skiptokens, true)) {
                 $m++;
             }
             if ($m < $count && $tokens[$m] === '=') {

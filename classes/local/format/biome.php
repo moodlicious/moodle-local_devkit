@@ -37,7 +37,7 @@ class biome extends base {
     #[\Override]
     public static function format(string $path): ?int {
         $config = self::get_config_path();
-        if (!$config) {
+        if ($config === null) {
             return null;
         }
 
@@ -63,12 +63,12 @@ class biome extends base {
     private static function get_config_path(): ?string {
         global $CFG;
 
-        if (self::$configpath) {
-            return self::$configpath;
-        }
-
         if (self::$configpath === false) {
             return null;
+        }
+
+        if (self::$configpath !== null) {
+            return self::$configpath;
         }
 
         self::$configpath = realpath("$CFG->dirroot/local/devkit/biome.jsonc");

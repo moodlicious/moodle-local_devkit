@@ -54,8 +54,8 @@ final class jsdoc_test extends advanced_testcase {
     public function test_passing_amd_file(): void {
         $filepath = $this->fixturedir . '/amd/src/passing.js';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
-        $this->assertCount(0, $results[0]->issues);
+        self::assertCount(1, $results);
+        self::assertCount(0, $results[0]->issues);
     }
 
     /**
@@ -64,8 +64,8 @@ final class jsdoc_test extends advanced_testcase {
     public function test_passing_esm_file(): void {
         $filepath = $this->fixturedir . '/js/esm/src/passing.tsx';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
-        $this->assertCount(0, $results[0]->issues);
+        self::assertCount(1, $results);
+        self::assertCount(0, $results[0]->issues);
     }
 
     /**
@@ -74,9 +74,9 @@ final class jsdoc_test extends advanced_testcase {
     public function test_missing_boilerplate(): void {
         $filepath = $this->fixturedir . '/amd/src/missing-boilerplate.js';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
+        self::assertCount(1, $results);
         $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
-        $this->assertContains('missing-boilerplate', $rules);
+        self::assertContains('missing-boilerplate', $rules);
     }
 
     /**
@@ -85,9 +85,9 @@ final class jsdoc_test extends advanced_testcase {
     public function test_missing_docblock(): void {
         $filepath = $this->fixturedir . '/amd/src/missing-docblock.js';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
+        self::assertCount(1, $results);
         $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
-        $this->assertContains('missing-docblock', $rules);
+        self::assertContains('missing-docblock', $rules);
     }
 
     /**
@@ -96,10 +96,10 @@ final class jsdoc_test extends advanced_testcase {
     public function test_incomplete_docblock(): void {
         $filepath = $this->fixturedir . '/amd/src/incomplete-docblock.js';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
+        self::assertCount(1, $results);
         $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
-        $this->assertContains('missing-copyright', $rules);
-        $this->assertContains('missing-license', $rules);
+        self::assertContains('missing-copyright', $rules);
+        self::assertContains('missing-license', $rules);
     }
 
     /**
@@ -108,9 +108,9 @@ final class jsdoc_test extends advanced_testcase {
     public function test_wrong_module_name(): void {
         $filepath = $this->fixturedir . '/amd/src/wrong-module-name.js';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
+        self::assertCount(1, $results);
         $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
-        $this->assertContains('module-name-incorrect', $rules);
+        self::assertContains('module-name-incorrect', $rules);
     }
 
     /**
@@ -118,10 +118,10 @@ final class jsdoc_test extends advanced_testcase {
      */
     public function test_get_include_patterns(): void {
         $patterns = jsdoc::get_include_patterns();
-        $this->assertContains('**/amd/src/*.js', $patterns);
-        $this->assertContains('**/js/esm/src/*.ts', $patterns);
-        $this->assertContains('**/js/esm/src/*.tsx', $patterns);
-        $this->assertNotContains('**/js/esm/src/*.js', $patterns);
+        self::assertContains('**/amd/src/*.js', $patterns);
+        self::assertContains('**/js/esm/src/*.ts', $patterns);
+        self::assertContains('**/js/esm/src/*.tsx', $patterns);
+        self::assertNotContains('**/js/esm/src/*.js', $patterns);
     }
 
     /**
@@ -129,6 +129,6 @@ final class jsdoc_test extends advanced_testcase {
      */
     public function test_get_exclude_patterns(): void {
         $patterns = jsdoc::get_exclude_patterns();
-        $this->assertContains('*/tests/fixtures/*', $patterns);
+        self::assertContains('*/tests/fixtures/*', $patterns);
     }
 }

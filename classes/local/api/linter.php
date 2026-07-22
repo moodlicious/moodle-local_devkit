@@ -54,7 +54,7 @@ class linter {
                     return true;
                 }
 
-                return in_array($linter::get_name(), $linternames);
+                return in_array($linter::get_name(), $linternames, true);
             },
         );
 
@@ -72,7 +72,7 @@ class linter {
             function (/** @var class-string<base> $linter */ $linter) {
                 $name = $linter::get_name();
                 $description = $linter::get_description();
-                return $description ? "$name: $description" : $name;
+                return $description !== null ? "$name: $description" : $name;
             },
             $linters,
         ));

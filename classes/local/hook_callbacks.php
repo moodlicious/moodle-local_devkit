@@ -47,7 +47,7 @@ class hook_callbacks {
         global $DB;
         $DB = helper::wrap_database($DB);
         $pdo = helper::get_pdo($DB);
-        if ($pdo) {
+        if ($pdo !== null) {
             $debugbar = debugbar::instance();
             $debugbar->get_database_collector()?->addConnection($pdo, 'moodle');
             $debugbar->get_time_data_collector()?->addMeasure('debugbar:start');

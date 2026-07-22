@@ -32,6 +32,8 @@ use ReflectionClass;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 
 use function array_key_exists;
+use function count;
+use function is_object;
 
 /**
  * The abstract base linter.
@@ -83,11 +85,12 @@ abstract class base {
      * @return void
      */
     public function set_progress_file(string $path): void {
-        if (!$this->progress) {
+        if ($this->progress === null) {
             return;
         }
 
-        $this->progress->setMessage("Running {$this->get_name()} on $path...");
+        $name = self::get_name();
+        $this->progress->setMessage("Running $name on $path...");
     }
 
     /**
@@ -105,9 +108,9 @@ abstract class base {
         $class = new ReflectionClass(static::class);
         /** @var ReflectionAttribute<linter>[] $attributes */
         $attributes = $class->getAttributes(linter::class);
-        [$attribute] = $attributes ?: [null];
+        [$attribute] = count($attributes) > 0 ? $attributes : [null];
 
-        if (!$attribute) {
+        if ($attribute === null) {
             throw new coding_exception('linter classes must have the linter attribute set');
         }
 
@@ -256,7 +259,7 @@ abstract class base {
 
         foreach ($iterator as $path) {
             $lintresults = $this->lint_file($path);
-            if ($lintresults) {
+            if (count($lintresults) > 0) {
                 $results = [...$results, ...$lintresults];
             }
         }
@@ -357,12 +360,12 @@ abstract class base {
      * @return bool
      */
     public function can_lint_file(string $filepath): bool {
-        $includematch = $this->path_match_patterns($filepath, $this->get_include_patterns());
+        $includematch = $this->path_match_patterns($filepath, static::get_include_patterns());
         if (!$includematch) {
             return false;
         }
 
-        $excludematch = $this->path_match_patterns($filepath, $this->get_exclude_patterns());
+        $excludematch = $this->path_match_patterns($filepath, static::get_exclude_patterns());
         if ($excludematch) {
             return false;
         }
@@ -403,7 +406,7 @@ abstract class base {
      */
     protected static function get_config_value(string $key, ?string $togglekey = null): mixed {
         if ($togglekey !== null) {
-            $enabled = self::get_config_value($togglekey);
+            $enabled = (bool) self::get_config_value($togglekey);
             if (!$enabled) {
                 return null;
             }
@@ -418,6 +421,8 @@ abstract class base {
             return null;
         }
 
+        // phpcs:ignore moodle.Commenting.InlineComment
+        // @phpstan-ignore-next-line phpstan/property.dynamicName (Checked above, probably fine)
         return $config->$key;
     }
 
@@ -478,10 +483,11 @@ abstract class base {
         } catch (dml_exception) {
             return null;
         }
-        if (!$configstring) {
+        if ($configstring === '' || $configstring === false) {
             return null;
         }
-        return json_decode($configstring, false);
+        $config = json_decode($configstring, false);
+        return is_object($config) ? $config : null;
     }
 
     /**
@@ -504,7 +510,7 @@ abstract class base {
      * @return string[]
      */
     protected static function parse_multiline_string_as_array(string $string): array {
-        $excludes = explode("\n", $string);
-        return array_filter(array_map(trim(...), $excludes));
+        $lines = explode("\n", $string);
+        return array_filter(array_map(trim(...), $lines), fn($line) => $line !== '');
     }
 }

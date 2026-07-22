@@ -44,13 +44,13 @@ final class stylelint_test extends advanced_testcase {
 
         $issue = stylelint::from_object($obj);
 
-        $this->assertNotNull($issue);
-        $this->assertSame(3, $issue->line);
-        $this->assertSame(5, $issue->column);
-        $this->assertSame('Unexpected invalid hex color', $issue->message);
-        $this->assertSame('color-no-invalid-hex', $issue->rule);
-        $this->assertSame('stylelint', $issue->source);
-        $this->assertSame(severity::error, $issue->severity);
+        self::assertNotNull($issue);
+        self::assertSame(3, $issue->line);
+        self::assertSame(5, $issue->column);
+        self::assertSame('Unexpected invalid hex color', $issue->message);
+        self::assertSame('color-no-invalid-hex', $issue->rule);
+        self::assertSame('stylelint', $issue->source);
+        self::assertSame(severity::error, $issue->severity);
     }
 
     /**
@@ -66,8 +66,8 @@ final class stylelint_test extends advanced_testcase {
         ];
 
         $issue = stylelint::from_object($obj);
-        $this->assertNotNull($issue);
-        $this->assertSame(severity::warning, $issue->severity);
+        self::assertNotNull($issue);
+        self::assertSame(severity::warning, $issue->severity);
     }
 
     /**
@@ -83,8 +83,8 @@ final class stylelint_test extends advanced_testcase {
         ];
 
         $issue = stylelint::from_object($obj);
-        $this->assertNotNull($issue);
-        $this->assertSame(severity::unknown, $issue->severity);
+        self::assertNotNull($issue);
+        self::assertSame(severity::unknown, $issue->severity);
     }
 
     /**
@@ -93,6 +93,6 @@ final class stylelint_test extends advanced_testcase {
     public function test_from_object_handles_empty_object(): void {
         $obj = (object) [];
         $issue = stylelint::from_object($obj);
-        $this->assertNull($issue);
+        self::assertNull($issue);
     }
 }

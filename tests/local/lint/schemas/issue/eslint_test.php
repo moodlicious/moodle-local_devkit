@@ -44,13 +44,13 @@ final class eslint_test extends advanced_testcase {
 
         $issue = eslint::from_object($obj);
 
-        $this->assertNotNull($issue);
-        $this->assertSame(5, $issue->line);
-        $this->assertSame(10, $issue->column);
-        $this->assertSame('Unused variable', $issue->message);
-        $this->assertSame('no-unused-vars', $issue->rule);
-        $this->assertSame('eslint', $issue->source);
-        $this->assertSame(severity::error, $issue->severity);
+        self::assertNotNull($issue);
+        self::assertSame(5, $issue->line);
+        self::assertSame(10, $issue->column);
+        self::assertSame('Unused variable', $issue->message);
+        self::assertSame('no-unused-vars', $issue->rule);
+        self::assertSame('eslint', $issue->source);
+        self::assertSame(severity::error, $issue->severity);
     }
 
     /**
@@ -66,7 +66,7 @@ final class eslint_test extends advanced_testcase {
         ];
 
         $result = eslint::from_object($obj);
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     /**
@@ -81,8 +81,8 @@ final class eslint_test extends advanced_testcase {
         ];
 
         $issue = eslint::from_object($obj);
-        $this->assertNotNull($issue);
-        $this->assertSame(severity::info, $issue->severity);
+        self::assertNotNull($issue);
+        self::assertSame(severity::info, $issue->severity);
     }
 
     /**
@@ -98,8 +98,8 @@ final class eslint_test extends advanced_testcase {
         ];
 
         $issue = eslint::from_object($obj);
-        $this->assertNotNull($issue);
-        $this->assertSame(severity::info, $issue->severity);
+        self::assertNotNull($issue);
+        self::assertSame(severity::info, $issue->severity);
     }
 
     /**
@@ -115,8 +115,8 @@ final class eslint_test extends advanced_testcase {
         ];
 
         $issue = eslint::from_object($obj);
-        $this->assertNotNull($issue);
-        $this->assertSame(severity::warning, $issue->severity);
+        self::assertNotNull($issue);
+        self::assertSame(severity::warning, $issue->severity);
     }
 
     /**
@@ -125,6 +125,6 @@ final class eslint_test extends advanced_testcase {
     public function test_from_object_handles_empty_object(): void {
         $obj = (object) [];
         $issue = eslint::from_object($obj);
-        $this->assertNull($issue);
+        self::assertNull($issue);
     }
 }

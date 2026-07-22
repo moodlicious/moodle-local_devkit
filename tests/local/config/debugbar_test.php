@@ -36,7 +36,7 @@ final class debugbar_test extends advanced_testcase {
         $this->resetAfterTest(true);
         set_config('debugbar_enabled', '1', 'local_devkit');
 
-        $this->assertTrue(debugbar::is_enabled());
+        self::assertTrue(debugbar::is_enabled());
     }
 
     /**
@@ -46,7 +46,7 @@ final class debugbar_test extends advanced_testcase {
     public function test_is_enabled_returns_false_when_not_set(): void {
         $this->resetAfterTest(true);
 
-        $this->assertFalse(debugbar::is_enabled());
+        self::assertFalse(debugbar::is_enabled());
     }
 
     /**
@@ -57,7 +57,7 @@ final class debugbar_test extends advanced_testcase {
         $this->resetAfterTest(true);
         set_config('debugbar_enabled', '0', 'local_devkit');
 
-        $this->assertFalse(debugbar::is_enabled());
+        self::assertFalse(debugbar::is_enabled());
     }
 
     /**
@@ -68,7 +68,7 @@ final class debugbar_test extends advanced_testcase {
         $this->resetAfterTest(true);
         set_config('debugbar_collect_queries', '1', 'local_devkit');
 
-        $this->assertTrue(debugbar::is_collect_queries_enabled());
+        self::assertTrue(debugbar::is_collect_queries_enabled());
     }
 
     /**
@@ -78,7 +78,7 @@ final class debugbar_test extends advanced_testcase {
     public function test_is_collect_queries_enabled_returns_false_when_not_set(): void {
         $this->resetAfterTest(true);
 
-        $this->assertFalse(debugbar::is_collect_queries_enabled());
+        self::assertFalse(debugbar::is_collect_queries_enabled());
     }
 
     /**
@@ -89,7 +89,7 @@ final class debugbar_test extends advanced_testcase {
         $this->resetAfterTest(true);
         set_config('debugbar_editor', 'phpstorm', 'local_devkit');
 
-        $this->assertSame('phpstorm', debugbar::get_editor());
+        self::assertSame('phpstorm', debugbar::get_editor());
     }
 
     /**
@@ -99,7 +99,7 @@ final class debugbar_test extends advanced_testcase {
     public function test_get_editor_returns_null_when_not_set(): void {
         $this->resetAfterTest(true);
 
-        $this->assertNull(debugbar::get_editor());
+        self::assertNull(debugbar::get_editor());
     }
 
     /**
@@ -110,6 +110,6 @@ final class debugbar_test extends advanced_testcase {
         $this->resetAfterTest(true);
         set_config('debugbar_editor', '', 'local_devkit');
 
-        $this->assertNull(debugbar::get_editor());
+        self::assertNull(debugbar::get_editor());
     }
 }

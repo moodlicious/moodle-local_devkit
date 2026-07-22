@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e50ce06ec451a198c175ff855c287b5",
+    "content-hash": "05aa70c28b53c72c92c8e6924631f81d",
     "packages": [
         {
             "name": "doctrine/deprecations",
@@ -56,16 +56,16 @@
         },
         {
             "name": "mcp/sdk",
-            "version": "v0.6.0",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/modelcontextprotocol/php-sdk.git",
-                "reference": "433c84b58af346dd32f15f9909679e96a46ebe23"
+                "reference": "a6f415578fa789783d010274d11c922e97659a8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/modelcontextprotocol/php-sdk/zipball/433c84b58af346dd32f15f9909679e96a46ebe23",
-                "reference": "433c84b58af346dd32f15f9909679e96a46ebe23",
+                "url": "https://api.github.com/repos/modelcontextprotocol/php-sdk/zipball/a6f415578fa789783d010274d11c922e97659a8a",
+                "reference": "a6f415578fa789783d010274d11c922e97659a8a",
                 "shasum": ""
             },
             "require": {
@@ -134,9 +134,9 @@
             "description": "Model Context Protocol SDK for Client and Server applications in PHP",
             "support": {
                 "issues": "https://github.com/modelcontextprotocol/php-sdk/issues",
-                "source": "https://github.com/modelcontextprotocol/php-sdk/tree/v0.6.0"
+                "source": "https://github.com/modelcontextprotocol/php-sdk/tree/v0.7.0"
             },
-            "time": "2026-06-02T15:47:04+00:00"
+            "time": "2026-07-14T22:58:00+00:00"
         },
         {
             "name": "opis/json-schema",
@@ -2647,6 +2647,58 @@
                 "source": "https://github.com/phpstan/phpstan-deprecation-rules/tree/2.0.4"
             },
             "time": "2026-02-09T13:21:14+00:00"
+        },
+        {
+            "name": "phpstan/phpstan-strict-rules",
+            "version": "2.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan-strict-rules.git",
+                "reference": "2bc5ae19ae965663b62ac907ee6342c3903ec93b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan-strict-rules/zipball/2bc5ae19ae965663b62ac907ee6342c3903ec93b",
+                "reference": "2bc5ae19ae965663b62ac907ee6342c3903ec93b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4 || ^8.0",
+                "phpstan/phpstan": "^2.1.52"
+            },
+            "require-dev": {
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpunit/phpunit": "^9.6",
+                "shipmonk/name-collision-detector": "^2.1"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "rules.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Extra strict and opinionated rules for PHPStan",
+            "keywords": [
+                "static analysis"
+            ],
+            "support": {
+                "issues": "https://github.com/phpstan/phpstan-strict-rules/issues",
+                "source": "https://github.com/phpstan/phpstan-strict-rules/tree/2.0.12"
+            },
+            "time": "2026-07-19T07:24:06+00:00"
         },
         {
             "name": "rector/rector",

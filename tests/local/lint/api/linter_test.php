@@ -52,7 +52,7 @@ final class linter_test extends advanced_testcase {
             'stylelint',
         ]);
 
-        $this->assertSame([
+        self::assertSame([
             '\\' . eslint::class,
             '\\' . lang::class,
             '\\' . phpcs::class,
@@ -69,7 +69,7 @@ final class linter_test extends advanced_testcase {
     public function test_get_linters_classnames_returns_empty_when_all_disabled(): void {
         $linters = linter::get_linters_classnames([]);
 
-        $this->assertSame([], $linters);
+        self::assertSame([], $linters);
     }
 
     /**
@@ -83,7 +83,7 @@ final class linter_test extends advanced_testcase {
             'stylelint',
         ]);
 
-        $this->assertSame([
+        self::assertSame([
             '\\' . eslint::class,
             '\\' . phpcs::class,
             '\\' . phplint::class,
@@ -98,7 +98,7 @@ final class linter_test extends advanced_testcase {
         $linters = [phplint::class];
         $info = linter::get_linters_info($linters);
 
-        $this->assertSame(['phplint: executes "php -l" for syntax checking'], $info);
+        self::assertSame(['phplint: executes "php -l" for syntax checking'], $info);
     }
 
     /**
@@ -110,6 +110,6 @@ final class linter_test extends advanced_testcase {
 
         $info = linter::get_linters_info([$linter::class]);
 
-        $this->assertSame(['base'], $info);
+        self::assertSame(['base'], $info);
     }
 }

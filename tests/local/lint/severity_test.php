@@ -34,7 +34,7 @@ final class severity_test extends advanced_testcase {
      */
     public function test_from_eslint_maps_0_to_info(): void {
         $result = severity::from_eslint(0);
-        $this->assertSame(severity::info, $result);
+        self::assertSame(severity::info, $result);
     }
 
     /**
@@ -42,7 +42,7 @@ final class severity_test extends advanced_testcase {
      */
     public function test_from_eslint_maps_1_to_warning(): void {
         $result = severity::from_eslint(1);
-        $this->assertSame(severity::warning, $result);
+        self::assertSame(severity::warning, $result);
     }
 
     /**
@@ -50,7 +50,7 @@ final class severity_test extends advanced_testcase {
      */
     public function test_from_eslint_maps_2_to_error(): void {
         $result = severity::from_eslint(2);
-        $this->assertSame(severity::error, $result);
+        self::assertSame(severity::error, $result);
     }
 
     /**
@@ -58,7 +58,7 @@ final class severity_test extends advanced_testcase {
      */
     public function test_from_eslint_maps_unknown_to_unknown(): void {
         $result = severity::from_eslint(99);
-        $this->assertSame(severity::unknown, $result);
+        self::assertSame(severity::unknown, $result);
     }
 
     /**
@@ -66,7 +66,7 @@ final class severity_test extends advanced_testcase {
      */
     public function test_from_stylelint_maps_warning_string_to_warning(): void {
         $result = severity::from_stylelint('warning');
-        $this->assertSame(severity::warning, $result);
+        self::assertSame(severity::warning, $result);
     }
 
     /**
@@ -74,7 +74,7 @@ final class severity_test extends advanced_testcase {
      */
     public function test_from_stylelint_maps_error_string_to_error(): void {
         $result = severity::from_stylelint('error');
-        $this->assertSame(severity::error, $result);
+        self::assertSame(severity::error, $result);
     }
 
     /**
@@ -82,7 +82,7 @@ final class severity_test extends advanced_testcase {
      */
     public function test_from_stylelint_maps_unknown_to_unknown(): void {
         $result = severity::from_stylelint('invalid');
-        $this->assertSame(severity::unknown, $result);
+        self::assertSame(severity::unknown, $result);
     }
 
     /**
@@ -90,9 +90,9 @@ final class severity_test extends advanced_testcase {
      */
     public function test_from_phpcs_maps_zero_or_less_to_info(): void {
         $result = severity::from_phpcs(0);
-        $this->assertSame(severity::info, $result);
+        self::assertSame(severity::info, $result);
         $result = severity::from_phpcs(-1);
-        $this->assertSame(severity::info, $result);
+        self::assertSame(severity::info, $result);
     }
 
     /**
@@ -100,9 +100,9 @@ final class severity_test extends advanced_testcase {
      */
     public function test_from_phpcs_maps_one_to_four_to_warning(): void {
         $result = severity::from_phpcs(1);
-        $this->assertSame(severity::warning, $result);
+        self::assertSame(severity::warning, $result);
         $result = severity::from_phpcs(4);
-        $this->assertSame(severity::warning, $result);
+        self::assertSame(severity::warning, $result);
     }
 
     /**
@@ -110,7 +110,7 @@ final class severity_test extends advanced_testcase {
      */
     public function test_from_phpcs_maps_five_to_error(): void {
         $result = severity::from_phpcs(5);
-        $this->assertSame(severity::error, $result);
+        self::assertSame(severity::error, $result);
     }
 
     /**
@@ -118,6 +118,6 @@ final class severity_test extends advanced_testcase {
      */
     public function test_from_phpcs_maps_unknown_to_unknown(): void {
         $result = severity::from_phpcs(99);
-        $this->assertSame(severity::unknown, $result);
+        self::assertSame(severity::unknown, $result);
     }
 }

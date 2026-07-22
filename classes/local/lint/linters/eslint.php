@@ -66,7 +66,7 @@ class eslint extends base {
         $output = $process->getOutput();
         $jsonoutput = json_decode($output);
         if ($jsonoutput === null) {
-            $output = $output ?: $process->getErrorOutput();
+            $output = $output !== '' ? $output : $process->getErrorOutput();
             $results[] = self::create_file_with_fatal_issue($filepath, "Unable to parse eslint output '$output'");
             return $results;
         }
@@ -76,9 +76,10 @@ class eslint extends base {
             $messages = $lintedfile->messages;
             foreach ($messages as $message) {
                 $issue = eslint_issue::from_object($message);
-                if ($issue) {
-                    $issues[] = $issue;
+                if ($issue === null) {
+                    continue;
                 }
+                $issues[] = $issue;
             }
 
             $results[] = new file($lintedfile->filePath, $issues);

@@ -46,7 +46,7 @@ class linter_config extends html_table {
             $config = $linter::get_config();
             $row = [
                 $linter::get_name(),
-                $config
+                $config !== null
                     ? html_writer::table(new key_value($config))
                     : get_string('linter_config_table:notconfigured', 'local_devkit'),
                 html_writer::link(

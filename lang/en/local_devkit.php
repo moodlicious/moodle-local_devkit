@@ -24,6 +24,8 @@
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+declare(strict_types=1);
+
 $string['linter_config:title'] = 'Configuring {$a}';
 $string['linter_config_table:actions'] = 'Actions';
 $string['linter_config_table:config'] = 'Config';

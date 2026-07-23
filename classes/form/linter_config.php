@@ -20,6 +20,9 @@ use core\context;
 use core\context\system;
 use core\url;
 use core_form\dynamic_form;
+use local_devkit\local\lint\linters\base;
+
+use function is_string;
 
 /**
  * Class linter_config
@@ -31,20 +34,20 @@ use core_form\dynamic_form;
 class linter_config extends dynamic_form {
     /**
      * Utility function to get the classname.
-     * @return class-string<\local_devkit\local\lint\linters\base>|null
+     * @return class-string<base>|null
      */
     public function get_linter_classname() {
-        /** @var class-string<\local_devkit\local\lint\linters\base>|null $classname */
+        /** @var class-string<base>|null $classname */
         $classname = $this->optional_param('classname', null, PARAM_TEXT);
-        if ($classname) {
+        if (is_string($classname) && $classname !== '') {
             return $classname;
         }
 
         $data = $this->get_data();
-        if ($data && property_exists($data, 'classname')) {
-            /** @var class-string<\local_devkit\local\lint\linters\base>|null $classname */
+        if ($data !== null && property_exists($data, 'classname')) {
+            /** @var class-string<base>|null $classname */
             $classname = $data->classname;
-            if ($classname) {
+            if (is_string($classname) && $classname !== '') {
                 return $classname;
             }
         }
@@ -58,7 +61,7 @@ class linter_config extends dynamic_form {
         $form->addElement('hidden', 'classname');
 
         $classname = $this->get_linter_classname();
-        if ($classname) {
+        if ($classname !== null) {
             $classname::define_config($form);
         }
     }
@@ -76,12 +79,12 @@ class linter_config extends dynamic_form {
     #[\Override]
     public function process_dynamic_submission() {
         $data = $this->get_data();
-        if (!$data) {
+        if ($data === null) {
             return ['success' => false];
         }
         unset($data->classname);
         $linter = $this->get_linter_classname();
-        if (!$linter) {
+        if ($linter === null) {
             return ['success' => false];
         }
         $linter::save_config($data);
@@ -91,17 +94,16 @@ class linter_config extends dynamic_form {
     #[\Override]
     public function set_data_for_dynamic_submission(): void {
         $linter = $this->get_linter_classname();
-        if (!$linter) {
+        if ($linter === null) {
             return;
         }
 
         $config = $linter::get_config();
         $data = (object) [
-            ...(array) ($config ?: new \stdClass()),
+            ...(array) ($config ?? new \stdClass()),
             'classname' => $linter,
         ];
         $this->set_data($data);
-        return;
     }
 
     #[\Override]

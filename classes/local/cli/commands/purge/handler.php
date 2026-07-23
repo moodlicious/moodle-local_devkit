@@ -35,9 +35,7 @@ use function count;
 class handler {
     /**
      * Invoke
-     * @param SymfonyStyle $io
      * @param string[] $caches
-     * @return int
      */
     private static function invoke(
         SymfonyStyle $io,
@@ -65,9 +63,7 @@ class handler {
 
     /**
      * Builds the command for purging caches
-     * @param string $name
      * @param string[] $cachekeys
-     * @return Command
      */
     private static function build_command(string $name, array $cachekeys): Command {
         $caches = self::get_caches();
@@ -78,7 +74,7 @@ class handler {
         }
 
         $command = new Command($name);
-        if ($cachekey) {
+        if ($cachekey !== null) {
             $description = $caches[$cachekey];
             $command->setDescription($description);
         } else {
@@ -88,7 +84,7 @@ class handler {
             ->addOption(
                 'caches',
                 mode: InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                default: $cachekey ? [$cachekey] : array_keys($caches),
+                default: $cachekey !== null ? [$cachekey] : array_keys($caches),
             )
             ->setCode(self::invoke(...));
         return $command;
@@ -98,7 +94,7 @@ class handler {
      * Gets a list of purgable caches.
      * @return array<string, string>
      */
-    public static function get_caches() {
+    public static function get_caches(): array {
         return [
             'courses' => get_string('purgecoursecache', 'admin'),
             'filter' => get_string('purgefiltercache', 'admin'),
@@ -113,8 +109,6 @@ class handler {
 
     /**
      * Register purge and purge:* commands
-     * @param Application $app
-     * @return void
      */
     public static function register(Application $app): void {
         $caches = self::get_caches();
@@ -123,11 +117,9 @@ class handler {
         $app->addCommand($command);
 
         // Make commands for running each individual cache.
-        foreach ($caches as $cachekey => $cachename) {
+        foreach (array_keys($caches) as $cachekey) {
             $command = self::build_command("purge:$cachekey", [$cachekey]);
             $app->addCommand($command);
         }
-
-        return;
     }
 }

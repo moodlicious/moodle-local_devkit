@@ -35,7 +35,7 @@ final class file_test extends advanced_testcase {
      */
     public function test_constructor_sets_file_path(): void {
         $file = new file('/path/to/file.php');
-        $this->assertSame('/path/to/file.php', $file->file);
+        self::assertSame('/path/to/file.php', $file->file);
     }
 
     /**
@@ -43,7 +43,7 @@ final class file_test extends advanced_testcase {
      */
     public function test_constructor_initializes_empty_issues(): void {
         $file = new file('/path/to/file.php');
-        $this->assertSame([], $file->issues);
+        self::assertSame([], $file->issues);
     }
 
     /**
@@ -54,9 +54,9 @@ final class file_test extends advanced_testcase {
         $issue2 = new issue(2, 2, 'Error 2', 'rule2', 'source2', severity::warning);
         $file = new file('/path/to/file.php', [$issue1, $issue2]);
 
-        $this->assertCount(2, $file->issues);
-        $this->assertSame('Error 1', $file->issues[0]->message);
-        $this->assertSame('Error 2', $file->issues[1]->message);
+        self::assertCount(2, $file->issues);
+        self::assertSame('Error 1', $file->issues[0]->message);
+        self::assertSame('Error 2', $file->issues[1]->message);
     }
 
     /**
@@ -68,8 +68,8 @@ final class file_test extends advanced_testcase {
 
         $file->add_issue($issue);
 
-        $this->assertCount(1, $file->issues);
-        $this->assertSame('Test error', $file->issues[0]->message);
+        self::assertCount(1, $file->issues);
+        self::assertSame('Test error', $file->issues[0]->message);
     }
 
     /**
@@ -81,7 +81,7 @@ final class file_test extends advanced_testcase {
 
         $result = $file->add_issue($issue);
 
-        $this->assertSame($file, $result);
+        self::assertSame($file, $result);
     }
 
     /**
@@ -92,10 +92,10 @@ final class file_test extends advanced_testcase {
         $file = new file('/path/to/file.php', [$issue]);
         $serialized = $file->jsonSerialize();
 
-        $this->assertArrayHasKey('file', $serialized);
-        $this->assertArrayHasKey('issues', $serialized);
-        $this->assertSame('/path/to/file.php', $serialized['file']);
-        $this->assertCount(1, $serialized['issues']);
+        self::assertArrayHasKey('file', $serialized);
+        self::assertArrayHasKey('issues', $serialized);
+        self::assertSame('/path/to/file.php', $serialized['file']);
+        self::assertCount(1, $serialized['issues']);
     }
 
     /**
@@ -110,7 +110,7 @@ final class file_test extends advanced_testcase {
         $CFG->dirroot = $root;
 
         $file = new file($root . '/unknown/templates/file.mustache');
-        $this->assertNull($file->get_component());
+        self::assertNull($file->get_component());
     }
 
     /**
@@ -119,7 +119,7 @@ final class file_test extends advanced_testcase {
     public function test_json_serialize_includes_component(): void {
         $file = new file('/path/to/file.php');
         $serialized = $file->jsonSerialize();
-        $this->assertArrayHasKey('component', $serialized);
+        self::assertArrayHasKey('component', $serialized);
     }
 
     /**
@@ -136,7 +136,7 @@ final class file_test extends advanced_testcase {
         $file = new file($root . '/unknown/templates/file.mustache');
         $first = $file->get_component();
         $second = $file->get_component();
-        $this->assertSame($first, $second);
+        self::assertSame($first, $second);
     }
 
     /**
@@ -146,7 +146,7 @@ final class file_test extends advanced_testcase {
         $file = new file('/path/to/file.php');
         $result = $file->format_path();
 
-        $this->assertSame('/path/to/file.php', $result);
+        self::assertSame('/path/to/file.php', $result);
     }
 
     /**
@@ -156,7 +156,7 @@ final class file_test extends advanced_testcase {
         $file = new file('/path/to/file.php');
         $result = $file->format_path(line: 10);
 
-        $this->assertSame('/path/to/file.php:10', $result);
+        self::assertSame('/path/to/file.php:10', $result);
     }
 
     /**
@@ -166,7 +166,7 @@ final class file_test extends advanced_testcase {
         $file = new file('/path/to/file.php');
         $result = $file->format_path(line: 10, column: 5);
 
-        $this->assertSame('/path/to/file.php:10:5', $result);
+        self::assertSame('/path/to/file.php:10:5', $result);
     }
 
     /**
@@ -174,9 +174,9 @@ final class file_test extends advanced_testcase {
      */
     public function test_format_path_skips_null_values(): void {
         $file = new file('/path/to/file.php');
-        $result = $file->format_path(line: null, column: 5);
+        $result = $file->format_path(column: 5);
 
-        $this->assertSame('/path/to/file.php', $result);
+        self::assertSame('/path/to/file.php', $result);
     }
 
     /**
@@ -186,8 +186,8 @@ final class file_test extends advanced_testcase {
         $file = new file('/path/to/file.php');
         $result = $file->format_path(line: 10, column: 5, decorate: true);
 
-        $this->assertStringContainsString('/path/to/file.php:10:5', $result);
-        $this->assertStringContainsString('<href=', $result);
-        $this->assertStringContainsString('vscode://file/', $result);
+        self::assertStringContainsString('/path/to/file.php:10:5', $result);
+        self::assertStringContainsString('<href=', $result);
+        self::assertStringContainsString('vscode://file/', $result);
     }
 }

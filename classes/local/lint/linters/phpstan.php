@@ -27,7 +27,6 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 
-use function count;
 use function dirname;
 use function in_array;
 
@@ -52,6 +51,10 @@ class phpstan extends base {
     public const CONFIG_KEY_RULE_LEVEL = 'rule_level';
     /** @var string */
     public const CONFIG_KEY_RESULT_CACHE_MODE = 'result_cache_mode';
+    /** @var string */
+    public const CONFIG_KEY_STRICT_RULES = 'struct_rules';
+    /** @var string */
+    public const CONFIG_KEY_STRICT_RULES_DEFAULT = '1';
 
     #[\Override]
     public static function get_include_patterns(): array {
@@ -63,7 +66,6 @@ class phpstan extends base {
 
     /**
      * Get the rule level to be analysed.
-     * @return int
      */
     public static function get_rule_level(): int {
         $config = self::get_config_value(self::CONFIG_KEY_RULE_LEVEL);
@@ -81,7 +83,6 @@ class phpstan extends base {
 
     /**
      * Get if per component result cache should be used.
-     * @return string
      */
     public static function get_result_cache_mode(): string {
         $config = self::get_config_value(self::CONFIG_KEY_RESULT_CACHE_MODE);
@@ -91,6 +92,13 @@ class phpstan extends base {
         }
 
         return $config;
+    }
+
+    /**
+     * Get if per component result cache should be used.
+     */
+    public static function get_strict_rules_enabled(): bool {
+        return (bool) (self::get_config_value(self::CONFIG_KEY_STRICT_RULES) ?? self::CONFIG_KEY_STRICT_RULES_DEFAULT);
     }
 
     #[\Override]
@@ -116,11 +124,10 @@ class phpstan extends base {
 
     /**
      * Executes phpstan on a given path.
-     * @param string $path
      * @return file[]
      */
-    private function execute($path): array {
-        $binary = $this->get_phpstan_binary_path();
+    private function execute(string $path): array {
+        $binary = self::get_phpstan_binary_path();
         $config = $this->get_config_neon($path);
         $process = new Process([
             'php',
@@ -136,11 +143,10 @@ class phpstan extends base {
         $process->run();
 
         $output = $process->getOutput();
-        if (!$output) {
+        if ($output === '') {
             $error = $process->getErrorOutput();
             $issue = phpstan_issue::simple($error);
-            $results[] = new file($path, [$issue]);
-            return $results;
+            return [new file($path, [$issue])];
         }
 
         return $this->parse_json($output, $path);
@@ -148,11 +154,9 @@ class phpstan extends base {
 
     /**
      * Parses the phpstan JSON result.
-     * @param string $output
-     * @param string $path
      * @return file[]
      */
-    private function parse_json(string $output, string $path) {
+    private function parse_json(string $output, string $path): array {
         $results = [];
         $jsonoutput = json_decode($output);
         if ($jsonoutput === null) {
@@ -161,7 +165,7 @@ class phpstan extends base {
                 0,
                 "'phpstan' returned non-JSON output",
                 'phpstan-json-parse-error',
-                $this->get_name(),
+                self::get_name(),
                 severity::error,
             );
             $results[] = new file($path, [$issue]);
@@ -175,23 +179,24 @@ class phpstan extends base {
             $results[] = self::create_file_with_fatal_issue($path, $error);
         }
 
-        foreach ($jsonoutput->files as $path => $lintedfile) {
+        foreach ($jsonoutput->files as $filepath => $lintedfile) {
             $issues = [];
             $messages = $lintedfile->messages;
 
-            [$path, $context] = self::strip_context_suffix($path);
+            [$filepath, $context] = $this->strip_context_suffix($filepath);
 
             foreach ($messages as $message) {
                 $issue = phpstan_issue::from_object($message);
-                if ($issue) {
-                    if ($context !== null) {
-                        array_unshift($issue->suggestions, $context);
-                    }
-                    $issues[] = $issue;
+                if (!$issue instanceof phpstan_issue) {
+                    continue;
                 }
+                if ($context !== null) {
+                    array_unshift($issue->suggestions, $context);
+                }
+                $issues[] = $issue;
             }
 
-            $results[] = new file($path, $issues);
+            $results[] = new file($filepath, $issues);
         }
 
         return $results;
@@ -203,8 +208,8 @@ class phpstan extends base {
      * @param string $path The raw path from PHPStan's JSON output.
      * @return array{0: string, 1: string|null} The clean path and the context string, or null if no suffix.
      */
-    private static function strip_context_suffix(string $path): array {
-        if (preg_match('/^(.+)\s+\(in context of class (.+)\)$/', $path, $matches)) {
+    private function strip_context_suffix(string $path): array {
+        if (preg_match('/^(.+)\s+\(in context of class (.+)\)$/', $path, $matches) === 1) {
             return [$matches[1], "In context of class {$matches[2]}"];
         }
         return [$path, null];
@@ -212,7 +217,6 @@ class phpstan extends base {
 
     /**
      * Generates a temporary config neon for linting.
-     * @return string
      */
     public function generate_temp_config_neon(string $path): string {
         global $CFG;
@@ -223,6 +227,7 @@ class phpstan extends base {
         $devkitpath = "{$CFG->dirroot}/local/devkit";
         $moodleneonpath = realpath("$devkitpath/vendor/micaherne/phpstan-moodle/extension.neon");
         $deprecationrules = realpath("$devkitpath/vendor/phpstan/phpstan-deprecation-rules/rules.neon");
+        $strictrules = realpath("$devkitpath/vendor/phpstan/phpstan-strict-rules/rules.neon");
         $devkitbootstrap = realpath("$devkitpath/phpstan-bootstrap.php");
 
         $usetempdir = match (self::get_result_cache_mode()) {
@@ -237,13 +242,17 @@ class phpstan extends base {
         $moodleroot = utils::get_moodle_root_dir();
         $rulelevel = self::get_rule_level();
 
+        $requiredfiles = [$moodleneonpath, $deprecationrules, $devkitbootstrap];
+        if (self::get_strict_rules_enabled()) {
+            $requiredfiles[] = $strictrules;
+        }
         $missingfiles = array_filter(
-            [$moodleneonpath, $deprecationrules, $devkitbootstrap],
-            fn($file) => $file === false,
+            $requiredfiles,
+            fn(string|false $file): bool => $file === false,
         );
-        if ($missingfiles) {
+        if ($missingfiles !== []) {
             throw new \RuntimeException(
-                'PHPStan rule files not found. Please run \'composer install\' in the devkit directory.',
+                "PHPStan rule files not found. Please run 'composer install' in the devkit directory.",
             );
         }
 
@@ -263,12 +272,16 @@ class phpstan extends base {
             ],
         ];
 
-        if ($usetempdir) {
+        if (self::get_strict_rules_enabled()) {
+            $config['includes'][] = $strictrules;
+        }
+
+        if ($usetempdir === true) {
             $config['parameters']['tmpDir'] = 'tmp';
         }
 
         $stubs = $this->get_stub_files();
-        if (count($stubs) > 0) {
+        if ($stubs !== []) {
             $config['parameters']['stubFiles'] = $stubs;
         }
 
@@ -308,8 +321,6 @@ class phpstan extends base {
 
     /**
      * Generate a temp directory for the current run.
-     * @param string $path
-     * @return string
      */
     public function generate_temp_dir(string $path): string {
         global $CFG;
@@ -317,8 +328,8 @@ class phpstan extends base {
         // Component resolving might fail during CI so catch any errors and fallback to '_'.
         $component = null;
         try {
-            $component = component::resolve_component_from_path(utils::get_path_relative_to_moodle_root($path)) ?: '_';
-        } catch (\Exception $th) {
+            $component = component::resolve_component_from_path(utils::get_path_relative_to_moodle_root($path)) ?? '_';
+        } catch (\Exception) {
             $component = '_';
         }
 
@@ -331,14 +342,13 @@ class phpstan extends base {
     /**
      * Walks up the file path until we find a phpstan.neon.
      * If none found, then generate one.
-     * @return string
      */
     public function get_config_neon(string $path): string {
         $filename = 'phpstan.neon';
         $path = is_file($path) ? dirname($path) : $path;
         $currentdir = realpath($path);
 
-        if (!$currentdir) {
+        if ($currentdir === false) {
             return $this->generate_temp_config_neon($path);
         }
 
@@ -361,12 +371,15 @@ class phpstan extends base {
 
     /**
      * Gets the phpstan binary path.
-     * @return string|null
      */
     public static function get_phpstan_binary_path(): ?string {
         global $CFG;
         $path = $CFG->dirroot . '/local/devkit/vendor/bin/phpstan';
-        return realpath($path) ?: null;
+        $path = realpath($path);
+        if ($path === false) {
+            return null;
+        }
+        return $path;
     }
 
     #[\Override]
@@ -392,5 +405,8 @@ class phpstan extends base {
         ];
         $form->addElement('select', self::CONFIG_KEY_RESULT_CACHE_MODE, 'Result cache mode', $modes);
         $form->setDefault(self::CONFIG_KEY_RESULT_CACHE_MODE, self::RESULT_CACHE_PER_COMPONENT);
+
+        $form->addElement('selectyesno', self::CONFIG_KEY_STRICT_RULES, 'Use strict rules');
+        $form->setDefault(self::CONFIG_KEY_STRICT_RULES, self::CONFIG_KEY_STRICT_RULES_DEFAULT);
     }
 }

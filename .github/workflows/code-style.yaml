@@ -25,6 +25,9 @@ jobs:
             - name: Run Pint
               run: ./vendor/bin/pint -v
 
+            - name: Run Rector
+              run: ./vendor/bin/rector process --dry-run
+
             - name: Format pint.json
               run: ./scripts/format-pint-json.sh
 

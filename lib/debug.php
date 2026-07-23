@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+declare(strict_types=1);
+
 use local_devkit\local\debug\debug;
 
 /**
@@ -34,6 +36,6 @@ use local_devkit\local\debug\debug;
  * @param      TValue ...$payload
  * @return     debug<array-key, TValue>
  */
-function debug(...$payload) {
+function debug(...$payload): debug {
     return new debug($payload);
 }

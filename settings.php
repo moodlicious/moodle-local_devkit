@@ -53,7 +53,7 @@ if ($hassiteconfig) {
         new lang_string('settings:debugbar_editor', 'local_devkit'),
         new lang_string('settings:debugbar_editor_desc', 'local_devkit'),
         '',
-        Closure::fromCallable([editor::class, 'get_menu']),
+        editor::get_menu(...),
     ));
 
     $settings->add(new admin_setting_description(

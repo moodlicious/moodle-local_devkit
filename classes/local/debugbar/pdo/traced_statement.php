@@ -57,7 +57,7 @@ class traced_statement extends TracedStatement {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         $lastframe = array_pop($backtrace);
 
-        $backtrace = array_filter($backtrace, function ($frame) use ($blacklistedclasses) {
+        $backtrace = array_filter($backtrace, function (array $frame) use ($blacklistedclasses): bool {
             if (!isset($frame['class'])) {
                 return true;
             }
@@ -65,7 +65,7 @@ class traced_statement extends TracedStatement {
         });
 
         // Add last frame back.
-        if ($lastframe) {
+        if ($lastframe !== null) {
             $backtrace[] = $lastframe;
         }
 
@@ -73,25 +73,21 @@ class traced_statement extends TracedStatement {
 
         $this->backtrace = $backtrace;
         $this->sql = "$this->sql\n" . $this->format_backtrace($backtrace);
-        return;
     }
     // phpcs:enable moodle.NamingConventions.ValidFunctionName.LowercaseMethod
-
     /**
      * Format a backtrace array into a string for logging.
      * @param Backtrace $backtrace
-     * @return string
      */
     protected function format_backtrace(array $backtrace): string {
-        $formattedframes = array_map([$this, 'format_backtrace_frame'], $backtrace);
-        $formattedframes = array_filter($formattedframes);
+        $formattedframes = array_map($this->format_backtrace_frame(...), $backtrace);
+        $formattedframes = array_filter($formattedframes, fn(?string $frame): bool => $frame !== null);
         return implode("\n", $formattedframes);
     }
 
     /**
      * Format a single backtrace frame for logging.
      * @param BacktraceFrame $frame
-     * @return string|null
      */
     protected function format_backtrace_frame(array $frame): ?string {
         $location = isset($frame['file'], $frame['line'])

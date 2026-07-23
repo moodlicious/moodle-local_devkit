@@ -21,6 +21,8 @@
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+declare(strict_types=1);
+
 use local_devkit\local\observer;
 
 defined('MOODLE_INTERNAL') || die();

@@ -38,53 +38,30 @@ use local_devkit\local\lint\severity;
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class issue implements JsonSerializable {
-    /** @var int Line number of the issue */
-    public int $line;
-    /** @var int Column of the issue */
-    public int $column;
-    /** @var string Message of the issue */
-    public string $message;
-    /** @var string The linter rule used */
-    public ?string $rule;
-    /** @var string The error source */
-    public string $source;
-    /** @var severity The severity of the issue */
-    public severity $severity;
-    /** @var string[] Suggestions on how to resolve the issue */
-    public array $suggestions;
-
     /**
      * Constructor.
-     * @param int $line
-     * @param int $column
-     * @param string $message
-     * @param string|null $rule
-     * @param string $source
-     * @param severity $severity
      * @param string[] $suggestions
      */
     public function __construct(
-        int $line,
-        int $column,
-        string $message,
-        ?string $rule,
-        string $source,
-        severity $severity,
-        array $suggestions = [],
+        /** @var int Line number of the issue */
+        public int $line,
+        /** @var int Column of the issue */
+        public int $column,
+        /** @var string Message of the issue */
+        public string $message,
+        /** @var string The linter rule used */
+        public ?string $rule,
+        /** @var string The error source */
+        public string $source,
+        /** @var severity The severity of the issue */
+        public severity $severity,
+        /** @var string[] Suggestions on how to resolve the issue */
+        public array $suggestions = [],
     ) {
-        $this->line = $line;
-        $this->column = $column;
-        $this->message = $message;
-        $this->rule = $rule;
-        $this->source = $source;
-        $this->severity = $severity;
-        $this->suggestions = $suggestions;
     }
 
     /**
      * Factory method to create from a linter result object.
-     * @param object $object
-     * @return self|null
      */
     public static function from_object(object $object): ?self {
         // To be overridden.
@@ -93,26 +70,19 @@ class issue implements JsonSerializable {
 
     /**
      * Utility function to get an object's property value, with fallback value.
-     * @param object $object
-     * @param string $property
-     * @param mixed $default
-     * @return mixed
      */
     protected static function object_property(object $object, string $property, mixed $default = null): mixed {
         if (!property_exists($object, $property)) {
             return $default;
         }
 
+        // phpcs:ignore moodle.Commenting.InlineComment
+        // @phpstan-ignore-next-line phpstan/property.dynamicName (Checked above, probably fine)
         return $object->{$property};
     }
 
     /**
      * Helper function to create a simple issue.
-     * @param string $message
-     * @param string|null $rule
-     * @param string $source
-     * @param severity $severity
-     * @return self
      */
     public static function simple(
         string $message,

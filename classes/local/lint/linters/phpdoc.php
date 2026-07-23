@@ -53,7 +53,7 @@ class phpdoc extends base {
         $fileresult = new file($filepath);
 
         $installedpath = self::get_installed_path();
-        if (!$installedpath) {
+        if ($installedpath === null) {
             return [];
         }
 
@@ -62,7 +62,7 @@ class phpdoc extends base {
 
         foreach ($errors as $error) {
             $issue = \local_devkit\local\lint\schemas\issue\phpdoc::from_object((object) $error);
-            if (!$issue) {
+            if (!$issue instanceof \local_devkit\local\lint\schemas\issue\phpdoc) {
                 continue;
             }
             $fileresult->add_issue($issue);
@@ -74,7 +74,6 @@ class phpdoc extends base {
 
     /**
      * Gets the installed path.
-     * @return string|null
      */
     private static function get_installed_path(): ?string {
         /** @var string|null $cache */
@@ -86,9 +85,9 @@ class phpdoc extends base {
         global $CFG;
         $path = $CFG->dirroot . '/local/moodlecheck/cli/moodlecheck.php';
         $realpath = realpath($path);
-        $cache = $realpath ?: null;
+        $cache = $realpath !== false ? $realpath : null;
 
-        if ($cache) {
+        if ($cache !== null) {
             require_once($CFG->dirroot . '/local/moodlecheck/locallib.php');
             require_once($CFG->dirroot . '/local/moodlecheck/rules/phpdocs_basic.php');
             \local_moodlecheck_registry::enable_all_rules();

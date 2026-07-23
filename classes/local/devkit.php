@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+declare(strict_types=1);
+
 namespace local_devkit\local;
 
 /**
@@ -25,7 +27,6 @@ namespace local_devkit\local;
 class devkit {
     /**
      * Determines if the plugin should load.
-     * @return bool
      */
     public static function is_enabled(): bool {
         // phpcs:ignore moodle.Commenting.InlineComment
@@ -33,11 +34,6 @@ class devkit {
         if (PHPUNIT_TEST) {
             return false;
         }
-
-        if (getenv('MDL_LOCAL_DEVKIT_DISABLE')) {
-            return false;
-        }
-
-        return true;
+        return !(bool) getenv('MDL_LOCAL_DEVKIT_DISABLE');
     }
 }

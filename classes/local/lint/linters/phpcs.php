@@ -53,7 +53,7 @@ class phpcs extends base {
      */
     public static function get_excluded_sniffs(): array {
         $config = self::get_config_value(self::CONFIG_KEY_EXCLUDED_SNIFFS, self::CONFIG_KEY_EXCLUDED_SNIFFS_ENABLED);
-        if (!$config) {
+        if ($config === null) {
             return [];
         }
 
@@ -83,14 +83,13 @@ class phpcs extends base {
 
     /**
      * Executes phpcs on a given path.
-     * @param string $path
      * @return file[]
      */
-    private function execute_phpcs($path): array {
+    private function execute_phpcs(string $path): array {
         $excludepatterns = self::get_exclude_patterns();
         $excludedsniffs = self::get_excluded_sniffs();
-        $ignore = $excludepatterns ? ['--ignore=' . implode(',', $excludepatterns)] : [];
-        $exclude = $excludedsniffs ? ['--exclude=' . implode(',', $excludedsniffs)] : [];
+        $ignore = $excludepatterns !== [] ? ['--ignore=' . implode(',', $excludepatterns)] : [];
+        $exclude = $excludedsniffs !== [] ? ['--exclude=' . implode(',', $excludedsniffs)] : [];
         $process = new Process([
             'phpcs',
             '--cache',
@@ -108,11 +107,9 @@ class phpcs extends base {
 
     /**
      * Parses the PHPCS JSON result.
-     * @param string $output
-     * @param string $path
      * @return file[]
      */
-    private function parse_phpcs_json(string $output, string $path) {
+    private function parse_phpcs_json(string $output, string $path): array {
         $results = [];
         $jsonoutput = json_decode($output);
         if ($jsonoutput === null) {
@@ -120,17 +117,18 @@ class phpcs extends base {
             return $results;
         }
 
-        foreach ($jsonoutput->files as $path => $lintedfile) {
+        foreach ($jsonoutput->files as $filepath => $lintedfile) {
             $issues = [];
             $messages = $lintedfile->messages;
             foreach ($messages as $message) {
                 $issue = phpcs_issue::from_object($message);
-                if ($issue) {
-                    $issues[] = $issue;
+                if (!$issue instanceof phpcs_issue) {
+                    continue;
                 }
+                $issues[] = $issue;
             }
 
-            $results[] = new file($path, $issues);
+            $results[] = new file($filepath, $issues);
         }
 
         return $results;

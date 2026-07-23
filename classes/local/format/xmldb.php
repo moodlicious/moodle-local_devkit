@@ -36,7 +36,7 @@ class xmldb extends base {
     public static function format(string $path): ?int {
         try {
             $structure = database::get_xmldb_structure($path);
-        } catch (\Throwable $th) {
+        } catch (\Throwable) {
             return Command::FAILURE;
         }
 

@@ -40,18 +40,17 @@ use core\plugin_manager;
 class plugins {
     /**
      * List installed plugins
-     * @param bool $includestandard
      * @return plugin[]
      */
-    public static function list(bool $includestandard = false) {
+    public static function list(bool $includestandard = false): array {
         $manager = plugin_manager::instance();
         /** @var array<string, array<string, \core\plugininfo\base>> $plugininfo */
         $plugininfo = $manager->get_plugins();
 
         $results = [];
 
-        foreach ($plugininfo as $type => $plugins) {
-            foreach ($plugins as $name => $plugin) {
+        foreach ($plugininfo as $plugins) {
+            foreach ($plugins as $plugin) {
                 $isstandard = $plugin->is_standard();
                 if (!$includestandard && $isstandard) {
                     continue;
@@ -75,7 +74,6 @@ class plugins {
 
     /**
      * Gets a plugin by its component name.
-     * @param string $component
      * @return plugin|null
      */
     public static function get_by_component(string $component): ?array {

@@ -16,6 +16,8 @@
 
 namespace local_devkit\local\cli\commands;
 
+use core\di;
+use local_devkit\local\format\base;
 use local_devkit\local\format\biome;
 use local_devkit\local\format\eslint;
 use local_devkit\local\format\phpcbf;
@@ -64,7 +66,6 @@ class format extends Command {
     ];
     /**
      * Configure arguments.
-     * @return void
      */
     protected function configure(): void {
         $this->addArgument('paths', InputArgument::IS_ARRAY);
@@ -84,7 +85,7 @@ class format extends Command {
             : null;
 
         $progress?->start('Starting...');
-        self::format_run($paths, $progress);
+        $this->format_run($paths, $progress);
         $progress?->finish('All done.');
 
         return Command::SUCCESS;
@@ -94,7 +95,7 @@ class format extends Command {
      * Format files in the given paths.
      * @param string[] $paths
      */
-    private static function format_run(array $paths, ?ProgressIndicator $progress): void {
+    private function format_run(array $paths, ?ProgressIndicator $progress): void {
         foreach ($paths as $path) {
             if (!file_exists($path)) {
                 continue;
@@ -107,7 +108,7 @@ class format extends Command {
                     ->in($path)
                     ->ignoreVCSIgnored(true);
 
-                $finder->filter(function (\SplFileInfo $file) {
+                $finder->filter(function (\SplFileInfo $file): bool {
                     $realpath = $file->getRealPath();
                     if ($realpath === false) {
                         return false;
@@ -124,11 +125,11 @@ class format extends Command {
                 foreach ($finder as $file) {
                     $realpath = $file->getRealPath();
                     if ($realpath !== false) {
-                        self::format_file($realpath, $progress);
+                        $this->format_file($realpath, $progress);
                     }
                 }
             } else {
-                self::format_file($path, $progress);
+                $this->format_file($path, $progress);
             }
         }
     }
@@ -136,9 +137,9 @@ class format extends Command {
     /**
      * Run formatters on a single file.
      */
-    private static function format_file(string $path, ?ProgressIndicator $progress): void {
+    private function format_file(string $path, ?ProgressIndicator $progress): void {
         $progress?->setMessage("Formatting $path...");
-        $formatters = self::pick_formatters($path);
+        $formatters = $this->pick_formatters($path);
         foreach ($formatters as $formatter) {
             $name = $formatter::get_name();
             $progress?->setMessage("Formatting $path with $name");
@@ -148,23 +149,23 @@ class format extends Command {
 
     /**
      * Picks formatters.
-     * @return \local_devkit\local\format\base[]
+     * @return base[]
      */
-    private static function pick_formatters(string $path): array {
+    private function pick_formatters(string $path): array {
         $ext = pathinfo($path, PATHINFO_EXTENSION);
 
         $formatters = match ($ext) {
             'php' => [
-                \core\di::get(pint::class),
-                \core\di::get(phpcbf::class),
+                di::get(pint::class),
+                di::get(phpcbf::class),
             ],
             'css', 'scss' => [
-                \core\di::get(biome::class),
-                \core\di::get(stylelint::class),
+                di::get(biome::class),
+                di::get(stylelint::class),
             ],
             'js', 'jsx', 'ts', 'tsx' => [
-                \core\di::get(biome::class),
-                \core\di::get(eslint::class),
+                di::get(biome::class),
+                di::get(eslint::class),
             ],
             default => null,
         };
@@ -174,7 +175,7 @@ class format extends Command {
         }
 
         if ($ext === 'xml' && str_ends_with(str_replace('\\', '/', $path), '/db/install.xml')) {
-            return [\core\di::get(xmldb::class)];
+            return [di::get(xmldb::class)];
         }
 
         return [];

@@ -20,8 +20,7 @@ namespace local_devkit\local\lint\linters;
 
 use advanced_testcase;
 use local_devkit\local\attributes\linter;
-
-use function get_class;
+use local_devkit\local\lint\schemas\issue;
 
 /**
  * Unit tests for the mustachelint linter.
@@ -65,8 +64,8 @@ final class mustachelint_test extends advanced_testcase {
     public function test_passing_template(): void {
         $filepath = $this->fixturedir . '/templates/passing.mustache';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
-        $this->assertCount(0, $results[0]->issues);
+        self::assertCount(1, $results);
+        self::assertCount(0, $results[0]->issues);
     }
 
     /**
@@ -75,9 +74,9 @@ final class mustachelint_test extends advanced_testcase {
     public function test_missing_boilerplate(): void {
         $filepath = $this->fixturedir . '/templates/missing-boilerplate.mustache';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
-        $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
-        $this->assertContains('missing-boilerplate', $rules);
+        self::assertCount(1, $results);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $results[0]->issues);
+        self::assertContains('missing-boilerplate', $rules);
     }
 
     /**
@@ -86,9 +85,9 @@ final class mustachelint_test extends advanced_testcase {
     public function test_no_doc_comment(): void {
         $filepath = $this->fixturedir . '/templates/no-doc-comment.mustache';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
-        $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
-        $this->assertContains('documentation-required', $rules);
+        self::assertCount(1, $results);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $results[0]->issues);
+        self::assertContains('documentation-required', $rules);
     }
 
     /**
@@ -97,24 +96,24 @@ final class mustachelint_test extends advanced_testcase {
     public function test_wrong_template_name(): void {
         $filepath = $this->fixturedir . '/templates/wrong-template-name.mustache';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
-        $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
-        $this->assertContains('template-name-incorrect', $rules);
+        self::assertCount(1, $results);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $results[0]->issues);
+        self::assertContains('template-name-incorrect', $rules);
     }
 
     /**
      * Test that a template with mixed-case template name reports template-name-casing.
      */
     public function test_mixed_case_name(): void {
-        $class = get_class($this->linter);
+        $class = $this->linter::class;
         $original = $class::$mocktemplatename;
         $class::$mocktemplatename = 'local_devkit/Test';
 
         $filepath = $this->fixturedir . '/templates/mixed-case-name.mustache';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
-        $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
-        $this->assertContains('template-name-casing', $rules);
+        self::assertCount(1, $results);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $results[0]->issues);
+        self::assertContains('template-name-casing', $rules);
 
         $class::$mocktemplatename = $original;
     }
@@ -125,9 +124,9 @@ final class mustachelint_test extends advanced_testcase {
     public function test_no_example_context(): void {
         $filepath = $this->fixturedir . '/templates/no-example-context.mustache';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
-        $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
-        $this->assertContains('documentation-example-context-required', $rules);
+        self::assertCount(1, $results);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $results[0]->issues);
+        self::assertContains('documentation-example-context-required', $rules);
     }
 
     /**
@@ -136,9 +135,9 @@ final class mustachelint_test extends advanced_testcase {
     public function test_invalid_json_example(): void {
         $filepath = $this->fixturedir . '/templates/invalid-json-example.mustache';
         $results = $this->linter->lint_file($filepath);
-        $this->assertCount(1, $results);
-        $rules = array_map(fn($i) => $i->rule, $results[0]->issues);
-        $this->assertContains('documentation-example-context-decode', $rules);
+        self::assertCount(1, $results);
+        $rules = array_map(fn(issue $i): ?string => $i->rule, $results[0]->issues);
+        self::assertContains('documentation-example-context-decode', $rules);
     }
 
     /**
@@ -146,7 +145,7 @@ final class mustachelint_test extends advanced_testcase {
      */
     public function test_get_include_patterns(): void {
         $patterns = mustachelint::get_include_patterns();
-        $this->assertContains('*.mustache', $patterns);
+        self::assertContains('*.mustache', $patterns);
     }
 
     /**
@@ -154,6 +153,6 @@ final class mustachelint_test extends advanced_testcase {
      */
     public function test_get_exclude_patterns(): void {
         $patterns = mustachelint::get_exclude_patterns();
-        $this->assertContains('*/tests/fixtures/*', $patterns);
+        self::assertContains('*/tests/fixtures/*', $patterns);
     }
 }

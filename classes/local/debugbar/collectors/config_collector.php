@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+declare(strict_types=1);
+
 namespace local_devkit\local\debugbar\collectors;
 
 use DebugBar\DataCollector\ConfigCollector;
@@ -27,9 +29,8 @@ use DebugBar\DataCollector\ConfigCollector;
 class config_collector extends ConfigCollector {
     /**
      * Sets the moodle $CFG object as the collector data.
-     * @return void
      */
-    public function populate() {
+    public function populate(): void {
         global $CFG;
         $data = (array) clone $CFG;
 

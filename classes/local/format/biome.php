@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+declare(strict_types=1);
+
 namespace local_devkit\local\format;
 
 use Symfony\Component\Process\Process;
@@ -37,7 +39,7 @@ class biome extends base {
     #[\Override]
     public static function format(string $path): ?int {
         $config = self::get_config_path();
-        if (!$config) {
+        if ($config === null) {
             return null;
         }
 
@@ -58,17 +60,16 @@ class biome extends base {
 
     /**
      * Get the biome.jsonc file.
-     * @return string|null
      */
     private static function get_config_path(): ?string {
         global $CFG;
 
-        if (self::$configpath) {
-            return self::$configpath;
-        }
-
         if (self::$configpath === false) {
             return null;
+        }
+
+        if (self::$configpath !== null) {
+            return self::$configpath;
         }
 
         self::$configpath = realpath("$CFG->dirroot/local/devkit/biome.jsonc");

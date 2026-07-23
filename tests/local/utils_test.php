@@ -34,9 +34,9 @@ final class utils_test extends advanced_testcase {
      */
     public function test_array_filter_left_returns_all_items_when_all_match(): void {
         $array = [1, 2, 3];
-        $result = utils::array_filter_left($array, fn($item) => $item > 0);
+        $result = utils::array_filter_left($array, fn($item): bool => $item > 0);
 
-        $this->assertSame([1, 2, 3], $result);
+        self::assertSame([1, 2, 3], $result);
     }
 
     /**
@@ -44,9 +44,9 @@ final class utils_test extends advanced_testcase {
      */
     public function test_array_filter_left_stops_on_first_false(): void {
         $array = [1, 2, 3, 4, 5];
-        $result = utils::array_filter_left($array, fn($item) => $item < 3);
+        $result = utils::array_filter_left($array, fn($item): bool => $item < 3);
 
-        $this->assertSame([1, 2], $result);
+        self::assertSame([1, 2], $result);
     }
 
     /**
@@ -54,9 +54,9 @@ final class utils_test extends advanced_testcase {
      */
     public function test_array_filter_left_returns_empty_when_first_fails(): void {
         $array = [1, 2, 3];
-        $result = utils::array_filter_left($array, fn($item) => $item > 1);
+        $result = utils::array_filter_left($array, fn($item): bool => $item > 1);
 
-        $this->assertSame([], $result);
+        self::assertSame([], $result);
     }
 
     /**
@@ -64,9 +64,9 @@ final class utils_test extends advanced_testcase {
      */
     public function test_array_filter_left_works_with_strings(): void {
         $array = ['a', 'b', 'c', 'stop', 'd'];
-        $result = utils::array_filter_left($array, fn($item) => $item !== 'stop');
+        $result = utils::array_filter_left($array, fn($item): bool => $item !== 'stop');
 
-        $this->assertSame(['a', 'b', 'c'], $result);
+        self::assertSame(['a', 'b', 'c'], $result);
     }
 
     /**
@@ -74,9 +74,9 @@ final class utils_test extends advanced_testcase {
      */
     public function test_array_filter_left_handles_empty_array(): void {
         $array = [];
-        $result = utils::array_filter_left($array, fn($item) => true);
+        $result = utils::array_filter_left($array, fn($item): true => true);
 
-        $this->assertSame([], $result);
+        self::assertSame([], $result);
     }
 
     /**
@@ -96,7 +96,7 @@ final class utils_test extends advanced_testcase {
         $path = $subdir . '/version.php';
         $result = utils::get_path_relative_to_moodle_root($path);
 
-        $this->assertSame('./public/mod/forum/version.php', $result);
+        self::assertSame('./public/mod/forum/version.php', $result);
     }
 
     /**
@@ -115,7 +115,7 @@ final class utils_test extends advanced_testcase {
         $path = $subdir . '/version.php';
         $result = utils::get_path_relative_to_moodle_root($path);
 
-        $this->assertSame('./mod/forum/version.php', $result);
+        self::assertSame('./mod/forum/version.php', $result);
     }
 
     /**
@@ -133,7 +133,7 @@ final class utils_test extends advanced_testcase {
         $path = $outside . '/file.php';
         $result = utils::get_path_relative_to_moodle_root($path);
 
-        $this->assertSame($path, $result);
+        self::assertSame($path, $result);
     }
 
     /**
@@ -149,7 +149,7 @@ final class utils_test extends advanced_testcase {
         $path = $root . '/nonexistent/file.php';
         $result = utils::get_path_relative_to_moodle_root($path);
 
-        $this->assertSame($path, $result);
+        self::assertSame($path, $result);
     }
 
     /**
@@ -165,7 +165,7 @@ final class utils_test extends advanced_testcase {
 
         $result = utils::get_path_relative_to_moodle_root($root);
 
-        $this->assertSame('./', $result);
+        self::assertSame('./', $result);
     }
 
     /**
@@ -175,6 +175,6 @@ final class utils_test extends advanced_testcase {
         $path = '/nonexistent/path/file.php';
         $result = utils::get_path_relative_to_moodle_root($path);
 
-        $this->assertSame($path, $result);
+        self::assertSame($path, $result);
     }
 }

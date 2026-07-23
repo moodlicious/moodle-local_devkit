@@ -56,14 +56,14 @@ class jsdoc extends base {
             return [self::create_file_with_fatal_issue($filepath, "Unable to read file.")];
         }
 
-        $modulename = self::resolve_module_name($filepath);
-        if (!$modulename) {
+        $modulename = $this->resolve_module_name($filepath);
+        if ($modulename === null) {
             return [self::create_file_with_fatal_issue($filepath, "Unable to resolve module name from file path.")];
         }
 
         $issues = [
-            ...self::get_issues_for_boilerplate($content),
-            ...self::get_issues_for_docblock($content, $modulename),
+            ...$this->get_issues_for_boilerplate($content),
+            ...$this->get_issues_for_docblock($content, $modulename),
         ];
 
         return [new file($filepath, $issues)];
@@ -71,24 +71,22 @@ class jsdoc extends base {
 
     /**
      * Resolve the expected module name from a file path.
-     * @param string $filepath
-     * @return string|null
      */
-    private static function resolve_module_name(string $filepath): ?string {
+    private function resolve_module_name(string $filepath): ?string {
         $relative = utils::get_path_relative_to_moodle_root($filepath);
         $component = component::resolve_component_from_path($relative);
-        if (!$component) {
+        if ($component === null) {
             return null;
         }
 
         $modulepath = null;
-        if (preg_match('#amd/src/(.+)$#', $relative, $match)) {
+        if (preg_match('#amd/src/(.+)$#', $relative, $match) === 1) {
             $modulepath = $match[1];
-        } else if (preg_match('#js/esm/src/(.+)$#', $relative, $match)) {
+        } else if (preg_match('#js/esm/src/(.+)$#', $relative, $match) === 1) {
             $modulepath = $match[1];
         }
 
-        if (!$modulepath) {
+        if ($modulepath === null) {
             return null;
         }
 
@@ -98,10 +96,9 @@ class jsdoc extends base {
 
     /**
      * Check for the presence of GPL boilerplate in the file.
-     * @param string $content
      * @return issue[]
      */
-    private static function get_issues_for_boilerplate(string $content): array {
+    private function get_issues_for_boilerplate(string $content): array {
         if (boilerplate::check_has_boilerplate($content, 'js')) {
             return [];
         }
@@ -118,11 +115,9 @@ class jsdoc extends base {
 
     /**
      * Check for the presence and correctness of the docblock.
-     * @param string $content
-     * @param string $expectedmodule
      * @return issue[]
      */
-    private static function get_issues_for_docblock(string $content, string $expectedmodule): array {
+    private function get_issues_for_docblock(string $content, string $expectedmodule): array {
         preg_match_all('/\/\*\*[\s\S]*?\*\//', $content, $matches);
         $docblocks = $matches[0];
 
@@ -156,7 +151,7 @@ class jsdoc extends base {
             );
         }
 
-        if (!preg_match('/@license\s+\S+/', $docblock)) {
+        if (preg_match('/@license\s+\S+/', $docblock) === 0) {
             $issues[] = issue::simple(
                 'Docblock is missing @license tag',
                 'missing-license',
@@ -165,7 +160,7 @@ class jsdoc extends base {
             );
         }
 
-        if (preg_match('/@module\s+(\S+)/', $docblock, $match)) {
+        if (preg_match('/@module\s+(\S+)/', $docblock, $match) === 1) {
             $declaredmodule = $match[1];
             if ($declaredmodule !== $expectedmodule) {
                 $issues[] = issue::simple(

@@ -32,6 +32,8 @@ use ReflectionClass;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 
 use function array_key_exists;
+use function count;
+use function is_object;
 
 /**
  * The abstract base linter.
@@ -66,33 +68,30 @@ abstract class base {
     /** @var string */
     public const CONFIG_KEY_EXCLUDE_PATTERNS = 'exclude_patterns';
 
-    /** @var ProgressIndicator|null */
-    protected ?ProgressIndicator $progress;
-
     /**
      * Constructor
      * @param ProgressIndicator $progress
      */
-    public function __construct(?ProgressIndicator $progress = null) {
-        $this->progress = $progress;
+    public function __construct(
+        /** @var ProgressIndicator|null */
+        protected ?ProgressIndicator $progress = null,
+    ) {
     }
 
     /**
      * Sets the processing file in the progress.
-     * @param string $path
-     * @return void
      */
     public function set_progress_file(string $path): void {
-        if (!$this->progress) {
+        if (!$this->progress instanceof ProgressIndicator) {
             return;
         }
 
-        $this->progress->setMessage("Running {$this->get_name()} on $path...");
+        $name = self::get_name();
+        $this->progress->setMessage("Running $name on $path...");
     }
 
     /**
      * Gets the {@see linter} attribute for this class.
-     * @return linter
      */
     public static function get_linter_attribute(): linter {
         /** @var linter[] $cachedinstances */
@@ -105,9 +104,9 @@ abstract class base {
         $class = new ReflectionClass(static::class);
         /** @var ReflectionAttribute<linter>[] $attributes */
         $attributes = $class->getAttributes(linter::class);
-        [$attribute] = $attributes ?: [null];
+        [$attribute] = count($attributes) > 0 ? $attributes : [null];
 
-        if (!$attribute) {
+        if ($attribute === null) {
             throw new coding_exception('linter classes must have the linter attribute set');
         }
 
@@ -117,7 +116,6 @@ abstract class base {
 
     /**
      * Gets the name of the linter.
-     * @return string
      */
     public static function get_name(): string {
         return self::get_linter_attribute()->name;
@@ -125,7 +123,6 @@ abstract class base {
 
     /**
      * Gets the summary description of the linter.
-     * @return string|null
      */
     public static function get_description(): ?string {
         return self::get_linter_attribute()->description;
@@ -133,7 +130,6 @@ abstract class base {
 
     /**
      * Determines if the given linter is enabled.
-     * @return bool
      */
     public static function is_enabled(): bool {
         $status = self::get_config_value(self::CONFIG_KEY_STATUS);
@@ -142,7 +138,6 @@ abstract class base {
 
     /**
      * Determines if the given linter is installed.
-     * @return bool
      */
     public static function is_installed(): bool {
         return true;
@@ -198,7 +193,7 @@ abstract class base {
 
         $paths = array_column(thirdpartylibs::list(), 'location');
 
-        $paths = array_map(function (string $path) {
+        $paths = array_map(function (string $path): string {
             if (!is_dir($path)) {
                 return $path;
             }
@@ -206,7 +201,7 @@ abstract class base {
         }, $paths);
 
         // Change all \ to / to avoid issues with Windows paths.
-        $paths = array_map(fn(string $path) => str_replace('\\', '/', $path), $paths);
+        $paths = array_map(fn(string $path): string => str_replace('\\', '/', $path), $paths);
 
         // Remove duplicates.
         $paths = array_values(array_unique($paths));
@@ -216,7 +211,6 @@ abstract class base {
 
     /**
      * Lints a single file.
-     * @param string $filepath
      * @return file[]
      */
     public function lint_file(string $filepath): array {
@@ -244,7 +238,6 @@ abstract class base {
 
     /**
      * Lints a single directory.
-     * @param string $directorypath
      * @return file[]
      */
     public function lint_directory(string $directorypath): array {
@@ -256,7 +249,7 @@ abstract class base {
 
         foreach ($iterator as $path) {
             $lintresults = $this->lint_file($path);
-            if ($lintresults) {
+            if ($lintresults !== []) {
                 $results = [...$results, ...$lintresults];
             }
         }
@@ -266,7 +259,6 @@ abstract class base {
 
     /**
      * Lints a given path.
-     * @param string $path
      * @return file[]
      */
     public function lint(string $path): array {
@@ -321,19 +313,17 @@ abstract class base {
             issue::simple(
                 message: $message,
                 rule: 'devkit-internal-fatal',
-                severity: severity::fatal,
                 source: self::get_name(),
+                severity: severity::fatal,
             ),
         ]);
     }
 
     /**
      * Checks if a given path matches some patterns.
-     * @param string $path
      * @param string[] $patterns
-     * @return bool
      */
-    private function path_match_patterns($path, $patterns): bool {
+    private function path_match_patterns(string $path, array $patterns): bool {
         // Normalise path to use forward slashes for consistency with glob patterns.
         $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
 
@@ -353,21 +343,15 @@ abstract class base {
     /**
      * Checks if a given filepath can be linted by the current linter.
      * Must match one of the include patterns AND none of the exclude patterns.
-     * @param string $filepath
-     * @return bool
      */
     public function can_lint_file(string $filepath): bool {
-        $includematch = $this->path_match_patterns($filepath, $this->get_include_patterns());
+        $includematch = $this->path_match_patterns($filepath, static::get_include_patterns());
         if (!$includematch) {
             return false;
         }
 
-        $excludematch = $this->path_match_patterns($filepath, $this->get_exclude_patterns());
-        if ($excludematch) {
-            return false;
-        }
-
-        return true;
+        $excludematch = $this->path_match_patterns($filepath, static::get_exclude_patterns());
+        return !$excludematch;
     }
 
     /**
@@ -397,13 +381,10 @@ abstract class base {
     /**
      * Helper function to get a specific linter config value, returns null if not set.
      * Optionally set togglekey to only return the value if it is set.
-     * @param string $key
-     * @param string|null $togglekey
-     * @return mixed
      */
     protected static function get_config_value(string $key, ?string $togglekey = null): mixed {
         if ($togglekey !== null) {
-            $enabled = self::get_config_value($togglekey);
+            $enabled = (bool) self::get_config_value($togglekey);
             if (!$enabled) {
                 return null;
             }
@@ -418,13 +399,13 @@ abstract class base {
             return null;
         }
 
+        // phpcs:ignore moodle.Commenting.InlineComment
+        // @phpstan-ignore-next-line phpstan/property.dynamicName (Checked above, probably fine)
         return $config->$key;
     }
 
     /**
      * Defines all configurable options for the current linter.
-     * @param MoodleQuickForm $form
-     * @return void
      */
     public static function define_config(MoodleQuickForm $form): void {
         $enabledoptions = [
@@ -441,16 +422,10 @@ abstract class base {
         foreach ($patterns as $togglename => $name) {
             self::define_config_textarea($form, $name, $togglename);
         }
-
-        return;
     }
 
     /**
      * Utility function for adding a toggleable textarea.
-     * @param MoodleQuickForm $form
-     * @param string $name
-     * @param string $togglename
-     * @return void
      */
     public static function define_config_textarea(MoodleQuickForm $form, string $name, string $togglename): void {
         $form->addElement('checkbox', $togglename, "Enable $name");
@@ -461,7 +436,6 @@ abstract class base {
 
     /**
      * Get the configuration name for this linter.
-     * @return string
      */
     public static function get_config_name(): string {
         $name = self::get_name();
@@ -470,7 +444,6 @@ abstract class base {
 
     /**
      * Gets the linter config.
-     * @return object|null
      */
     public static function get_config(): ?object {
         try {
@@ -478,16 +451,15 @@ abstract class base {
         } catch (dml_exception) {
             return null;
         }
-        if (!$configstring) {
+        if ($configstring === '' || $configstring === false) {
             return null;
         }
-        return json_decode($configstring, false);
+        $config = json_decode($configstring, false);
+        return is_object($config) ? $config : null;
     }
 
     /**
      * Saves the linter config.
-     * @param object $config
-     * @return void
      */
     public static function save_config(object $config): void {
         $configstring = json_encode($config);
@@ -500,11 +472,10 @@ abstract class base {
     /**
      * Utility function to parse textarea multiline strings as an array.
      * Splits at new lines, trims each line, and filters empty lines.
-     * @param string $string
      * @return string[]
      */
     protected static function parse_multiline_string_as_array(string $string): array {
-        $excludes = explode("\n", $string);
-        return array_filter(array_map(trim(...), $excludes));
+        $lines = explode("\n", $string);
+        return array_filter(array_map(trim(...), $lines), fn($line): bool => $line !== '');
     }
 }

@@ -16,9 +16,11 @@
 
 namespace local_devkit\local\seeders;
 
+use csv_import_reader;
 use Faker\Factory;
 use InvalidArgumentException;
 use Symfony\Component\Console\Helper\ProgressIndicator;
+use tool_uploaduser\process;
 
 /**
  * Class users
@@ -46,8 +48,23 @@ class users extends base {
     public function seed(): void {
         global $CFG;
         require_once($CFG->dirroot . '/user/lib.php');
+        require_once($CFG->libdir . '/csvlib.class.php');
 
         $faker = Factory::create();
+
+        $delimiter = ',';
+        $columns = ['firstname', 'lastname', 'username', 'email', 'password'];
+        $iid = csv_import_reader::get_new_iid('uploaduser');
+        $cir = new csv_import_reader($iid, 'uploaduser');
+        $cir->load_csv_content(implode($delimiter, $columns), 'utf8', $delimiter);
+
+        $process = new process($cir, \tool_uploaduser\local\text_progress_tracker::class);
+        $process->set_form_data((object) ['uutype' => UU_USER_ADDNEW]);
+
+        // Remove text_progress_tracker's output as we are using our own progress tracking.
+        ob_start();
+        $process->process();
+        ob_end_clean();
 
         // This is to ensure the password passes Moodle's password policy.
         $passwordsuffix = '@aA1!';
@@ -60,10 +77,8 @@ class users extends base {
                 'username' => $faker->userName(),
                 'email' => $faker->safeEmail(),
                 'password' => $faker->password() . $passwordsuffix,
-                'confirmed' => 1,
-                'mnethostid' => get_config('', 'mnet_localhost_id'),
             ];
-            user_create_user($user);
+            $process->process_line(array_values($user));
         }
     }
 }

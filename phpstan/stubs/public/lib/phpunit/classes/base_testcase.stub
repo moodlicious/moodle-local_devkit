@@ -1,0 +1,6 @@
+<?php
+
+use PHPUnit\Framework\TestCase;
+
+abstract class base_testcase extends TestCase {
+}

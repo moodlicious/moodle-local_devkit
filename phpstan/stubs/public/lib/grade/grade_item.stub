@@ -1,0 +1,25 @@
+<?php
+
+class grade_item extends grade_object {
+    /**
+     * @param string $source
+     * @param bool $isbulkupdate
+     * @return true
+     */
+    public function update($source = null, $isbulkupdate = false) {
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     * @return grade_item|false
+     */
+    public static function fetch($params) {
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     * @return grade_item[]|false
+     */
+    public static function fetch_all($params) {
+    }
+}

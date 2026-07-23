@@ -15,3 +15,13 @@ define('FORMAT_MARKDOWN', '4');
  */
 function format_text($text, $format = \FORMAT_MOODLE, $options = null, $courseiddonotuse = null) {
 }
+
+
+/**
+ * @param string $message
+ * @param DEBUG_NONE|DEBUG_MINIMAL|DEBUG_NORMAL|DEBUG_ALL|DEBUG_DEVELOPER $level
+ * @param mixed[] $backtrace
+ * @return bool
+ */
+function debugging($message = '', $level = DEBUG_NORMAL, $backtrace = null) {
+}

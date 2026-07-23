@@ -1,0 +1,40 @@
+<?php
+
+class enrol_category_plugin extends enrol_plugin {
+}
+
+class enrol_cohort_plugin extends enrol_plugin {
+}
+
+class enrol_database_plugin extends enrol_plugin {
+}
+
+class enrol_fee_plugin extends enrol_plugin {
+}
+
+class enrol_flatfile_plugin extends enrol_plugin {
+}
+
+class enrol_guest_plugin extends enrol_plugin {
+}
+
+class enrol_imsenterprise_plugin extends enrol_plugin {
+}
+
+class enrol_ldap_plugin extends enrol_plugin {
+}
+
+class enrol_lti_plugin extends enrol_plugin {
+}
+
+class enrol_manual_plugin extends enrol_plugin {
+}
+
+class enrol_meta_plugin extends enrol_plugin {
+}
+
+class enrol_paypal_plugin extends enrol_plugin {
+}
+
+class enrol_self_plugin extends enrol_plugin {
+}

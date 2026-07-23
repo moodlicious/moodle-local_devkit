@@ -1,0 +1,14 @@
+<?php
+
+namespace core_course;
+
+/**
+ * @property-read int $courseid
+ * @property-read int $userid
+ * @property-read array<int, int[]> $sections
+ * @property-read cm_info[] $cms
+ * @property-read array<string, array<int, cm_info>> $instances
+ * @property-read array<int, array<int, int>> $groups
+ */
+class modinfo {
+}

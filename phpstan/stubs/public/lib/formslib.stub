@@ -1,4 +1,87 @@
 <?php
 
+use core\url;
+
+abstract class moodleform {
+    /**
+     * @param string|url|null $action
+     * @param mixed $customdata
+     * @param 'get'|'post' $method
+     * @param string $target
+     * @param string|array<string, mixed>|null $attributes
+     * @param bool $editable
+     * @param array<mixed> $ajaxformdata
+     */
+    public function __construct(
+        $action = null,
+        $customdata = null,
+        $method = 'post',
+        $target = '',
+        $attributes = null,
+        $editable = true,
+        $ajaxformdata = null,
+    ) {
+    }
+
+    /**
+     * @param string $elname
+     * @return string|false
+     */
+    public function save_temp_file($elname) {
+    }
+
+    /**
+     * @param string $elname
+     * @return stored_file[]|false|null
+     */
+    protected function get_draft_files($elname) {
+    }
+
+    /**
+     * @param string $elname
+     * @param int $newcontextid
+     * @param string $newcomponent
+     * @param string $newfilearea
+     * @param int $newitemid
+     * @param string $newfilepath
+     * @param string $newfilename
+     * @param bool $overwrite
+     * @param int $newuserid
+     * @return stored_file|false
+     */
+    public function save_stored_file(
+        $elname,
+        $newcontextid,
+        $newcomponent,
+        $newfilearea,
+        $newitemid,
+        $newfilepath = '/',
+        $newfilename = null,
+        $overwrite = false,
+        $newuserid = null,
+    ) {
+    }
+
+    /**
+     * @param string $elname
+     * @return string|false
+     */
+    public function get_file_content($elname) {
+    }
+
+    /**
+     * @return void
+     */
+    abstract protected function definition();
+
+    /**
+     * @param array<string, mixed> $data
+     * @param array<string, string> $files
+     * @return array<string, string>
+     */
+    public function validation($data, $files) {
+    }
+}
+
 class MoodleQuickForm extends HTML_QuickForm_DHTMLRulesTableless {
 }

@@ -4,9 +4,52 @@ use stored_file;
 
 class file_storage {
     /**
+     * @param int $fileid
+     * @return stored_file|false
+     */
+    public function get_file_by_id($fileid) {
+    }
+
+    /**
      * @param string $pathnamehash
      * @return stored_file|false
      */
     public function get_file_by_hash($pathnamehash) {
+    }
+
+    /**
+     * @param int $contextid
+     * @param string $component
+     * @param string $filearea
+     * @param int $itemid
+     * @param string $filepath
+     * @param string $filename
+     * @return stored_file|false
+     */
+    public function get_file($contextid, $component, $filearea, $itemid, $filepath, $filename) {
+    }
+
+    /**
+     * @param int $contextid
+     * @param string $component
+     * @param string $filearea
+     * @param int $itemid
+     * @param int $filepath
+     * @param bool $recursive
+     * @param bool $includedirs
+     * @param string $sort
+     * @return array<string, stored_file>
+     */
+    public function get_directory_files($contextid, $component, $filearea, $itemid, $filepath, $recursive = false, $includedirs = true, $sort = "filepath, filename") {
+    }
+
+    /**
+     * @param int $contextid context ID
+     * @param string $component component
+     * @param string|false $filearea
+     * @param int|false $itemid
+     * @return true
+     */
+    public function delete_area_files($contextid, $component = false, $filearea = false, $itemid = false) {
     }
 }

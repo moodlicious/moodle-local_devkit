@@ -1,0 +1,24 @@
+<?php
+
+use core_course\cm_info;
+
+define('NOGROUPS', 0);
+define('SEPARATEGROUPS', 1);
+define('VISIBLEGROUPS', 2);
+
+/**
+ * @param int $groupid
+ * @param string $fields
+ * @param string $sort
+ * @return stdClass[]
+ */
+function groups_get_members($groupid, $fields = 'u.*', $sort = 'lastname ASC') {
+}
+
+/**
+ * @param cm_info|stdClass $cm
+ * @param stdClass|null $course
+ * @return NOGROUPS|SEPARATEGROUPS|VISIBLEGROUPS
+ */
+function groups_get_activity_groupmode($cm, $course = null) {
+}

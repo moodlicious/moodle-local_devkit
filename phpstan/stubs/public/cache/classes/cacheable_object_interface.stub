@@ -1,0 +1,6 @@
+<?php
+
+namespace core_cache;
+
+interface cacheable_object_interface {
+}

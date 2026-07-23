@@ -72,7 +72,7 @@ class lang extends base {
 
     #[\Override]
     public function lint_file(string $filepath): array {
-        $segments = self::split_lang_filepath($filepath);
+        $segments = $this->split_lang_filepath($filepath);
         if ($segments === null) {
             return [];
         }
@@ -80,33 +80,29 @@ class lang extends base {
         // Let's be really cheeky and just filter the lint_directory results for the current file.
         [$langdir] = $segments;
         $results = $this->lint_directory($langdir);
-        $results = array_filter(
+        return array_filter(
             $results,
-            fn(file $result) => $result->file === $filepath,
+            fn(file $result): bool => $result->file === $filepath,
         );
-        return $results;
     }
 
     #[\Override]
     public function lint_directory(string $directorypath): array {
-        $nearestlangdir = self::find_nearest_langdir_up($directorypath);
+        $nearestlangdir = $this->find_nearest_langdir_up($directorypath);
         $rawstringdata = $this->load_strings($nearestlangdir);
         $stringdata = $this->normalise_strings($rawstringdata);
 
         $results = $this->validate($stringdata);
-        $results = array_filter(
+        return array_filter(
             $results,
-            fn(file $result) => str_starts_with($result->file, $directorypath),
+            fn(file $result): bool => str_starts_with($result->file, $directorypath),
         );
-        return $results;
     }
 
     /**
      * Walks up the directory tree and find the nearest lang directory.
-     * @param string $directorypath
-     * @return string
      */
-    private static function find_nearest_langdir_up(string $directorypath): string {
+    private function find_nearest_langdir_up(string $directorypath): string {
         global $CFG;
 
         $root = realpath(utils::get_moodle_root_dir());
@@ -132,13 +128,11 @@ class lang extends base {
             break;
         }
 
-        if (count($segments) === 0) {
+        if ($segments === []) {
             return $directorypath;
         }
 
-        $directorypath = $root . implode(DIRECTORY_SEPARATOR, $segments);
-
-        return $directorypath;
+        return $root . implode(DIRECTORY_SEPARATOR, $segments);
     }
 
     /**
@@ -147,8 +141,6 @@ class lang extends base {
      * Loading strings via the manager will fallback on undefined strings,
      * so we add an option to disable and load directly from file.
      *
-     * @param string $directorypath
-     * @param bool $usestringmanager
      * @return RawLangdirs
      */
     private function load_strings(string $directorypath, bool $usestringmanager = false): array {
@@ -163,7 +155,7 @@ class lang extends base {
                 continue;
             }
 
-            $segments = self::split_lang_filepath($path);
+            $segments = $this->split_lang_filepath($path);
             if ($segments === null) {
                 continue;
             }
@@ -186,12 +178,10 @@ class lang extends base {
         $manager = $usestringmanager ? get_string_manager() : null;
         foreach ($langdirdata as $langdir => $components) {
             foreach ($components as $component => $locales) {
-                foreach ($locales as $locale => $strings) {
+                foreach (array_keys($locales) as $locale) {
                     $langdirdata[$langdir][$component][$locale] = $manager !== null
                         ? $manager->load_component_strings($component, $locale)
-                        : self::load_component_strings(
-                            self::compose_lang_filepath($langdir, $component, $locale),
-                        );
+                        : $this->load_component_strings($this->compose_lang_filepath($langdir, $component, $locale));
                 }
             }
         }
@@ -203,12 +193,12 @@ class lang extends base {
      * Loads language file strings.
      * @return RawStrings
      */
-    private static function load_component_strings(string $filepath): array {
+    private function load_component_strings(string $filepath): array {
         try {
             $string = [];
             include($filepath);
             return $string;
-        } catch (\Throwable $th) {
+        } catch (\Throwable) {
             return [];
         }
     }
@@ -295,10 +285,10 @@ class lang extends base {
         ['locales' => $locales, 'identifiers' => $identifiers] = $componentdata;
 
         $englishlocaleid = 'en';
-        $englishlangfilepath = self::compose_lang_filepath($langdir, $component, $englishlocaleid);
+        $englishlangfilepath = $this->compose_lang_filepath($langdir, $component, $englishlocaleid);
 
         if (!in_array($englishlocaleid, $locales, true)) {
-            $results[] = self::single_file_issue(
+            $results[] = $this->single_file_issue(
                 $englishlangfilepath,
                 "Missing required '$englishlocaleid' locale",
                 "linting-requires-$englishlocaleid-locale",
@@ -311,7 +301,7 @@ class lang extends base {
 
             // Validate that all strings have the 'en' locale.
             if (!in_array($englishlocaleid, $identifierlocales, true)) {
-                $results[] = self::single_file_issue(
+                $results[] = $this->single_file_issue(
                     $englishlangfilepath,
                     "Identifier '$identifier' is not present in the '$englishlocaleid' locale",
                     'identifier-safely-missing',
@@ -323,58 +313,54 @@ class lang extends base {
             // Validate that if a string has the 'en' locale, it should also have all other locales.
             $missinglocales = array_diff($locales, $identifierlocales);
             foreach ($missinglocales as $missinglocale) {
-                $results[] = self::single_file_issue(
-                    self::compose_lang_filepath($langdir, $component, $missinglocale),
+                $results[] = $this->single_file_issue(
+                    $this->compose_lang_filepath($langdir, $component, $missinglocale),
                     "Identifier '$identifier' missing from '$missinglocale' locale",
                     'identifier-missing',
-                    line: self::identifier_line($identifier, $englishlangfilepath),
+                    line: $this->identifier_line($identifier, $englishlangfilepath),
                 );
             }
 
             // Validate that there are no extra locales.
             $extralocales = array_diff($identifierlocales, $locales);
             foreach ($extralocales as $extralocale) {
-                $extralangfile = self::compose_lang_filepath($langdir, $component, $extralocale);
-                $results[] = self::single_file_issue(
+                $extralangfile = $this->compose_lang_filepath($langdir, $component, $extralocale);
+                $results[] = $this->single_file_issue(
                     $extralangfile,
                     "Identifier '$identifier' has extra '$extralocale' locale",
                     'identifier-extra',
-                    line: self::identifier_line($identifier, $extralangfile),
+                    line: $this->identifier_line($identifier, $extralangfile),
                 );
             }
 
             $englishstring = $localesdata[$englishlocaleid];
-            $requiredplaceholders = self::extract_placeholders($englishstring);
+            $requiredplaceholders = $this->extract_placeholders($englishstring);
 
             foreach ($localesdata as $locale => $string) {
-                $localelangfile = self::compose_lang_filepath($langdir, $component, $locale);
-                $placeholders = self::extract_placeholders($string);
+                $localelangfile = $this->compose_lang_filepath($langdir, $component, $locale);
+                $placeholders = $this->extract_placeholders($string);
                 $missingplaceholders = array_diff($requiredplaceholders, $placeholders);
-                if (count($missingplaceholders) > 0) {
-                    $placeholdersmsg = self::placeholders_to_string($missingplaceholders);
-                    $results[] = self::single_file_issue(
+                if ($missingplaceholders !== []) {
+                    $placeholdersmsg = $this->placeholders_to_string($missingplaceholders);
+                    $results[] = $this->single_file_issue(
                         $localelangfile,
                         "Identifier '$identifier' is missing placeholders $placeholdersmsg in the '$locale' locale",
                         'identifier-placeholders-missing',
-                        line: self::identifier_line($identifier, $localelangfile),
+                        line: $this->identifier_line($identifier, $localelangfile),
                     );
                 }
 
                 $extraplaceholders = array_diff($placeholders, $requiredplaceholders);
-                if (count($extraplaceholders) > 0) {
-                    $placeholdersmsg = self::placeholders_to_string($extraplaceholders);
-                    $results[] = self::single_file_issue(
+                if ($extraplaceholders !== []) {
+                    $placeholdersmsg = $this->placeholders_to_string($extraplaceholders);
+                    $results[] = $this->single_file_issue(
                         $localelangfile,
                         "Identifier '$identifier' has extra placeholders $placeholdersmsg in the '$locale' locale",
                         'identifier-placeholders-extra',
-                        line: self::identifier_line($identifier, $localelangfile),
+                        line: $this->identifier_line($identifier, $localelangfile),
                     );
                 }
-
-                continue;
             }
-
-            continue;
         }
 
         return $results;
@@ -383,17 +369,16 @@ class lang extends base {
     /**
      * Splits the lang file into the /lang dir, locale code, and component name.
      * Can use {@see self::split_lang_filepath} to reconstruct the file path from parts.
-     * @param string $filepath
      * @return array{string, string, string} - lang dir, locale, component
      */
-    private static function split_lang_filepath(string $filepath): ?array {
+    private function split_lang_filepath(string $filepath): ?array {
         $segments = explode(DIRECTORY_SEPARATOR, $filepath);
         $component = array_pop($segments);
         $component = str_replace('.php', '', $component);
         $locale = array_pop($segments);
         $langdir = implode(DIRECTORY_SEPARATOR, $segments);
 
-        if (count($segments) === 0 || $locale === null || $component === '') {
+        if ($segments === [] || $locale === null || $component === '') {
             return null;
         }
 
@@ -403,27 +388,15 @@ class lang extends base {
     /**
      * Utility function to recreate the language file path.
      * Can use {@see self::split_lang_filepath} to split the file path back into parts.
-     * @param string $langdir
-     * @param string $component
-     * @param string $locale
-     * @return string
      */
-    private static function compose_lang_filepath(string $langdir, string $component, string $locale): string {
+    private function compose_lang_filepath(string $langdir, string $component, string $locale): string {
         return implode(DIRECTORY_SEPARATOR, [$langdir, $locale, "$component.php"]);
     }
 
     /**
      * Helper function to create a simple issue.
-     * @param string $path
-     * @param string $message
-     * @param string|null $rule
-     * @param int $line
-     * @param int $column
-     * @param string $source
-     * @param severity $severity
-     * @return file
      */
-    private static function single_file_issue(
+    private function single_file_issue(
         string $path,
         string $message,
         ?string $rule,
@@ -440,20 +413,16 @@ class lang extends base {
 
     /**
      * Resolves the line number for a specific identifier in a language file, falling back to 0.
-     * @param string $identifier
-     * @param string $langfile
-     * @return int
      */
-    private static function identifier_line(string $identifier, string $langfile): int {
-        return self::find_identifier_line_number_in_file($identifier, $langfile) ?? 0;
+    private function identifier_line(string $identifier, string $langfile): int {
+        return $this->find_identifier_line_number_in_file($identifier, $langfile) ?? 0;
     }
 
     /**
      * Extracts {$a} / {$a->key} placeholders from a given string.
-     * @param string $string
      * @return string[]
      */
-    private static function extract_placeholders(string $string): array {
+    private function extract_placeholders(string $string): array {
         static $regex = '/{\$a(?:->\w+)?}/';
         $success = preg_match_all($regex, $string, $matches);
         if ($success === false) {
@@ -466,21 +435,17 @@ class lang extends base {
     /**
      * Converts a set of placeholders into string suitable to use in the issue message.
      * @param string[] $placeholders
-     * @return string
      */
-    private static function placeholders_to_string(array $placeholders): string {
-        $placeholders = array_map(fn($placeholder) => "`$placeholder`", $placeholders);
+    private function placeholders_to_string(array $placeholders): string {
+        $placeholders = array_map(fn(string $placeholder): string => "`$placeholder`", $placeholders);
         $string = implode(',', $placeholders);
         return "($string)";
     }
 
     /**
      * Resolves the line number for a specific identifier in a language file.
-     * @param string $identifier
-     * @param string $langfile
-     * @return int|null
      */
-    private static function find_identifier_line_number_in_file(string $identifier, string $langfile): ?int {
+    private function find_identifier_line_number_in_file(string $identifier, string $langfile): ?int {
         $source = file_get_contents($langfile);
         if ($source === false) {
             return null;

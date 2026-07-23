@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+declare(strict_types=1);
+
 namespace local_devkit\local\mcp\tools;
 
 use local_devkit\local\cli\commands\database\database_show;
@@ -32,28 +34,26 @@ class database {
     /**
      * Show database tables defined, all or for a specific plugin component.
      * @param string|null $component The plugin component name. E.g. mod_assign.
-     * @return object
      */
     public static function db_show_tables(?string $component = null): object {
         try {
             $data = database_show::get_data($component);
             return (object) ['data' => $data];
         } catch (Throwable $e) {
-            throw new ToolCallException($e->getMessage());
+            throw new ToolCallException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
     /**
      * Get the fields, indexes and keys of a specific database table.
      * @param string $tablename The database table name.
-     * @return object
      */
     public static function db_get_table(string $tablename): object {
         try {
             $data = database_table::get_data($tablename);
             return (object) ['data' => $data];
         } catch (Throwable $e) {
-            throw new ToolCallException($e->getMessage());
+            throw new ToolCallException($e->getMessage(), $e->getCode(), $e);
         }
     }
 }

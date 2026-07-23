@@ -20,6 +20,7 @@ use core\context;
 use core\context\system;
 use core\url;
 use core_form\dynamic_form;
+use local_devkit\local\lint\linters\base;
 
 use function is_string;
 
@@ -33,10 +34,10 @@ use function is_string;
 class linter_config extends dynamic_form {
     /**
      * Utility function to get the classname.
-     * @return class-string<\local_devkit\local\lint\linters\base>|null
+     * @return class-string<base>|null
      */
     public function get_linter_classname() {
-        /** @var class-string<\local_devkit\local\lint\linters\base>|null $classname */
+        /** @var class-string<base>|null $classname */
         $classname = $this->optional_param('classname', null, PARAM_TEXT);
         if (is_string($classname) && $classname !== '') {
             return $classname;
@@ -44,7 +45,7 @@ class linter_config extends dynamic_form {
 
         $data = $this->get_data();
         if ($data !== null && property_exists($data, 'classname')) {
-            /** @var class-string<\local_devkit\local\lint\linters\base>|null $classname */
+            /** @var class-string<base>|null $classname */
             $classname = $data->classname;
             if (is_string($classname) && $classname !== '') {
                 return $classname;
@@ -103,7 +104,6 @@ class linter_config extends dynamic_form {
             'classname' => $linter,
         ];
         $this->set_data($data);
-        return;
     }
 
     #[\Override]

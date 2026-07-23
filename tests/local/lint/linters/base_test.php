@@ -37,8 +37,6 @@ use Symfony\Component\Console\Output\NullOutput;
 final class base_test extends advanced_testcase {
     /**
      * Returns a simple base class for testing.
-     * @param ProgressIndicator|null $progress
-     * @return base
      */
     public function create_simple_base_class(?ProgressIndicator $progress = null): base {
         return new #[linter('base')] class ($progress) extends base {
@@ -172,7 +170,7 @@ final class base_test extends advanced_testcase {
      */
     public function test_set_progress_file_does_nothing_when_no_progress(): void {
         $this->expectNotToPerformAssertions();
-        $linter = $this->create_simple_base_class(null);
+        $linter = $this->create_simple_base_class();
         $linter->set_progress_file('/some/path/file.php');
     }
 

@@ -31,8 +31,6 @@ use xmldb_structure;
 class database {
     /**
      * List database tables for a given plugin.
-     * @param string $component
-     * @return database_schema|null
      */
     public static function list_plugin_tables(string $component): ?database_schema {
         $targetplugin = plugins::get_by_component($component);
@@ -51,10 +49,8 @@ class database {
 
     /**
      * Gets database tables from a specific db/install.xml file.
-     * @param string $xmlpath
-     * @return database_schema|null
      */
-    public static function list_tables_from_xml(string $xmlpath) {
+    public static function list_tables_from_xml(string $xmlpath): database_schema {
         $structure = self::get_xmldb_structure($xmlpath);
 
         /** @var \xmldb_table[] $tables */
@@ -110,13 +106,11 @@ class database {
             );
         }
 
-        $result = new database_schema(
+        return new database_schema(
             name: $structure->getName(),
             comment: $structure->getComment(),
             tables: $tableresults,
         );
-
-        return $result;
     }
 
     /**
@@ -130,7 +124,7 @@ class database {
         $plugintables = [];
         foreach ($plugins as $plugin) {
             $tables = self::list_plugin_tables($plugin['component']);
-            if ($tables === null) {
+            if (!$tables instanceof database_schema) {
                 continue;
             }
             $plugintables[] = $tables;
@@ -138,9 +132,6 @@ class database {
 
         $corexmlpath = $CFG->libdir . '/db/install.xml';
         $coretables = self::list_tables_from_xml($corexmlpath);
-        if ($coretables === null) {
-            throw new Exception('Unable to load tables from core moodle /lib/db/install.xml');
-        }
         $plugintables[] = $coretables;
 
         return $plugintables;
@@ -148,8 +139,6 @@ class database {
 
     /**
      * Find a specific table.
-     * @param string $tablename
-     * @return database_schema\table|null
      */
     public static function find_table(string $tablename): ?database_schema\table {
         $result = self::list_tables();
@@ -170,10 +159,8 @@ class database {
 
     /**
      * Converts the XMLDB_TYPE_XXX to human readable string.
-     * @param int $type
-     * @return string
      */
-    public static function field_type_to_string(int $type) {
+    public static function field_type_to_string(int $type): string {
         return match ($type) {
             XMLDB_TYPE_INCORRECT => 'incorrect',
             XMLDB_TYPE_INTEGER => 'integer',
@@ -190,10 +177,8 @@ class database {
 
     /**
      * Converts the XMLDB_KEY_XXX to human readable string.
-     * @param int $type
-     * @return string
      */
-    public static function key_type_to_string(int $type) {
+    public static function key_type_to_string(int $type): string {
         return match ($type) {
             XMLDB_KEY_INCORRECT => 'incorrect',
             XMLDB_KEY_PRIMARY => 'primary',
@@ -207,8 +192,6 @@ class database {
 
     /**
      * Gets the xmldb_structure for a given xmlpath.
-     * @param string $xmlpath
-     * @return xmldb_structure
      */
     public static function get_xmldb_structure(string $xmlpath): xmldb_structure {
         global $CFG;

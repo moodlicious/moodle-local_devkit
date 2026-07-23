@@ -32,10 +32,6 @@ use local_devkit\local\utils;
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class file implements JsonSerializable {
-    /** @var string */
-    public readonly string $file;
-    /** @var issue[] */
-    public array $issues;
     /** @var string|null */
     private ?string $component = null;
     /** @var bool */
@@ -43,18 +39,18 @@ class file implements JsonSerializable {
 
     /**
      * Constructor.
-     * @param string $file
      * @param issue[] $issues
      */
-    public function __construct(string $file, array $issues = []) {
-        $this->file = $file;
-        $this->issues = $issues;
+    public function __construct(
+        /** @var string */
+        public readonly string $file,
+        /** @var issue[] */
+        public array $issues = [],
+    ) {
     }
 
     /**
      * Adds an issue.
-     * @param issue $issue
-     * @return self
      */
     public function add_issue(issue $issue): self {
         $this->issues[] = $issue;
@@ -63,7 +59,6 @@ class file implements JsonSerializable {
 
     /**
      * Resolves the component name from this file's path.
-     * @return string|null
      */
     public function get_component(): ?string {
         if (!$this->componentresolved) {
@@ -88,16 +83,11 @@ class file implements JsonSerializable {
 
     /**
      * Formats a given file issue into a clickable link.
-     * @param int|null $line
-     * @param int|null $column
-     * @param bool $decorate
-     * @param bool $relative
-     * @return string
      */
     public function format_path(?int $line = null, ?int $column = null, bool $decorate = false, bool $relative = false): string {
         $displaypath = $relative ? utils::get_path_relative_to_moodle_root($this->file) : $this->file;
 
-        static $filter = fn(?string $item) => (bool) $item;
+        static $filter = fn(?string $item): bool => (bool) $item;
 
         $location = implode(":", utils::array_filter_left([$displaypath, $line, $column], $filter));
 
@@ -107,8 +97,6 @@ class file implements JsonSerializable {
 
         $encodedpath = str_replace('%2F', '/', rawurlencode($this->file));
         $encodedlocation = implode(":", utils::array_filter_left([$encodedpath, $line, $column], $filter));
-
-        $link = "<href=vscode://file/$encodedlocation>$location</>";
-        return $link;
+        return "<href=vscode://file/$encodedlocation>$location</>";
     }
 }

@@ -174,7 +174,7 @@ final class file_test extends advanced_testcase {
      */
     public function test_format_path_skips_null_values(): void {
         $file = new file('/path/to/file.php');
-        $result = $file->format_path(line: null, column: 5);
+        $result = $file->format_path(column: 5);
 
         self::assertSame('/path/to/file.php', $result);
     }

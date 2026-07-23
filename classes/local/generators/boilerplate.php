@@ -28,8 +28,6 @@ use Exception;
 class boilerplate {
     /**
      * Get the canonical GPL boilerplate.
-     * @param bool $usehttps
-     * @return string
      */
     public static function get_boilerplate(bool $usehttps): string {
         static $cache = [];
@@ -57,8 +55,6 @@ class boilerplate {
 
     /**
      * Get the canonical GPL boilerplate with JS line comments.
-     * @param bool $usehttps
-     * @return string
      */
     public static function generate_for_javascript(bool $usehttps): string {
         $raw = self::get_boilerplate($usehttps);
@@ -71,8 +67,6 @@ class boilerplate {
 
     /**
      * Get the canonical GPL boilerplate wrapped as a Mustache comment block.
-     * @param bool $usehttps
-     * @return string
      */
     public static function generate_for_mustache(bool $usehttps): string {
         $raw = self::get_boilerplate($usehttps);
@@ -86,14 +80,12 @@ class boilerplate {
 
     /**
      * Check whether content starts with the GPL boilerplate (http or https variant).
-     * @param string $content
      * @param string $format 'js' or 'mustache'
-     * @return bool
      */
     public static function check_has_boilerplate(string $content, string $format): bool {
         $generator = match ($format) {
-            'js' => [self::class, 'generate_for_javascript'],
-            'mustache' => [self::class, 'generate_for_mustache'],
+            'js' => self::generate_for_javascript(...),
+            'mustache' => self::generate_for_mustache(...),
             default => throw new \InvalidArgumentException("Unknown format: $format"),
         };
 

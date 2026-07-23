@@ -37,19 +37,19 @@ class thirdpartylib {
     public string $name;
 
     /** @var string|null */
-    public ?string $description;
+    public ?string $description = null;
 
     /** @var string|null */
-    public ?string $version;
+    public ?string $version = null;
 
     /** @var string */
     public string $license;
 
     /** @var string|null */
-    public ?string $licenseversion;
+    public ?string $licenseversion = null;
 
     /** @var string|null */
-    public ?string $repository;
+    public ?string $repository = null;
 
     /** @var bool */
     public bool $customised;
@@ -59,12 +59,9 @@ class thirdpartylib {
 
     /**
      * Creates an instance from {@see \SimpleXMLElement}.
-     * @param string $basepath
-     * @param SimpleXMLElement $element
      * @throws Exception
-     * @return thirdpartylib
      */
-    public static function from_xml_element(string $basepath, SimpleXMLElement $element) {
+    public static function from_xml_element(string $basepath, SimpleXMLElement $element): self {
         $instance = new self();
         $basepath = realpath(dirname($basepath));
         if ($basepath === false) {
@@ -82,14 +79,18 @@ class thirdpartylib {
         $instance->version = $element->version ?? null;
         $instance->license = (string) $element->license;
         $instance->licenseversion = null;
-        if (isset($element->licenseversion) && ((string) $element->licenseversion) !== '') {
+        if (
+            property_exists($element, 'licenseversion')
+            && $element->licenseversion !== null
+            && ((string) $element->licenseversion) !== ''
+        ) {
             $instance->licenseversion = (string) $element->licenseversion;
         }
         $instance->repository = $element->repository ?? null;
         $instance->customised = (bool) ($element->customised ?? false);
 
         $instance->copyrights = [];
-        if (isset($element->copyrights->copyright)) {
+        if (property_exists($element->copyrights, 'copyright') && $element->copyrights->copyright !== null) {
             foreach ($element->copyrights->copyright as $copyright) {
                 $instance->copyrights[] = (string) $copyright;
             }

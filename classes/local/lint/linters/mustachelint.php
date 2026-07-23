@@ -70,11 +70,11 @@ class mustachelint extends base {
         }
 
         $issues = [
-            ...self::get_issues_for_boilerplate($content),
+            ...$this->get_issues_for_boilerplate($content),
         ];
 
-        $comments = self::extract_comments_from_template($content);
-        $documentation = self::get_documentation_comment($comments);
+        $comments = $this->extract_comments_from_template($content);
+        $documentation = $this->get_documentation_comment($comments);
 
         $issues = [
             ...$issues,
@@ -86,7 +86,6 @@ class mustachelint extends base {
 
     /**
      * Returns the template name in the format of componentname/templatename.
-     * @return string|null
      */
     protected static function resolve_template_name(string $filepath): ?string {
         $directoriespath = self::parse_template_path($filepath);
@@ -106,7 +105,6 @@ class mustachelint extends base {
 
     /**
      * Gets the plugin path and mustache path.
-     * @param string $filepath
      * @return array{string, string}|null
      */
     private static function parse_template_path(string $filepath): ?array {
@@ -131,31 +129,29 @@ class mustachelint extends base {
 
     /**
      * Match any mustache comments and return them.
-     * @param string $content
      * @return string[]
      */
-    private static function extract_comments_from_template(string $content): array {
+    private function extract_comments_from_template(string $content): array {
         preg_match_all('/^\{\{!$[\s\S]*?^\}\}$/m', $content, $matches);
         $comments = $matches[0];
 
         return array_filter(
-            array_map(function (string $comment) {
+            array_map(function (string $comment): string|null {
                 $comment = preg_replace('/^\{\{!\R?/', '', $comment); // Remove opening line.
                 if ($comment !== null && $comment !== '') {
                     $comment = preg_replace('/^\}\}$/m', '', $comment);   // Remove closing line.
                 }
                 return $comment;
             }, $comments),
-            fn($comment) => $comment !== null && $comment !== '',
+            fn(?string $comment): bool => $comment !== null && $comment !== '',
         );
     }
 
     /**
      * Check for the presence of GPL boilerplate in the file.
-     * @param string $content
      * @return issue[]
      */
-    private static function get_issues_for_boilerplate(string $content): array {
+    private function get_issues_for_boilerplate(string $content): array {
         if (boilerplate::check_has_boilerplate($content, 'mustache')) {
             return [];
         }
@@ -173,9 +169,8 @@ class mustachelint extends base {
     /**
      * Finds the documentation comment.
      * @param string[] $comments
-     * @return string|null
      */
-    private static function get_documentation_comment(array $comments): ?string {
+    private function get_documentation_comment(array $comments): ?string {
         foreach ($comments as $comment) {
             $trimmed = trim($comment);
 
@@ -191,8 +186,6 @@ class mustachelint extends base {
      * Gets all issues related to the documentation comment.
      *
      * @see \core\output\mustache_template_finder::get_template_filepath() for disabling theme overrides.
-     * @param string|null $documentation
-     * @param string $templatename
      * @return issue[]
      */
     protected static function get_issues_for_documentation_comment(
@@ -273,7 +266,7 @@ class mustachelint extends base {
                             severity::warning,
                         );
                     }
-                } catch (\Throwable $th) {
+                } catch (\Throwable) {
                     $issues[] = issue::simple(
                         'Unable to render template with json example',
                         'template-render-error',
@@ -289,7 +282,6 @@ class mustachelint extends base {
 
     /**
      * Get the declared template name (@template xxx) from the documentation comment.
-     * @param string $comment
      */
     protected static function get_template_from_comment(string $comment): ?string {
         $result = preg_match('/@template ([A-Za-z0-9_\/-]+)/', $comment, $match);
@@ -302,7 +294,6 @@ class mustachelint extends base {
 
     /**
      * Get the example json from the documentation comment.
-     * @param string $comment
      */
     protected static function get_example_from_comment(string $comment): ?string {
         $result = preg_match('/Example context \(json\):\R\s*([\s\S]*})/', $comment, $match);

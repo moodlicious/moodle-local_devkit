@@ -41,7 +41,6 @@ trait devkit_database_trait {
 
     /**
      * Clone the database connection details from the original database instance.
-     * @param moodle_database $db
      * @return void
      */
     protected function clone_connection(moodle_database $db) {
@@ -60,8 +59,6 @@ trait devkit_database_trait {
 
     /**
      * Determine whether a query of the given type should be logged.
-     * @param int $type
-     * @return bool
      */
     protected function should_log_query(int $type): bool {
         // Only log application queries, not internal ones.
@@ -73,7 +70,6 @@ trait devkit_database_trait {
     /**
      * Start query wrapper.
      * @param mixed $sql
-     * @param array|null $params
      * @param mixed $type
      * @param mixed $extrainfo
      * @return void
@@ -120,7 +116,7 @@ trait devkit_database_trait {
 
         $mysqliresult = $result instanceof mysqli_result ? $result : null;
 
-        if ($mysqliresult !== null) {
+        if ($mysqliresult instanceof mysqli_result) {
             $statement->end(rowCount: (int) $mysqliresult->num_rows);
         } else {
             $statement->end();
@@ -168,7 +164,6 @@ trait devkit_database_trait {
 
     /**
      * Get the TraceablePDO instance.
-     * @return TraceablePDO
      */
     public function get_pdo(): TraceablePDO {
         return $this->pdo;

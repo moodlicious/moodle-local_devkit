@@ -17,6 +17,7 @@
 namespace local_devkit\local;
 
 use core\event\base;
+use DebugBar\DataCollector\TimeDataCollector;
 
 /**
  * Observer.
@@ -27,16 +28,14 @@ use core\event\base;
 class observer {
     /**
      * Observe everything any log it!
-     * @param base $event
-     * @return void
      */
-    public static function observe_all_events(base $event) {
-        if (!(devkit::is_enabled() && \local_devkit\local\config\debugbar::is_enabled())) {
+    public static function observe_all_events(base $event): void {
+        if (!devkit::is_enabled() || !\local_devkit\local\config\debugbar::is_enabled()) {
             return;
         }
 
         $collector = debugbar::instance()->get_time_data_collector();
-        if ($collector === null) {
+        if (!$collector instanceof TimeDataCollector) {
             return;
         }
 
@@ -51,6 +50,5 @@ class observer {
         ];
 
         $collector->addMeasure($label, params: $params);
-        return;
     }
 }

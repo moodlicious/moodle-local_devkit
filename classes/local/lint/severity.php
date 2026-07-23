@@ -31,10 +31,8 @@ enum severity: string {
 
     /**
      * Gets severity from eslint.
-     * @param int $severity
-     * @return severity
      */
-    public static function from_eslint(int $severity) {
+    public static function from_eslint(int $severity): self {
         return match ($severity) {
             0 => self::info,
             1 => self::warning,
@@ -45,10 +43,8 @@ enum severity: string {
 
     /**
      * Gets severity from stylelint.
-     * @param string $severity
-     * @return severity
      */
-    public static function from_stylelint(string $severity) {
+    public static function from_stylelint(string $severity): self {
         return match ($severity) {
             'warning' => self::warning,
             'error' => self::error,
@@ -58,10 +54,8 @@ enum severity: string {
 
     /**
      * Gets severity from phpcs.
-     * @param int $severity
-     * @return severity
      */
-    public static function from_phpcs(int $severity) {
+    public static function from_phpcs(int $severity): self {
         return match (true) {
             $severity <= 0 => self::info,
             $severity <= 4 => self::warning,
@@ -72,10 +66,8 @@ enum severity: string {
 
     /**
      * Gets severity from phpdoc.
-     * @param string $severity
-     * @return severity
      */
-    public static function from_phpdoc(string $severity) {
+    public static function from_phpdoc(string $severity): self {
         return match ($severity) {
             'info' => self::info,
             'warning' => self::warning,

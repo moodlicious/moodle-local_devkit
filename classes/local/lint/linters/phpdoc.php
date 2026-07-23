@@ -62,7 +62,7 @@ class phpdoc extends base {
 
         foreach ($errors as $error) {
             $issue = \local_devkit\local\lint\schemas\issue\phpdoc::from_object((object) $error);
-            if ($issue === null) {
+            if (!$issue instanceof \local_devkit\local\lint\schemas\issue\phpdoc) {
                 continue;
             }
             $fileresult->add_issue($issue);
@@ -74,7 +74,6 @@ class phpdoc extends base {
 
     /**
      * Gets the installed path.
-     * @return string|null
      */
     private static function get_installed_path(): ?string {
         /** @var string|null $cache */

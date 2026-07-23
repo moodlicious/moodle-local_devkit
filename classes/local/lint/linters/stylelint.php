@@ -68,7 +68,7 @@ class stylelint extends base {
             $warnings = $lintedfile->warnings;
             foreach ($warnings as $warning) {
                 $issue = stylelint_issue::from_object($warning);
-                if ($issue === null) {
+                if (!$issue instanceof stylelint_issue) {
                     continue;
                 }
                 $issues[] = $issue;

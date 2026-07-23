@@ -30,8 +30,6 @@ use mysqli_native_moodle_database;
 class helper {
     /**
      * Wrap the provided database instance with the appropriate devkit database wrapper, if not already wrapped.
-     * @param moodle_database $db
-     * @return moodle_database
      */
     public static function wrap_database(moodle_database $db): moodle_database {
         if ($db instanceof mariadb_native_moodle_database) {
@@ -48,7 +46,6 @@ class helper {
 
     /**
      * Get the PDO instance from a given database, if it's a devkit wrapper.
-     * @param moodle_database $db
      */
     public static function get_pdo(moodle_database $db): ?TraceablePDO {
         if (!($db instanceof devkit_database_interface)) {

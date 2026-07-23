@@ -22,8 +22,6 @@ use local_devkit\local\lint\schemas\issue\phpcs as phpcs_issue;
 use MoodleQuickForm;
 use Symfony\Component\Process\Process;
 
-use function count;
-
 /**
  * The 'php -l' linter.
  *
@@ -85,14 +83,13 @@ class phpcs extends base {
 
     /**
      * Executes phpcs on a given path.
-     * @param string $path
      * @return file[]
      */
-    private function execute_phpcs($path): array {
+    private function execute_phpcs(string $path): array {
         $excludepatterns = self::get_exclude_patterns();
         $excludedsniffs = self::get_excluded_sniffs();
-        $ignore = count($excludepatterns) > 0 ? ['--ignore=' . implode(',', $excludepatterns)] : [];
-        $exclude = count($excludedsniffs) > 0 ? ['--exclude=' . implode(',', $excludedsniffs)] : [];
+        $ignore = $excludepatterns !== [] ? ['--ignore=' . implode(',', $excludepatterns)] : [];
+        $exclude = $excludedsniffs !== [] ? ['--exclude=' . implode(',', $excludedsniffs)] : [];
         $process = new Process([
             'phpcs',
             '--cache',
@@ -110,11 +107,9 @@ class phpcs extends base {
 
     /**
      * Parses the PHPCS JSON result.
-     * @param string $output
-     * @param string $path
      * @return file[]
      */
-    private function parse_phpcs_json(string $output, string $path) {
+    private function parse_phpcs_json(string $output, string $path): array {
         $results = [];
         $jsonoutput = json_decode($output);
         if ($jsonoutput === null) {
@@ -127,7 +122,7 @@ class phpcs extends base {
             $messages = $lintedfile->messages;
             foreach ($messages as $message) {
                 $issue = phpcs_issue::from_object($message);
-                if ($issue === null) {
+                if (!$issue instanceof phpcs_issue) {
                     continue;
                 }
                 $issues[] = $issue;

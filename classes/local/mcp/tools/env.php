@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+declare(strict_types=1);
+
 namespace local_devkit\local\mcp\tools;
 
 use Mcp\Exception\ToolCallException;
@@ -29,14 +31,13 @@ use Throwable;
 class env {
     /**
      * Get an overview of the current Moodle environment.
-     * @return object
      */
     public static function env_overview(): object {
         try {
             $data = \local_devkit\local\api\env::overview();
             return (object) ['data' => $data];
         } catch (Throwable $e) {
-            throw new ToolCallException($e->getMessage());
+            throw new ToolCallException($e->getMessage(), $e->getCode(), $e);
         }
     }
 }

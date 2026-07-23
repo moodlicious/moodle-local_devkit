@@ -34,7 +34,7 @@ class moodle_collector extends DataCollector implements Renderable {
      */
     public function collect(): array {
         global $CFG;
-        [$version] = explode(' ', $CFG->release);
+        [$version] = explode(' ', (string) $CFG->release);
         $lang = current_language();
         return [
             "version" => $version,

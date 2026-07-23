@@ -39,7 +39,7 @@ class linter_config extends html_table {
             get_string('linter_config_table:actions', 'local_devkit'),
         ];
 
-        $linters = $linters = linter::get_linters_classnames();
+        $linters = linter::get_linters_classnames();
         $this->data = [];
 
         foreach ($linters as $linter) {
@@ -67,9 +67,8 @@ class linter_config extends html_table {
 
     /**
      * Initialises JS.
-     * @return void
      */
-    public function init_js() {
+    public function init_js(): void {
         global $PAGE;
         $PAGE->requires->js_call_amd('local_devkit/linter_config', 'init', []);
     }

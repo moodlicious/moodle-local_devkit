@@ -19,6 +19,7 @@ namespace local_devkit\local;
 use core\hook\after_config;
 use core\hook\output\before_footer_html_generation;
 use core\hook\output\before_standard_head_html_generation;
+use DebugBar\DataCollector\PDO\TraceablePDO;
 use local_devkit\local\databases\helper;
 
 /**
@@ -30,8 +31,6 @@ use local_devkit\local\databases\helper;
 class hook_callbacks {
     /**
      * Callback for after_config hook.
-     * @param after_config $hook
-     * @return void
      */
     public static function after_config(
         after_config $hook,
@@ -47,7 +46,7 @@ class hook_callbacks {
         global $DB;
         $DB = helper::wrap_database($DB);
         $pdo = helper::get_pdo($DB);
-        if ($pdo !== null) {
+        if ($pdo instanceof TraceablePDO) {
             $debugbar = debugbar::instance();
             $debugbar->get_database_collector()?->addConnection($pdo, 'moodle');
             $debugbar->get_time_data_collector()?->addMeasure('debugbar:start');
@@ -56,8 +55,6 @@ class hook_callbacks {
 
     /**
      * Callback for before_standard_head_html_generation hook.
-     * @param before_standard_head_html_generation $hook
-     * @return void
      */
     public static function before_standard_head_html_generation(
         before_standard_head_html_generation $hook,
@@ -72,8 +69,6 @@ class hook_callbacks {
 
     /**
      * Callback for before_footer_html_generation hook.
-     * @param before_footer_html_generation $hook
-     * @return void
      */
     public static function before_footer_html_generation(
         before_footer_html_generation $hook,
@@ -91,9 +86,8 @@ class hook_callbacks {
     /**
      * Determines if callbacks are enabled.
      * Skips during unit testing as it seems to cause issues.
-     * @return bool
      */
-    public static function callbacks_enabled() {
+    public static function callbacks_enabled(): bool {
         return devkit::is_enabled() && \local_devkit\local\config\debugbar::is_enabled();
     }
 }

@@ -38,17 +38,16 @@ use function is_callable;
  */
 class debug implements IteratorAggregate {
     /**
-     * Any data associated with this debug instance.
-     * @var array<TKey, TValue>
-     */
-    private array $payload;
-
-    /**
      * Constructor.
      * @param array<TKey, TValue> $payload
      */
-    public function __construct(array $payload) {
-        $this->payload = $payload;
+    public function __construct(
+        /**
+         * Any data associated with this debug instance.
+         * @var array<TKey, TValue>
+         */
+        private readonly array $payload,
+    ) {
     }
 
     /**
@@ -56,7 +55,7 @@ class debug implements IteratorAggregate {
      * @return self<TKey, TValue>
      */
     public function dump(): self {
-        return $this->payload_each(function ($item, $key) {
+        return $this->payload_each(function ($item, int|string $key): void {
             $this->payload_print_key($key);
             var_dump($item);
         });
@@ -78,7 +77,7 @@ class debug implements IteratorAggregate {
         if ($pretty) {
             $flags |= JSON_PRETTY_PRINT;
         }
-        return $this->payload_each(function ($item, $key) use ($flags) {
+        return $this->payload_each(function ($item, int|string $key) use ($flags): void {
             $this->payload_print_key($key);
             echo json_encode($item, $flags), PHP_EOL;
         });
@@ -96,7 +95,7 @@ class debug implements IteratorAggregate {
      * @return self<TKey, TValue>
      */
     public function export(): self {
-        return $this->payload_each(function ($item, $key) {
+        return $this->payload_each(function ($item, int|string $key): void {
             $this->payload_print_key($key);
             var_export($item);
             echo PHP_EOL;
@@ -112,7 +111,6 @@ class debug implements IteratorAggregate {
 
     /**
      * Measures execution time in milliseconds.
-     * @param int $iterations
      * @return self<TKey, float|null>
      */
     public function measure(int $iterations = 1): self {
@@ -121,7 +119,7 @@ class debug implements IteratorAggregate {
         }
 
         $payload = [];
-        $this->payload_each(function ($value, $key) use (&$payload, $iterations) {
+        $this->payload_each(function ($value, $key) use (&$payload, $iterations): void {
             if (!is_callable($value)) {
                 $payload[$key] = null;
                 return;
@@ -209,7 +207,6 @@ class debug implements IteratorAggregate {
 
     /**
      * Utility function print a payload key.
-     * @param array-key $key
      * @return self<TKey, TValue>
      */
     private function payload_print_key(int|string $key): self {

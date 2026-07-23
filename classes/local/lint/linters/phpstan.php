@@ -27,7 +27,6 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 
-use function count;
 use function dirname;
 use function in_array;
 
@@ -67,7 +66,6 @@ class phpstan extends base {
 
     /**
      * Get the rule level to be analysed.
-     * @return int
      */
     public static function get_rule_level(): int {
         $config = self::get_config_value(self::CONFIG_KEY_RULE_LEVEL);
@@ -85,7 +83,6 @@ class phpstan extends base {
 
     /**
      * Get if per component result cache should be used.
-     * @return string
      */
     public static function get_result_cache_mode(): string {
         $config = self::get_config_value(self::CONFIG_KEY_RESULT_CACHE_MODE);
@@ -127,10 +124,9 @@ class phpstan extends base {
 
     /**
      * Executes phpstan on a given path.
-     * @param string $path
      * @return file[]
      */
-    private function execute($path): array {
+    private function execute(string $path): array {
         $binary = self::get_phpstan_binary_path();
         $config = $this->get_config_neon($path);
         $process = new Process([
@@ -158,11 +154,9 @@ class phpstan extends base {
 
     /**
      * Parses the phpstan JSON result.
-     * @param string $output
-     * @param string $path
      * @return file[]
      */
-    private function parse_json(string $output, string $path) {
+    private function parse_json(string $output, string $path): array {
         $results = [];
         $jsonoutput = json_decode($output);
         if ($jsonoutput === null) {
@@ -189,11 +183,11 @@ class phpstan extends base {
             $issues = [];
             $messages = $lintedfile->messages;
 
-            [$filepath, $context] = self::strip_context_suffix($filepath);
+            [$filepath, $context] = $this->strip_context_suffix($filepath);
 
             foreach ($messages as $message) {
                 $issue = phpstan_issue::from_object($message);
-                if ($issue === null) {
+                if (!$issue instanceof phpstan_issue) {
                     continue;
                 }
                 if ($context !== null) {
@@ -214,7 +208,7 @@ class phpstan extends base {
      * @param string $path The raw path from PHPStan's JSON output.
      * @return array{0: string, 1: string|null} The clean path and the context string, or null if no suffix.
      */
-    private static function strip_context_suffix(string $path): array {
+    private function strip_context_suffix(string $path): array {
         if (preg_match('/^(.+)\s+\(in context of class (.+)\)$/', $path, $matches) === 1) {
             return [$matches[1], "In context of class {$matches[2]}"];
         }
@@ -223,7 +217,6 @@ class phpstan extends base {
 
     /**
      * Generates a temporary config neon for linting.
-     * @return string
      */
     public function generate_temp_config_neon(string $path): string {
         global $CFG;
@@ -255,11 +248,11 @@ class phpstan extends base {
         }
         $missingfiles = array_filter(
             $requiredfiles,
-            fn($file) => $file === false,
+            fn(string|false $file): bool => $file === false,
         );
-        if (count($missingfiles) > 0) {
+        if ($missingfiles !== []) {
             throw new \RuntimeException(
-                'PHPStan rule files not found. Please run \'composer install\' in the devkit directory.',
+                "PHPStan rule files not found. Please run 'composer install' in the devkit directory.",
             );
         }
 
@@ -288,7 +281,7 @@ class phpstan extends base {
         }
 
         $stubs = $this->get_stub_files();
-        if (count($stubs) > 0) {
+        if ($stubs !== []) {
             $config['parameters']['stubFiles'] = $stubs;
         }
 
@@ -328,8 +321,6 @@ class phpstan extends base {
 
     /**
      * Generate a temp directory for the current run.
-     * @param string $path
-     * @return string
      */
     public function generate_temp_dir(string $path): string {
         global $CFG;
@@ -338,7 +329,7 @@ class phpstan extends base {
         $component = null;
         try {
             $component = component::resolve_component_from_path(utils::get_path_relative_to_moodle_root($path)) ?? '_';
-        } catch (\Exception $th) {
+        } catch (\Exception) {
             $component = '_';
         }
 
@@ -351,7 +342,6 @@ class phpstan extends base {
     /**
      * Walks up the file path until we find a phpstan.neon.
      * If none found, then generate one.
-     * @return string
      */
     public function get_config_neon(string $path): string {
         $filename = 'phpstan.neon';
@@ -381,7 +371,6 @@ class phpstan extends base {
 
     /**
      * Gets the phpstan binary path.
-     * @return string|null
      */
     public static function get_phpstan_binary_path(): ?string {
         global $CFG;

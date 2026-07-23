@@ -19,7 +19,6 @@ declare(strict_types=1);
 namespace local_devkit\local\lint\linters;
 
 use advanced_testcase;
-use local_devkit\local\attributes\linter;
 
 /**
  * Unit tests for the phpstan linter.

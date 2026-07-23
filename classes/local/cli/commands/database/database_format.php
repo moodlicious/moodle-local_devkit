@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+declare(strict_types=1);
+
 namespace local_devkit\local\cli\commands\database;
 
 use local_devkit\local\api\plugins;
@@ -36,7 +38,6 @@ class database_format extends Command {
      * Invoke
      * @param string $component The component name of the plugin.
      * @param SymfonyStyle $io The input/output style interface.
-     * @return int
      */
     public function __invoke(
         #[Argument('The component name of the plugin.')] string $component,

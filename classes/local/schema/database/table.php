@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+declare(strict_types=1);
+
 namespace local_devkit\local\schema\database;
 
 /**
@@ -26,8 +28,6 @@ namespace local_devkit\local\schema\database;
 class table {
     /**
      * Constructor.
-     * @param string $name
-     * @param string|null $comment
      * @param field[] $fields
      * @param key[] $keys
      * @param index[] $indexes

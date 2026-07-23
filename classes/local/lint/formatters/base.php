@@ -38,7 +38,6 @@ abstract class base {
 
     /**
      * Constructor.
-     * @param SymfonyStyle $io
      */
     public function __construct(
         /** @var SymfonyStyle $io */
@@ -49,7 +48,6 @@ abstract class base {
     /**
      * Return the appropriate exit code based on whether any issues were found.
      * @param file[] $results
-     * @return int
      */
     protected static function exit_code(array $results): int {
         foreach ($results as $file) {
@@ -64,7 +62,6 @@ abstract class base {
      * Outputs the results.
      * @param class-string<\local_devkit\local\lint\linters\base>[] $linters
      * @param file[] $results
-     * @return int
      */
     abstract public function output(array $linters, array $results): int;
 }

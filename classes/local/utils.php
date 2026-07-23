@@ -32,7 +32,6 @@ class utils {
      * @template TItem
      *
      * @param TItem[] $array
-     * @param callable $callback
      * @return TItem[]
      */
     public static function array_filter_left(array $array, callable $callback): array {
@@ -49,17 +48,11 @@ class utils {
 
     /**
      * Returns the root directory of the Moodle installation.
-     *
-     * @return string
      */
     public static function get_moodle_root_dir(): string {
         global $CFG;
 
-        if (isset($CFG->root)) {
-            return $CFG->root;
-        }
-
-        return $CFG->dirroot;
+        return $CFG->root ?? $CFG->dirroot;
     }
 
     /**
@@ -68,8 +61,6 @@ class utils {
      * E.g. /path/to/moodle/public/mod/forum/version.php -> ./public/mod/forum/version.php.
      *
      * Any errors the path will be returned as is, e.g. path does not exist.
-     * @param string $path
-     * @return string
      */
     public static function get_path_relative_to_moodle_root(string $path): string {
         $root = self::get_moodle_root_dir();
@@ -87,7 +78,7 @@ class utils {
         $rootdir = rtrim($rootnormalised, '/') . '/';
         $pathdir = rtrim($pathnormalised, '/') . '/';
 
-        if (strpos($pathdir, $rootdir) !== 0) {
+        if (!str_starts_with($pathdir, $rootdir)) {
             return $path;
         }
 

@@ -2,7 +2,7 @@
     "name": "imfelixyeung/moodle-local_devkit",
     "description": "A collection of tools to help with the development of Moodle.",
     "require": {
-        "php": ">=8.3",
+        "php": "^8.3",
         "php-debugbar/php-debugbar": "^3.7",
         "symfony/console": "^7.0",
         "mcp/sdk": "^0.7.0",
@@ -15,7 +15,8 @@
         "micaherne/phpstan-moodle": "^1.0",
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "laravel/pint": "^1.29",
-        "phpstan/phpstan-strict-rules": "^2.0"
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "rector/rector": "^2.5"
     },
     "authors": [
         {

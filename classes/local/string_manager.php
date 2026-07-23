@@ -24,6 +24,7 @@
 namespace local_devkit\local;
 
 use core_string_manager_standard;
+use local_devkit\local\debugbar\collectors\string_manager_collector;
 
 /**
  * Intercepts and logs any get_string calls.
@@ -42,7 +43,7 @@ class string_manager extends core_string_manager_standard {
 
         // Do nothing if the collector is not enabled.
         $collector = debugbar::instance()->get_string_manager_collector();
-        if ($collector === null) {
+        if (!$collector instanceof string_manager_collector) {
             return $result;
         }
 

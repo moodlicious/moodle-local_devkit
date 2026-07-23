@@ -44,8 +44,9 @@ final class component_test extends advanced_testcase {
      */
     public function test_sorted_map_orders_longest_paths_first(): void {
         $map = component::get_component_path_map_sorted_cached();
-        $lengths = array_map('strlen', array_values($map));
-        for ($i = 1; $i < count($lengths); $i++) {
+        $lengths = array_map(strlen(...), array_values($map));
+        $counter = count($lengths);
+        for ($i = 1; $i < $counter; $i++) {
             self::assertGreaterThanOrEqual($lengths[$i], $lengths[$i - 1]);
         }
     }

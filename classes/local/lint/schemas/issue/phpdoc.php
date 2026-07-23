@@ -29,8 +29,6 @@ use local_devkit\local\lint\severity;
 class phpdoc extends issue {
     /**
      * Factory method to create from an phpdoc message object.
-     * @param object $object
-     * @return self|null
      */
     public static function from_object(object $object): ?self {
         $line = self::object_property($object, 'line');

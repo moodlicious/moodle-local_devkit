@@ -54,7 +54,7 @@ class thirdpartylibs {
         $plugintypes = array_keys(core_component::get_plugin_types());
         $pluginfiles = array_merge(
             ...array_map(
-                fn(string $type) => array_values(core_component::get_plugin_list_with_file($type, $xmlname)),
+                fn(string $type): array => array_values(core_component::get_plugin_list_with_file($type, $xmlname)),
                 $plugintypes,
             ),
         );
@@ -82,7 +82,7 @@ class thirdpartylibs {
             foreach ($xml as $library) {
                 try {
                     $libraries[] = thirdpartylib::from_xml_element($file, $library);
-                } catch (Exception $e) {
+                } catch (Exception) {
                     continue;
                 }
             }

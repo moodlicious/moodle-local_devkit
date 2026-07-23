@@ -29,6 +29,10 @@ class devkit {
      * Determines if the plugin should load.
      */
     public static function is_enabled(): bool {
+        if (during_initial_install()) {
+            return false;
+        }
+
         // phpcs:ignore moodle.Commenting.InlineComment
         // @phpstan-ignore if.alwaysFalse
         if (PHPUNIT_TEST) {

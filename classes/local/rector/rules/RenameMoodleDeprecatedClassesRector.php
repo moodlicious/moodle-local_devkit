@@ -43,6 +43,7 @@ use function strlen;
 final class RenameMoodleDeprecatedClassesRector extends AbstractRector {
     /**
      * Map of old Moodle class aliases to their new namespaced equivalents.
+     * @var array<class-string, class-string>
      */
     private const array CONTEX_CLASS_MAP = [
         // These are not included in legacyclasses.php.
@@ -56,7 +57,7 @@ final class RenameMoodleDeprecatedClassesRector extends AbstractRector {
         \context::class => \core\context::class,
     ];
 
-    /** @var array $classmap */
+    /** @var array<class-string, class-string> $classmap */
     private static array $classmap = [];
 
     /**
@@ -64,7 +65,7 @@ final class RenameMoodleDeprecatedClassesRector extends AbstractRector {
      */
     private function construct_classmap(): void {
         global $CFG;
-        if (self::$classmap) {
+        if (self::$classmap !== []) {
             return;
         }
         self::$classmap = self::CONTEX_CLASS_MAP;
@@ -72,6 +73,8 @@ final class RenameMoodleDeprecatedClassesRector extends AbstractRector {
         if (!isset($CFG)) {
             return;
         }
+
+        /** @var mixed $legacyclasses */
         $legacyclasses = null;
         require("$CFG->libdir/db/legacyclasses.php");
 
@@ -145,6 +148,8 @@ final class RenameMoodleDeprecatedClassesRector extends AbstractRector {
     public function refactor(Node $node): ?Node {
         $this->construct_classmap();
         $this->renamereactor->configure(self::$classmap);
+        // phpcs:ignore
+        // @phpstan-ignore argument.type
         return $this->renamereactor->refactor($node);
     }
 }

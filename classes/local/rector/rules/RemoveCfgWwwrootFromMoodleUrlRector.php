@@ -19,6 +19,7 @@ namespace local_devkit\local\rector\rules;
 use core\url;
 use moodle_url;
 use PhpParser\Node;
+use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\BinaryOp\Concat;
 use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\PropertyFetch;
@@ -61,12 +62,12 @@ final class RemoveCfgWwwrootFromMoodleUrlRector extends AbstractRector {
         return [New_::class];
     }
 
-    /**
-     * {@inheritDoc}
-     * @param New_ $node
-     */
     #[\Override]
     public function refactor(Node $node): ?Node {
+        if (!$node instanceof New_) {
+            return null;
+        }
+
         if (!$this->is_moodle_url($node)) {
             return null;
         }
@@ -75,16 +76,21 @@ final class RemoveCfgWwwrootFromMoodleUrlRector extends AbstractRector {
             return null;
         }
 
-        $arg1 = $node->args[0]->value;
-        if (!$arg1 instanceof Concat) {
+        $arg0 = $node->args[0];
+
+        if (!$arg0 instanceof Arg) {
             return null;
         }
 
-        if (!$this->is_cfg_wwwroot_property($arg1->left)) {
+        if (!$arg0->value instanceof Concat) {
             return null;
         }
 
-        $node->args[0]->value = $arg1->right;
+        if (!$this->is_cfg_wwwroot_property($arg0->value->left)) {
+            return null;
+        }
+
+        $arg0->value = $arg0->value->right;
 
         return $node;
     }

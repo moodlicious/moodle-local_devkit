@@ -16,7 +16,8 @@
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "laravel/pint": "^1.29",
         "phpstan/phpstan-strict-rules": "^2.0",
-        "rector/rector": "^2.5"
+        "rector/rector": "^2.5",
+        "symplify/rule-doc-generator-contracts": "^11.2"
     },
     "authors": [
         {

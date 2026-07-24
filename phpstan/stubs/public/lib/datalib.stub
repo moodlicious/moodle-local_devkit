@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @param bool $get
+ * @param string $search
+ * @param bool $confirmed
+ * @param int[] $exceptions
+ * @param string $sort
+ * @param string $firstinitial
+ * @param string $lastinitial
+ * @param string $page
+ * @param string $recordsperpage
+ * @param string $fields
+ * @return ($get is true ? stdClass[] : int)
+ */
+function get_users(
+    $get = true,
+    $search = '',
+    $confirmed = false,
+    ?array $exceptions = null,
+    $sort = 'firstname ASC',
+    $firstinitial = '',
+    $lastinitial = '',
+    $page = '',
+    $recordsperpage = '',
+    $fields = '*',
+    $extraselect = '',
+    ?array $extraparams = null,
+) {
+}
+
+/**
+ * @param string $modulename
+ * @param array<int, int|stdClass> $courses
+ * @param int|null $userid
+ * @param int $includeinvisible
+ * @return stdClass[]
+ */
+function get_all_instances_in_courses($modulename, $courses, $userid = null, $includeinvisible = false) {
+}
+
+/**
+ * @param string $modulename
+ * @param int|stdClass $course
+ * @param int $userid
+ * @param int $includeinvisible
+ * @return stdClass[]
+ */
+function get_all_instances_in_course($modulename, $course, $userid = null, $includeinvisible = false) {
+    return get_all_instances_in_courses($modulename, [$course->id => $course], $userid, $includeinvisible);
+}

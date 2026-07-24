@@ -1,5 +1,27 @@
 <?php
 
+use core_course\cm_info;
+
 define('COMPLETION_TRACKING_NONE', 0);
 define('COMPLETION_TRACKING_MANUAL', 1);
 define('COMPLETION_TRACKING_AUTOMATIC', 2);
+
+class completion_info {
+    /**
+     * @param stdClass|cm_info $cm Activity; only required field is ->id
+     * @param bool $wholecourse
+     * @param int $userid
+     * @param mixed $unused
+     * @return stdClass
+     */
+    public function get_data($cm, $wholecourse = false, $userid = 0, $unused = null) {
+    }
+
+    /**
+     * @param string $error
+     * @return never
+     * @throws moodle_exception
+     */
+    public function internal_systemerror($error) {
+    }
+}

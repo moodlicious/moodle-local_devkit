@@ -10,6 +10,20 @@ use const IGNORE_MULTIPLE;
 use const MUST_EXIST;
 
 /**
+ * @property-read int $id
+ * @property-read string $name
+ * @property-read string $idnumber
+ * @property-read string $description
+ * @property-read int $descriptionformat
+ * @property-read int $parent
+ * @property-read int $sortorder
+ * @property-read int $coursecount
+ * @property-read int $visible
+ * @property-read int $visibleold
+ * @property-read int $timemodified
+ * @property-read int $depth
+ * @property-read string $path
+ * @property-read string $theme
  * @implements IteratorAggregate<string, mixed>
  */
 class core_course_category implements cacheable_object_interface, IteratorAggregate, renderable {

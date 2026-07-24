@@ -24,6 +24,7 @@
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\lang_string;
 use core\output\html_writer;
 use local_devkit\local\data\editor;
 use local_devkit\output\tables\linter_config;

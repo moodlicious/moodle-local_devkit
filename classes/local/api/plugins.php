@@ -17,6 +17,7 @@
 namespace local_devkit\local\api;
 
 use core\plugin_manager;
+use core\plugininfo\base;
 
 /**
  * Plugins API.
@@ -44,7 +45,7 @@ class plugins {
      */
     public static function list(bool $includestandard = false): array {
         $manager = plugin_manager::instance();
-        /** @var array<string, array<string, \core\plugininfo\base>> $plugininfo */
+        /** @var array<string, array<string, base>> $plugininfo */
         $plugininfo = $manager->get_plugins();
 
         $results = [];

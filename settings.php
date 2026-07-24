@@ -18,6 +18,7 @@
  * DevKit plugin settings.
  *
  * @var bool $hassiteconfig
+ * @var admin_root $ADMIN
  *
  * @package   local_devkit
  * @copyright 2026 Felix Yeung

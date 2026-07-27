@@ -17,10 +17,14 @@
 namespace local_devkit\local\lint\linters;
 
 use local_devkit\local\attributes\linter;
+use local_devkit\local\lint\linters\lang\string_collector;
 use local_devkit\local\lint\schemas\file;
 use local_devkit\local\lint\schemas\issue;
 use local_devkit\local\lint\severity;
 use local_devkit\local\utils;
+use PhpParser\Error;
+use PhpParser\NodeTraverser;
+use PhpParser\ParserFactory;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -190,17 +194,41 @@ class lang extends base {
     }
 
     /**
-     * Loads language file strings.
+     * Loads language file strings by parsing the file without executing it.
+     *
      * @return RawStrings
      */
     private function load_component_strings(string $filepath): array {
-        try {
-            $string = [];
-            include($filepath);
-            return $string;
-        } catch (\Throwable) {
+        $contents = file_get_contents($filepath);
+        if ($contents === false) {
             return [];
         }
+
+        return $this->parse_lang_file_contents($contents);
+    }
+
+    /**
+     * Parses lang file contents and extracts string assignments using nikic/php-parser.
+     *
+     * @return RawStrings
+     */
+    private function parse_lang_file_contents(string $contents): array {
+        $parser = (new ParserFactory())->createForHostVersion();
+        try {
+            $ast = $parser->parse($contents);
+        } catch (Error) {
+            return [];
+        }
+        if ($ast === null) {
+            return [];
+        }
+
+        $traverser = new NodeTraverser();
+        $collector = new string_collector();
+        $traverser->addVisitor($collector);
+        $traverser->traverse($ast);
+
+        return $collector->strings;
     }
 
     /**
@@ -317,7 +345,6 @@ class lang extends base {
                     $this->compose_lang_filepath($langdir, $component, $missinglocale),
                     "Identifier '$identifier' missing from '$missinglocale' locale",
                     'identifier-missing',
-                    line: $this->identifier_line($identifier, $englishlangfilepath),
                 );
             }
 

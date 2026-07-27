@@ -22,6 +22,7 @@ use local_devkit\local\lint\schemas\file;
 use local_devkit\local\lint\schemas\issue;
 use local_devkit\local\lint\severity;
 use local_devkit\local\utils;
+use PhpParser\Error;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
 use RecursiveDirectoryIterator;
@@ -213,7 +214,11 @@ class lang extends base {
      */
     private function parse_lang_file_contents(string $contents): array {
         $parser = (new ParserFactory())->createForHostVersion();
-        $ast = $parser->parse($contents);
+        try {
+            $ast = $parser->parse($contents);
+        } catch (Error) {
+            return [];
+        }
         if ($ast === null) {
             return [];
         }

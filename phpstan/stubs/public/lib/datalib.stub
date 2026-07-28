@@ -11,6 +11,8 @@
  * @param string $page
  * @param string $recordsperpage
  * @param string $fields
+ * @param string $extraselect
+ * @param mixed[]|null $extraparams
  * @return ($get is true ? stdClass[] : int)
  */
 function get_users(

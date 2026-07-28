@@ -424,6 +424,13 @@ function fullname($user, $override = false) {
 }
 
 /**
+ * @param 'get'|'buffer'|'close'|'flush' $action
+ * @return ($action is 'get' ? moodle_phpmailer : null)
+ */
+function get_mailer($action = 'get') {
+}
+
+/**
  * @param stdClass $user
  * @param stdClass|string $from
  * @param string $subject

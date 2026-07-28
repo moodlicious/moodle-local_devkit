@@ -1,0 +1,4 @@
+<?php
+
+class moodle_phpmailer extends \PHPMailer\PHPMailer\PHPMailer {
+}

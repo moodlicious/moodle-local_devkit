@@ -20,7 +20,7 @@ class completion_info {
     /**
      * @param string $error
      * @return never
-     * @throws moodle_exception
+     * @throws moodle_exception&Throwable
      */
     public function internal_systemerror($error) {
     }

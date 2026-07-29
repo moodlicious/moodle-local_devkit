@@ -75,6 +75,12 @@ abstract class moodleform {
     abstract protected function definition();
 
     /**
+     * @return void
+     */
+    public function definition_after_data() {
+    }
+
+    /**
      * @param array<string, mixed> $data
      * @param array<string, string> $files
      * @return array<string, string>

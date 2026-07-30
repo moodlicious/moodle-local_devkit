@@ -1,72 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<libraries>
+<libraries
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://moodlicious.com/schemas/mdl/thirdpartylibs.xsd"
+>
     <library>
         <location>vendor/autoload.php</location>
         <name>Composer Autoload</name>
+        <version>2.10.2</version>
         <license>MIT</license>
     </library>
     <library>
         <location>vendor/composer</location>
         <name>Composer</name>
+        <version>2.10.2</version>
         <license>MIT</license>
     </library>
     <library>
         <location>vendor/doctrine/deprecations</location>
         <name>Doctrine Deprecations</name>
+        <version>1.1.6</version>
         <license>MIT</license>
+        <repository>https://github.com/doctrine/deprecations</repository>
     </library>
     <library>
         <location>vendor/laravel/pint</location>
         <name>Laravel Pint</name>
+        <version>1.29.3</version>
         <license>MIT</license>
+        <repository>https://github.com/laravel/pint</repository>
     </library>
     <library>
         <location>vendor/mcp/sdk</location>
         <name>MCP PHP SDK</name>
-        <version>0.6.0</version>
+        <version>0.7.0</version>
         <license>Apache</license>
+        <licenseversion>2.0</licenseversion>
+        <repository>https://github.com/phpchatco/mcp-sdk</repository>
     </library>
     <library>
         <location>vendor/micaherne/phpstan-moodle</location>
         <name>phpstan-moodle</name>
+        <version>1.1.0</version>
+        <license>GPL</license>
+        <licenseversion>3.0-or-later</licenseversion>
+        <repository>https://github.com/micaherne/phpstan-moodle</repository>
     </library>
     <library>
         <location>vendor/opis</location>
         <name>Opis Libraries</name>
+        <version>2.6.0</version>
+        <license>Apache</license>
+        <licenseversion>2.0</licenseversion>
+        <repository>https://github.com/opis/json-schema</repository>
     </library>
     <library>
         <location>vendor/php-debugbar/php-debugbar</location>
         <name>PHP DebugBar</name>
-        <version>3.7.0</version>
+        <version>3.8.0</version>
         <license>MIT</license>
+        <repository>https://github.com/maximebf/php-debugbar</repository>
     </library>
     <library>
         <location>vendor/php-http/discovery</location>
         <name>HTTPlug Discovery</name>
+        <version>1.20.0</version>
+        <license>MIT</license>
+        <repository>https://github.com/php-http/discovery</repository>
     </library>
     <library>
         <location>vendor/phpdocumentor</location>
         <name>phpDocumentor</name>
+        <version>6.0.3</version>
+        <license>MIT</license>
+        <repository>https://github.com/phpDocumentor</repository>
     </library>
     <library>
         <location>vendor/phpstan</location>
         <name>PHPStan</name>
-        <version>2.1</version>
+        <version>2.2.6</version>
         <license>MIT</license>
+        <repository>https://github.com/phpstan/phpstan</repository>
     </library>
     <library>
         <location>vendor/psr</location>
         <name>PSR dependencies</name>
+        <version>3.0.2</version>
         <license>MIT</license>
     </library>
     <library>
         <location>vendor/symfony</location>
         <name>Symfony dependencies</name>
+        <version>7.4.14</version>
         <license>MIT</license>
+        <repository>https://github.com/symfony</repository>
     </library>
     <library>
         <location>vendor/webmozart/assert</location>
         <name>Webmozart Assert</name>
+        <version>2.4.1</version>
         <license>MIT</license>
+        <repository>https://github.com/webmozarts/assert</repository>
     </library>
 </libraries>

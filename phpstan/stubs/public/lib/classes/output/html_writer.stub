@@ -10,7 +10,7 @@ class html_writer {
      * @param string|string[] $selected
      * @param string[]|false|string|null $nothing
      * @param null|mixed[] $attributes
-     * @param string $disabled
+     * @param string[] $disabled
      * @return string
      */
     public static function select(

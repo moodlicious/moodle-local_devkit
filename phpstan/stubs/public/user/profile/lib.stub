@@ -1,0 +1,12 @@
+<?php
+
+class profile_field_base {
+    /**
+     * @param mixed $data
+     * @param mixed $datarecord
+     * @return mixed
+     */
+    public function edit_save_data_preprocess($data, $datarecord) {
+        return $data;
+    }
+}

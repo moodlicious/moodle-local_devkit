@@ -7,6 +7,12 @@ define('FORMAT_WIKI', '3');
 define('FORMAT_MARKDOWN', '4');
 
 /**
+ * @return stdClass|false
+ */
+function data_submitted() {
+}
+
+/**
  * @param string $text
  * @param \FORMAT_MOODLE|\FORMAT_HTML|\FORMAT_PLAIN|\FORMAT_MARKDOWN $format
  * @param stdClass|mixed[] $options

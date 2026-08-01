@@ -1,0 +1,25 @@
+<?php
+
+namespace core\output;
+
+class html_writer {
+    /**
+     *
+     * @param string[] $options
+     * @param string $name
+     * @param string|string[] $selected
+     * @param string[]|false|string|null $nothing
+     * @param null|mixed[] $attributes
+     * @param string $disabled
+     * @return string
+     */
+    public static function select(
+        array $options,
+        $name,
+        $selected = '',
+        $nothing = ['' => 'choosedots'],
+        ?array $attributes = null,
+        array $disabled = [],
+    ): string {
+    }
+}

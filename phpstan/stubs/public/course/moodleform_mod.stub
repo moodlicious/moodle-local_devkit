@@ -11,4 +11,10 @@ abstract class moodleform_mod extends moodleform {
      */
     protected function standard_intro_elements($customlabel = null) {
     }
+
+    /**
+     * @return stdClass|null
+     */
+    public function get_data() {
+    }
 }

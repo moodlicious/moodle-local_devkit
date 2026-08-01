@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Formats each stub.
+# Formats stub files in batches.
 #
 # Note that we don't use `./vendor/bin/pint phpstan/stubs/**/*.stub`
 # in case there are too many stubs to pass to pint.
 
 set -euo pipefail
 
+readonly BATCH_SIZE=50
+
 find phpstan/stubs -type f -name '*.stub' -print0 |
-while IFS= read -r -d '' stub; do
-    ./vendor/bin/pint "$stub"
-done
+xargs -0 -n "$BATCH_SIZE" ./vendor/bin/pint

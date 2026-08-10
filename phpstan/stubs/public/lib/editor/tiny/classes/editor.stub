@@ -1,0 +1,6 @@
+<?php
+
+namespace editor_tiny;
+
+class editor extends \texteditor {
+}

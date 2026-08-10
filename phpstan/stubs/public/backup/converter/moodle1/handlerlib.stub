@@ -1,6 +1,7 @@
 <?php
 
-abstract class moodle1_handler implements loggable {}
+abstract class moodle1_handler implements loggable {
+}
 
 abstract class moodle1_xml_handler extends moodle1_handler {
     /** @var null|xml_writer */
@@ -22,8 +23,8 @@ abstract class moodle1_xml_handler extends moodle1_handler {
     }
 }
 
-abstract class moodle1_plugin_handler extends moodle1_xml_handler {}
-
+abstract class moodle1_plugin_handler extends moodle1_xml_handler {
+}
 
 abstract class moodle1_mod_handler extends moodle1_plugin_handler {
     /**

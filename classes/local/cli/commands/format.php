@@ -17,6 +17,7 @@
 namespace local_devkit\local\cli\commands;
 
 use core\di;
+use InvalidArgumentException;
 use local_devkit\local\format\base;
 use local_devkit\local\format\biome;
 use local_devkit\local\format\eslint;
@@ -29,10 +30,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Finder\Finder;
+
+use function count;
 
 /**
  * Format command.
@@ -69,6 +73,7 @@ class format extends Command {
      */
     protected function configure(): void {
         $this->addArgument('paths', InputArgument::IS_ARRAY);
+        $this->addOption('batch-size', null, InputOption::VALUE_REQUIRED, 'Number of files per formatter batch', 50);
     }
 
     /**
@@ -80,12 +85,18 @@ class format extends Command {
         OutputInterface $output,
     ): int {
         $paths = $input->getArgument('paths');
+        $rawbatchsize = $input->getOption('batch-size');
+        if (!is_numeric($rawbatchsize) || (int) $rawbatchsize <= 0) {
+            $io->error('The batch-size option must be a positive integer.');
+            return Command::FAILURE;
+        }
+        $batchsize = (int) $rawbatchsize;
         $progress = $output instanceof ConsoleOutputInterface
             ? new ProgressIndicator($output->getErrorOutput())
             : null;
 
         $progress?->start('Starting...');
-        $this->format_run($paths, $progress);
+        $this->format_run($paths, $batchsize, $progress);
         $progress?->finish('All done.');
 
         return Command::SUCCESS;
@@ -95,7 +106,33 @@ class format extends Command {
      * Format files in the given paths.
      * @param string[] $paths
      */
-    private function format_run(array $paths, ?ProgressIndicator $progress): void {
+    private function format_run(array $paths, int $batchsize, ?ProgressIndicator $progress): void {
+        if ($batchsize < 1) {
+            throw new InvalidArgumentException('Argument $batchsize must be a positive integer.');
+        }
+
+        $allfiles = $this->collect_files($paths);
+
+        $formattermap = $this->build_formatter_map($allfiles);
+
+        foreach ($formattermap as $formatterclass => $files) {
+            $name = $formatterclass::get_name();
+            $batches = array_chunk($files, $batchsize);
+            foreach ($batches as $batch) {
+                $progress?->setMessage("Running $name on " . count($batch) . " files...");
+                $formatterclass::format_batch($batch);
+            }
+        }
+    }
+
+    /**
+     * Collect all files from the given paths.
+     * @param string[] $paths
+     * @return string[]
+     */
+    private function collect_files(array $paths): array {
+        $files = [];
+
         foreach ($paths as $path) {
             if (!file_exists($path)) {
                 continue;
@@ -125,26 +162,47 @@ class format extends Command {
                 foreach ($finder as $file) {
                     $realpath = $file->getRealPath();
                     if ($realpath !== false) {
-                        $this->format_file($realpath, $progress);
+                        $files[] = $realpath;
                     }
                 }
             } else {
-                $this->format_file($path, $progress);
+                $files[] = $path;
             }
         }
+
+        return $files;
     }
 
     /**
-     * Run formatters on a single file.
+     * Build a map of formatter class to file paths, preserving pick_formatters order.
+     *
+     * Formatters are emitted in the order they first appear across all files,
+     * which respects the per-file ordering defined by pick_formatters.
+     *
+     * @param string[] $files
+     * @return array<class-string<base>, string[]>
      */
-    private function format_file(string $path, ?ProgressIndicator $progress): void {
-        $progress?->setMessage("Formatting $path...");
-        $formatters = $this->pick_formatters($path);
-        foreach ($formatters as $formatter) {
-            $name = $formatter::get_name();
-            $progress?->setMessage("Formatting $path with $name");
-            $formatter::format($path);
+    private function build_formatter_map(array $files): array {
+        $formatterorder = [];
+        $formattermap = [];
+
+        foreach ($files as $file) {
+            foreach ($this->pick_formatters($file) as $formatter) {
+                $class = $formatter::class;
+                if (!isset($formattermap[$class])) {
+                    $formatterorder[] = $class;
+                    $formattermap[$class] = [];
+                }
+                $formattermap[$class][] = $file;
+            }
         }
+
+        $ordered = [];
+        foreach ($formatterorder as $class) {
+            $ordered[$class] = $formattermap[$class];
+        }
+
+        return $ordered;
     }
 
     /**

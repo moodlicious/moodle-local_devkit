@@ -35,4 +35,17 @@ abstract class base {
      * Apply formatting to a given file.
      */
     abstract public static function format(string $file): ?int;
+
+    /**
+     * Apply formatting to a batch of files.
+     *
+     * Subclasses may override this to pass multiple files in a single process invocation.
+     *
+     * @param string[] $files
+     */
+    public static function format_batch(array $files): void {
+        foreach ($files as $file) {
+            static::format($file);
+        }
+    }
 }

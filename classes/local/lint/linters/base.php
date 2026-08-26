@@ -106,7 +106,7 @@ abstract class base {
         $attributes = $class->getAttributes(linter::class);
         [$attribute] = count($attributes) > 0 ? $attributes : [null];
 
-        if ($attribute === null) {
+        if (!$attribute instanceof \ReflectionAttribute) {
             throw new coding_exception('linter classes must have the linter attribute set');
         }
 

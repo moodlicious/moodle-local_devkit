@@ -29,6 +29,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -71,6 +72,7 @@ class format extends Command {
      */
     protected function configure(): void {
         $this->addArgument('paths', InputArgument::IS_ARRAY);
+        $this->addOption('batch-size', null, InputOption::VALUE_REQUIRED, 'Number of files per formatter batch', 50);
     }
 
     /**
@@ -82,12 +84,13 @@ class format extends Command {
         OutputInterface $output,
     ): int {
         $paths = $input->getArgument('paths');
+        $batchsize = (int) $input->getOption('batch-size');
         $progress = $output instanceof ConsoleOutputInterface
             ? new ProgressIndicator($output->getErrorOutput())
             : null;
 
         $progress?->start('Starting...');
-        $this->format_run($paths, $progress);
+        $this->format_run($paths, $batchsize, $progress);
         $progress?->finish('All done.');
 
         return Command::SUCCESS;
@@ -97,14 +100,14 @@ class format extends Command {
      * Format files in the given paths.
      * @param string[] $paths
      */
-    private function format_run(array $paths, ?ProgressIndicator $progress): void {
+    private function format_run(array $paths, int $batchsize, ?ProgressIndicator $progress): void {
         $allfiles = $this->collect_files($paths);
 
         $formattermap = $this->build_formatter_map($allfiles);
 
         foreach ($formattermap as $formatterclass => $files) {
             $name = $formatterclass::get_name();
-            $batches = array_chunk($files, 10);
+            $batches = array_chunk($files, $batchsize);
             foreach ($batches as $batch) {
                 $progress?->setMessage("Running $name on " . count($batch) . " files...");
                 $formatterclass::format_batch($batch);

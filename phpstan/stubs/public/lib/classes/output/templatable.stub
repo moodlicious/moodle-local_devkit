@@ -2,5 +2,11 @@
 
 namespace core\output;
 
+use stdClass;
+
 interface templatable {
+    /**
+     * @return stdClass|array<mixed>
+     */
+    public function export_for_template(renderer_base $output);
 }

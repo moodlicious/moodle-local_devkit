@@ -17,6 +17,7 @@
 namespace local_devkit\local\cli\commands;
 
 use core\di;
+use InvalidArgumentException;
 use local_devkit\local\format\base;
 use local_devkit\local\format\biome;
 use local_devkit\local\format\eslint;
@@ -84,7 +85,12 @@ class format extends Command {
         OutputInterface $output,
     ): int {
         $paths = $input->getArgument('paths');
-        $batchsize = (int) $input->getOption('batch-size');
+        $rawbatchsize = $input->getOption('batch-size');
+        if (!is_numeric($rawbatchsize) || (int) $rawbatchsize <= 0) {
+            $io->error('The batch-size option must be a positive integer.');
+            return Command::FAILURE;
+        }
+        $batchsize = (int) $rawbatchsize;
         $progress = $output instanceof ConsoleOutputInterface
             ? new ProgressIndicator($output->getErrorOutput())
             : null;
@@ -101,6 +107,10 @@ class format extends Command {
      * @param string[] $paths
      */
     private function format_run(array $paths, int $batchsize, ?ProgressIndicator $progress): void {
+        if ($batchsize < 1) {
+            throw new InvalidArgumentException('Argument $batchsize must be a positive integer.');
+        }
+
         $allfiles = $this->collect_files($paths);
 
         $formattermap = $this->build_formatter_map($allfiles);

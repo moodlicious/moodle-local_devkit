@@ -1,0 +1,6 @@
+<?php
+
+namespace core\output;
+
+class stored_progress_bar extends progress_bar {
+}

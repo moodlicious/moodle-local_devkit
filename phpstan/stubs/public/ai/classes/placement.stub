@@ -1,0 +1,27 @@
+<?php
+
+namespace core_ai;
+
+use core\context;
+use core_ai\aiactions\base;
+
+abstract class placement {
+    /**
+     * @return class-string<base>[]
+     */
+    abstract public static function get_action_list(): array;
+
+    /**
+     * @return array{'action': string}[]
+     */
+    public static function get_actions_available(context $context, bool $checkcontext = true): array {
+        return [];
+    }
+
+    /**
+     * @return array{'action': string}[]
+     */
+    public function get_sub_actions(string $classname): array {
+        return [];
+    }
+}

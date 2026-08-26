@@ -7,6 +7,12 @@ define('FORMAT_WIKI', '3');
 define('FORMAT_MARKDOWN', '4');
 
 /**
+ * @return stdClass|false
+ */
+function data_submitted() {
+}
+
+/**
  * @param string $text
  * @param \FORMAT_MOODLE|\FORMAT_HTML|\FORMAT_PLAIN|\FORMAT_MARKDOWN $format
  * @param stdClass|mixed[] $options
@@ -14,4 +20,13 @@ define('FORMAT_MARKDOWN', '4');
  * @return string
  */
 function format_text($text, $format = \FORMAT_MOODLE, $options = null, $courseiddonotuse = null) {
+}
+
+/**
+ * @param string $message
+ * @param DEBUG_NONE|DEBUG_MINIMAL|DEBUG_NORMAL|DEBUG_ALL|DEBUG_DEVELOPER $level
+ * @param mixed[] $backtrace
+ * @return bool
+ */
+function debugging($message = '', $level = DEBUG_NORMAL, $backtrace = null) {
 }

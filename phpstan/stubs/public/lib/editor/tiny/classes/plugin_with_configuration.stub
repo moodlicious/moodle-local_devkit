@@ -1,0 +1,21 @@
+<?php
+
+namespace editor_tiny;
+
+use core\context;
+
+interface plugin_with_configuration {
+    /**
+     * @param context $context
+     * @param array<string, mixed> $options
+     * @param array<string, mixed> $fpoptions
+     * @param editor $editor
+     * @return array<mixed>
+     */
+    public static function get_plugin_configuration_for_context(
+        context $context,
+        array $options,
+        array $fpoptions,
+        ?editor $editor = null,
+    ): array;
+}

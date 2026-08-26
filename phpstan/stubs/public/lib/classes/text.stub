@@ -1,0 +1,12 @@
+<?php
+
+class core_text {
+    /**
+     * @param string $text
+     * @param string $fromCS
+     * @param string $toCS
+     * @return string|false
+     */
+    public static function convert($text, $fromCS, $toCS = 'utf-8') {
+    }
+}

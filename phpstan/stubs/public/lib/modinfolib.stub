@@ -1,0 +1,26 @@
+<?php
+
+use core\exception\moodle_exception;
+use core_course\cm_info;
+use Throwable;
+
+/**
+ * @param int|stdClass $courseorid
+ * @param int $userid
+ * @param bool $resetonly
+ * @return ($resetonly is false ? \core_course\modinfo : null)
+ * @throws moodle_exception&Throwable
+ */
+function get_fast_modinfo($courseorid, $userid = 0, $resetonly = false) {
+}
+
+/**
+ * @param stdClass|int $cmorid
+ * @param string $modulename
+ * @param stdClass|int $courseorid
+ * @param int $userid
+ * @return array{stdClass, cm_info}
+ * @throws moodle_exception&Throwable
+ */
+function get_course_and_cm_from_cmid($cmorid, $modulename = '', $courseorid = 0, $userid = 0) {
+}

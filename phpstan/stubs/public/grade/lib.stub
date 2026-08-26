@@ -1,0 +1,10 @@
+<?php
+
+class grade_structure {
+}
+
+/**
+ * @property grade_item[] $items
+ */
+class grade_tree extends grade_structure {
+}

@@ -1,0 +1,12 @@
+<?php
+
+namespace core\navigation;
+
+use core\lang_string;
+use core\output\renderable;
+
+/**
+ * @property string|lang_string $text
+ */
+class navigation_node implements renderable {
+}

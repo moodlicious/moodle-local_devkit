@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @param string $source
+ * @param int $courseid
+ * @param string $itemtype
+ * @param string|null $itemmodule
+ * @param int $iteminstance
+ * @param int $itemnumber
+ * @param mixed $grades
+ * @param mixed $itemdetails
+ * @param bool $isbulkupdate
+ * @return GRADE_UPDATE_OK|GRADE_UPDATE_FAILED|GRADE_UPDATE_MULTIPLE|GRADE_UPDATE_ITEM_LOCKED
+ */
+function grade_update(
+    $source,
+    $courseid,
+    $itemtype,
+    $itemmodule,
+    $iteminstance,
+    $itemnumber,
+    $grades = null,
+    $itemdetails = null,
+    $isbulkupdate = false,
+) {
+}

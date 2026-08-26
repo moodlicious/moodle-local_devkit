@@ -1,0 +1,16 @@
+<?php
+
+namespace core\task;
+
+use core\output\stored_progress_bar;
+
+trait stored_progress_task_trait {
+    /** @var ?stored_progress_bar $progress */
+    protected $progress = null;
+
+    /**
+     * @phpstan-assert !null $this->progress
+     */
+    protected function start_stored_progress(): void {
+    }
+}

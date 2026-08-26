@@ -1,0 +1,51 @@
+<?php
+
+namespace core\event;
+
+use core\exception\coding_exception;
+use IteratorAggregate;
+use Throwable;
+
+/**
+ * @phpstan-type event_level base::LEVEL_*
+ * @phpstan-type event_crud 'c'|'r'|'u'|'d'
+ * @property-read string $eventname
+ * @property-read string $component
+ * @property-read string $action
+ * @property-read string $target
+ * @property-read string $objecttable
+ * @property-read int $objectid
+ * @property-read string $crud
+ * @property-read event_level $edulevel
+ * @property-read int $contextid
+ * @property-read int $contextlevel
+ * @property-read int $contextinstanceid
+ * @property-read int $userid
+ * @property-read int $courseid
+ * @property-read int $relateduserid
+ * @property-read int $anonymous
+ * @property-read mixed|null $other
+ * @property-read int $timecreated
+ * @implements IteratorAggregate<string, mixed>
+ */
+abstract class base implements IteratorAggregate {
+    public const LEVEL_OTHER = 0;
+    public const LEVEL_TEACHING = 1;
+    public const LEVEL_PARTICIPATING = 2;
+
+    /**
+     * @param array{
+     *     objectid?: int|null,
+     *     context?: \core\context,
+     *     userid?: int,
+     *     courseid?: int|null,
+     *     relateduserid?: int|null,
+     *     anonymous?: bool|1|2,
+     *     other?: mixed|null,
+     * } $data
+     * @return static returns instance of new event
+     * @throws coding_exception&Throwable
+     */
+    final public static function create(?array $data = null) {
+    }
+}

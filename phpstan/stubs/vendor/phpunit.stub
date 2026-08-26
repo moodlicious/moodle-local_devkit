@@ -1,0 +1,20 @@
+<?php declare(strict_types=1);
+
+namespace PHPUnit\Framework{
+    use Countable;
+
+    abstract class TestCase extends Assert implements Reorderable, SelfDescribing, Test {
+    }
+
+    abstract class Assert {
+    }
+
+    interface SelfDescribing {
+    }
+
+    interface Reorderable {
+    }
+
+    interface Test extends Countable {
+    }
+}

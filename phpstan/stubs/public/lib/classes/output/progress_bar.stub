@@ -1,0 +1,6 @@
+<?php
+
+namespace core\output;
+
+class progress_bar implements renderable, templatable {
+}

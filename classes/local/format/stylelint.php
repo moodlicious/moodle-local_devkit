@@ -40,4 +40,10 @@ class stylelint extends base {
 
         return $process->getExitCode();
     }
+
+    #[\Override]
+    public static function format_batch(array $files): void {
+        $process = new Process(array_merge(['bunx', 'stylelint', '--fix'], $files));
+        $process->run();
+    }
 }

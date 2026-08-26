@@ -58,6 +58,25 @@ class biome extends base {
         return $process->getExitCode();
     }
 
+    #[\Override]
+    public static function format_batch(array $files): void {
+        $config = self::get_config_path();
+        if ($config === null) {
+            return;
+        }
+
+        $process = new Process(array_merge([
+            'bunx',
+            '--bun',
+            '@biomejs/biome',
+            'format',
+            '--config-path',
+            $config,
+            '--write',
+        ], $files));
+        $process->run();
+    }
+
     /**
      * Get the biome.jsonc file.
      */

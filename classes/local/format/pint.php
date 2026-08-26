@@ -54,4 +54,25 @@ class pint extends base {
 
         return $process->getExitCode();
     }
+
+    #[\Override]
+    public static function format_batch(array $files): void {
+        global $CFG;
+        $bin = realpath("$CFG->dirroot/local/devkit/vendor/bin/pint");
+        $config = realpath("$CFG->dirroot/local/devkit/pint.json");
+
+        if ($bin === false || $config === false) {
+            return;
+        }
+
+        $process = new Process(array_merge([
+            'php',
+            $bin,
+            '--no-interaction',
+            '--quiet',
+            '--config',
+            $config,
+        ], $files), timeout: MINSECS);
+        $process->run();
+    }
 }

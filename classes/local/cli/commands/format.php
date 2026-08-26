@@ -34,6 +34,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Finder\Finder;
 
+use function count;
+
 /**
  * Format command.
  *
@@ -96,6 +98,28 @@ class format extends Command {
      * @param string[] $paths
      */
     private function format_run(array $paths, ?ProgressIndicator $progress): void {
+        $allfiles = $this->collect_files($paths);
+
+        $formattermap = $this->build_formatter_map($allfiles);
+
+        foreach ($formattermap as $formatterclass => $files) {
+            $name = $formatterclass::get_name();
+            $batches = array_chunk($files, 10);
+            foreach ($batches as $batch) {
+                $progress?->setMessage("Running $name on " . count($batch) . " files...");
+                $formatterclass::format_batch($batch);
+            }
+        }
+    }
+
+    /**
+     * Collect all files from the given paths.
+     * @param string[] $paths
+     * @return string[]
+     */
+    private function collect_files(array $paths): array {
+        $files = [];
+
         foreach ($paths as $path) {
             if (!file_exists($path)) {
                 continue;
@@ -125,26 +149,47 @@ class format extends Command {
                 foreach ($finder as $file) {
                     $realpath = $file->getRealPath();
                     if ($realpath !== false) {
-                        $this->format_file($realpath, $progress);
+                        $files[] = $realpath;
                     }
                 }
             } else {
-                $this->format_file($path, $progress);
+                $files[] = $path;
             }
         }
+
+        return $files;
     }
 
     /**
-     * Run formatters on a single file.
+     * Build a map of formatter class to file paths, preserving pick_formatters order.
+     *
+     * Formatters are emitted in the order they first appear across all files,
+     * which respects the per-file ordering defined by pick_formatters.
+     *
+     * @param string[] $files
+     * @return array<class-string<base>, string[]>
      */
-    private function format_file(string $path, ?ProgressIndicator $progress): void {
-        $progress?->setMessage("Formatting $path...");
-        $formatters = $this->pick_formatters($path);
-        foreach ($formatters as $formatter) {
-            $name = $formatter::get_name();
-            $progress?->setMessage("Formatting $path with $name");
-            $formatter::format($path);
+    private function build_formatter_map(array $files): array {
+        $formatterorder = [];
+        $formattermap = [];
+
+        foreach ($files as $file) {
+            foreach ($this->pick_formatters($file) as $formatter) {
+                $class = $formatter::class;
+                if (!isset($formattermap[$class])) {
+                    $formatterorder[] = $class;
+                    $formattermap[$class] = [];
+                }
+                $formattermap[$class][] = $file;
+            }
         }
+
+        $ordered = [];
+        foreach ($formatterorder as $class) {
+            $ordered[$class] = $formattermap[$class];
+        }
+
+        return $ordered;
     }
 
     /**

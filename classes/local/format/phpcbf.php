@@ -42,4 +42,13 @@ class phpcbf extends base {
 
         return $process->getExitCode();
     }
+
+    #[\Override]
+    public static function format_batch(array $files): void {
+        $process = new Process(array_merge([
+            'phpcbf',
+            '-q',
+        ], $files), timeout: MINSECS);
+        $process->run();
+    }
 }

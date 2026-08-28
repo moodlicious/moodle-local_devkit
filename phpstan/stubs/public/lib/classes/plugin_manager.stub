@@ -1,0 +1,12 @@
+<?php
+
+namespace core;
+
+class plugin_manager {
+    /**
+     * @param string $type
+     * @return class-string<\core\plugininfo\base>
+     */
+    public static function resolve_plugininfo_class($type) {
+    }
+}

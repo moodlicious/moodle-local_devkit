@@ -1,0 +1,6 @@
+<?php
+
+namespace core_cache;
+
+class application_cache extends cache implements loader_with_locking_interface {
+}

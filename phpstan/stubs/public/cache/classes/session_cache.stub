@@ -1,0 +1,6 @@
+<?php
+
+namespace core_cache;
+
+class session_cache extends cache {
+}

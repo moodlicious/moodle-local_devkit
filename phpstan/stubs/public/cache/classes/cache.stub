@@ -1,0 +1,15 @@
+<?php
+
+namespace core_cache;
+
+class cache implements loader_interface {
+    /**
+     * @param string $component
+     * @param string $area
+     * @param array<mixed> $identifiers
+     * @param string $unused
+     * @return application_cache|session_cache|request_cache
+     */
+    public static function make($component, $area, array $identifiers = [], $unused = null) {
+    }
+}

@@ -1,0 +1,6 @@
+<?php
+
+namespace core_cache;
+
+interface loader_with_locking_interface {
+}

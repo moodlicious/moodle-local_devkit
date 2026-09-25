@@ -24,6 +24,13 @@ abstract class moodleform {
     }
 
     /**
+     * @param stdClass|array<mixed> $default_values
+     * @return void
+     */
+    function set_data($default_values) {
+    }
+
+    /**
      * @param string $elname
      * @return string|false
      */

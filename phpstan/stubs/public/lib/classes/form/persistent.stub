@@ -1,0 +1,14 @@
+<?php
+
+namespace core\form;
+
+use moodleform;
+use stdClass;
+
+abstract class persistent extends moodleform {
+    /**
+     * @return stdClass|null
+     */
+    public function get_data() {
+    }
+}

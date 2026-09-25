@@ -1,0 +1,11 @@
+<?php
+
+namespace core;
+
+abstract class persistent {
+    /**
+     * @return array<string, array<mixed>>
+     */
+    protected static function define_properties() {
+    }
+}

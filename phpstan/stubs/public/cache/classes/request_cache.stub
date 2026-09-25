@@ -1,0 +1,6 @@
+<?php
+
+namespace core_cache;
+
+class request_cache extends cache {
+}
